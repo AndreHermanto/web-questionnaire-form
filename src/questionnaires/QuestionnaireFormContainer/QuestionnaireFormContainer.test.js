@@ -4,5 +4,5 @@ import QuestionnaireForm from './index';
 
 it('QuestionnaireForm', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<QuestionnaireForm />, div);
+  ReactDOM.render(<QuestionnaireForm params={{questionnaireId: 1}} />, div);
 });
