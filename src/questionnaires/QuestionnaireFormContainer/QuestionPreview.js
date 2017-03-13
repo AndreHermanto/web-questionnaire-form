@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function QuestionPreview({ question, number }) {
+export default function QuestionPreview({ question, number, onAnswer }) {
   let answers = '';
   if (question.get('type') === 'section') {
     return <h3 style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 16 }}>{question.get('title')}</h3>
@@ -11,7 +11,10 @@ export default function QuestionPreview({ question, number }) {
       return <div className={question.get('type')} key={index}>
         <label>
           {question.get('type') !== 'text' &&
-          <input name={question.get('id')} type={question.get('type')} />
+          <input
+            name={question.get('id')}
+            type={question.get('type')}
+            onChange={onAnswer} />
           }
           {question.get('type') === 'text' &&
           <textarea className="form-control" rows="3"></textarea>
