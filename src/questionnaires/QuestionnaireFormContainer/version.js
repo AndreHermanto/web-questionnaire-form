@@ -2,17 +2,32 @@ export default {
   title: '',
   body: [
     {
+      id: 28,
+      type: 'text',
+      question: 'Any additional information on cancer diagnosis',
+      answers: [
+        {
+          id: 10000000,
+          text: '', // text dont require a label
+          concepts: []
+        }
+      ]
+    },
+    {
       id: 1,
       type: 'radio',
       question: 'Are you registering for yourself, your child, or another individual? (1)',
       answers: [
         {
+          id: 1,
           text: 'Self',
           type: 'radio'
         }, {
+          id: 2,
           text: 'Child',
           type: 'radio'
         }, {
+          id: 3,
           text: 'Other (please specify)',
           type: 'radio+text'
         }
@@ -28,13 +43,16 @@ export default {
       description: 'Examples: chromosome microarray (CMA), single gene sequencing test, gene panel test, whole exome sequencing (WES), whole genome sequencing (WGS). (2)',
       answers: [
         {
+          id: 4,
           text: 'Yes',
           type: 'radio'
         }, {
+          id: 5,
           text: 'No',
           type: 'radio',
           goTo: 'Health and Development'
         }, {
+          id: 6,
           text: 'No Sure',
           type: 'radio'
         }
@@ -45,20 +63,25 @@ export default {
       question: ' What type(s) of genetic testing have you had? Please select all that apply. (2b)',
       answers: [
         {
+          id: 7,
           type: 'checkbox',
           text: 'Chromosomes',
           description: 'Also called chromosome analysis, karyotype, karyotype analysis, or G-band karyotype'
         }, {
+          id: 8,
           type: 'checkbox',
           text: 'Direct-to-consumer (DTC) genetic test ',
           description: '(Genetic testing that is ordered by and returned directly to the person tested rather than through a doctor, also called DTC. Please specify name of the company and/or test below, such as Counsyl, 23andMe, etc'
         }, {
+          id: 9,
           type: 'checkbox+other',
           text: 'Other (please specify)'
         }, {
+          id: 10,
           type: 'checkbox',
           text: 'I am not sure'
         }, {
+          id: 11,
           type: 'checkbox',
           text: 'Prefer not to answer'
         }
@@ -639,16 +662,6 @@ export default {
           type: 'checkbox',
           text: 'Prefer not to answer',
           goTo: 'End'
-        }
-      ]
-    }, {
-      id: 28,
-      type: 'text',
-      question: 'Any additional information on cancer diagnosis',
-      answers: [
-        {
-          text: '', // text dont require a label
-          concepts: []
         }
       ]
     }
