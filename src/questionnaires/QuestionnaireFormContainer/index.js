@@ -1,7 +1,12 @@
 import React, {
   Component
 } from 'react';
-import { ProgressBar } from 'react-bootstrap';
+import {
+  ProgressBar
+} from 'react-bootstrap';
+import {
+  Link
+} from 'react-router';
 import { fromJS } from 'immutable';
 import cuid from 'cuid';
 import _ from 'lodash';
@@ -41,6 +46,7 @@ class QuestionnaireForm extends Component {
       }),
       version
     };
+
     this.createResponse = this.createResponse.bind(this);
     this.updateResponse = this.updateResponse.bind(this);
     this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
@@ -55,6 +61,20 @@ class QuestionnaireForm extends Component {
       .then((questionnaire) => {
         this.setState({
           questionnaire
+        });
+        // load the current version
+        return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}/versions/${questionnaire.currentVersionId}`);
+      })
+      .then(response => response.json())
+      .then((json) => {
+        const realVersion = json.data;
+        realVersion.body = JSON.parse(realVersion.body);
+
+        if (!realVersion.body.length) {
+          return;
+        }
+        this.setState({
+          version: fromJS(realVersion)
         });
       })
       .catch(console.error);

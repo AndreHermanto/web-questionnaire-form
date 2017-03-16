@@ -64,6 +64,7 @@ export default function QuestionPreview({
             style={{ marginRight: 8 }}
             name={question.get('id')}
             type={question.get('type')}
+            value={!!_.find(questionResponse.answers, { id: answer.get('id') })}
             onChange={e => handleAnswer(e, answer)}
           />)
           }
@@ -88,8 +89,8 @@ export default function QuestionPreview({
           <strong>{question.get('question')}</strong>
         </p>
         <p className="text-muted">
-          {question.get('type') === 'radio' && <div>Select One</div>}
-          {question.get('type') === 'checkbox' && <div>Select Any</div>}
+          {question.get('type') === 'radio' && <span>Select One</span>}
+          {question.get('type') === 'checkbox' && <span>Select Any</span>}
         </p>
         {answers}
       </div>
