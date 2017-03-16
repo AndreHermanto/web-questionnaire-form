@@ -169,6 +169,14 @@ class QuestionnaireForm extends Component {
             </div>
           </div>
         </div>
+        {this.state.response &&
+        <Link
+          to="/submitted"
+          disabled={this.state.version.get('body').filter(question => question.get('type') !== 'section').count() !== this.state.response.answeredQuestions.length}
+          className="btn btn-success btn-lg"
+        >
+          Submit Questionnaire
+        </Link>}
       </div>
     );
   }

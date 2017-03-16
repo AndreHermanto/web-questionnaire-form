@@ -3,6 +3,9 @@ import {
   Navbar,
   Nav
 } from 'react-bootstrap';
+import {
+  Link
+} from 'react-router';
 import styled from 'styled-components';
 import logo from '../assets/images/sanford-health-logo.png';
 
@@ -20,7 +23,7 @@ export default class NavigationBar extends React.Component {
       <WhiteNavbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#/"><img src={logo} alt="logo" width="104px" height="40px" /></a>
+            <Link to="/"><img src={logo} alt="logo" width="104px" height="40px" /></Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
