@@ -1,5 +1,15 @@
 import React from 'react';
 import _ from 'lodash';
+import styled from 'styled-components';
+
+const AnswerOption = styled.label`
+  width: 100%;
+  border: ${props => props.active ? '1px solid #96C65E' : '1px solid #eee'};
+  padding: 16px 16px 16px 36px !important;
+  color: ${props => props.active ? '#7bb13d' : '#666'};
+  background-color: ${props => props.active ? '#F0F7E7' : 'white'};
+  margin-bottom: 8px;
+`;
 
 export default function QuestionPreview({
   question,
@@ -34,26 +44,28 @@ export default function QuestionPreview({
 
   let answers = '';
   if (question.get('type') === 'section') {
-    return <h3 style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 16 }}>{question.get('title')}</h3>;
+    return <h2 style={{ marginBottom: 32, marginTop: 40 }}>{question.get('title')}</h2>;
   }
 
   if (question.get('type') === 'checkbox' || question.get('type') === 'radio' || question.get('type') === 'text') {
-    answers = question.get('answers').map(answer =>
-      <div className={question.get('type')} key={answer.get('id')}>
-        <label>
+    answers = question.get('answers').map((answer) => {
+      if (question.get('type') === 'text') {
+        return (<textarea
+          key={answer.get('id')}
+          className="form-control"
+          rows="3"
+          onChange={e => handleAnswer(e, answer)}
+        />);
+      }
+      return (<div className={question.get('type')} key={answer.get('id')}>
+        <AnswerOption active={!!_.find(questionResponse.answers, { id: answer.get('id') })}>
           {question.get('type') !== 'text' &&
-          <input
+          (<input
+            style={{ marginRight: 8 }}
             name={question.get('id')}
             type={question.get('type')}
             onChange={e => handleAnswer(e, answer)}
-          />
-          }
-          {question.get('type') === 'text' &&
-          <textarea
-            className="form-control"
-            rows="3"
-            onChange={e => handleAnswer(e, answer)}
-          />
+          />)
           }
           {' '}
           {answer.get('text')} {answer.get('goTo') && <small className="text-muted">Go to: {answer.get('goTo')}</small>}
@@ -61,15 +73,26 @@ export default function QuestionPreview({
           {answer.get('concepts') && !!answer.get('concepts').count() &&
           <span className="text-muted">({answer.get('concepts').map(concept => <small key={concept.get('id')} className="text-success">{concept.get('label')}</small>)})</span>
           }
-        </label>
-      </div>
-    );
+        </AnswerOption>
+      </div>);
+    });
   } else {
     answers = 'Unknown type';
   }
 
-  return (<div>
-    <p><strong>{number}. {question.get('question')}</strong></p>
-    {answers}
+  return (<div style={{ marginBottom: 24, backgroundColor: 'white', border: '1px solid #eee', padding: 32 }}>
+    <div className="media">
+      <div className="pull-left"><strong>{number}.</strong></div>
+      <div className="media-body" style={{ paddingLeft: 16 }}>
+        <p style={{ color: '#333', fontSize: 16, marginBottom: 16 }}>
+          <strong>{question.get('question')}</strong>
+        </p>
+        <p className="text-muted">
+          {question.get('type') === 'radio' && <div>Select One</div>}
+          {question.get('type') === 'checkbox' && <div>Select Any</div>}
+        </p>
+        {answers}
+      </div>
+    </div>
   </div>);
 }

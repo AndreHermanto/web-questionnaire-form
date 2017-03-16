@@ -1,4 +1,7 @@
-import React, { Component } from 'react';
+import React, {
+  Component
+} from 'react';
+import { ProgressBar } from 'react-bootstrap';
 import { fromJS } from 'immutable';
 import cuid from 'cuid';
 import _ from 'lodash';
@@ -120,29 +123,52 @@ class QuestionnaireForm extends Component {
   }
 
   render() {
+    let percentComplete;
+    if (this.state.response) {
+      percentComplete = (this.state.response.answeredQuestions.length / this.state.version.get('body').filter(question => question.get('type') !== 'section').count()) * 100;
+    } else {
+      percentComplete = 0;
+    }
+
     return (
       <div className="container">
-        <h4>Questionnaire Form</h4>
-        {this.state.version.get('body').count()}
-        {this.state.version.get('body').map((question, index) => {
-          let questionResponse;
-          if (this.state.response) {
-            questionResponse = _.find(this.state.response.answeredQuestions, { id: question.get('id') }) || {
-              id: question.get('id'),
-              answers: []
-            };
-          } else {
-            questionResponse = { id: question.get('id'), answers: [] };
-          }
+        <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
+        <div className="row">
+          <div className="col-md-9">
+            {this.state.version.get('body').map((question, index) => {
+              let questionResponse;
+              if (this.state.response) {
+                questionResponse = _.find(this.state.response.answeredQuestions, { id: question.get('id') }) || {
+                  id: question.get('id'),
+                  answers: []
+                };
+              } else {
+                questionResponse = { id: question.get('id'), answers: [] };
+              }
 
-          return (<QuestionPreview
-            key={question.get('id')}
-            number={index + 1}
-            question={question}
-            questionResponse={questionResponse}
-            onAnswer={this.handleQuestionAnswered}
-          />);
-        })}
+              return (<QuestionPreview
+                key={question.get('id')}
+                number={index + 1}
+                question={question}
+                questionResponse={questionResponse}
+                onAnswer={this.handleQuestionAnswered}
+              />);
+            })}
+          </div>
+          <div className="col-md-3">
+            <div style={{ padding: 16, backgroundColor: 'white', position: 'fixed', width: '200px' }}>
+              {this.state.version.get('title')}
+              <p className="text-muted">
+                Answered: { this.state.response && this.state.response.answeredQuestions.length }
+                {' '}
+                of
+                {' '}
+                { this.state.version.get('body').filter(question => question.get('type') !== 'section').count() }
+              </p>
+              <ProgressBar now={percentComplete} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
