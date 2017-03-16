@@ -1,5 +1,5 @@
 export default {
-  title: '',
+  title: 'Genome Connect',
   body: [
     {
       id: 28,
