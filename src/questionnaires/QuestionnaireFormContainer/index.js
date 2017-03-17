@@ -8,79 +8,13 @@ import {
   Link
 } from 'react-router';
 import { fromJS } from 'immutable';
-import cuid from 'cuid';
 import _ from 'lodash';
-import genomeConnect from './version';
 import QuestionPreview from './QuestionPreview';
 
-const userId = 'd0a264b2-f0dd-4660-b3b0-4d44d4b4bf03';
-const questionnaireId = '57f35e83-8ab2-43d5-8bb3-eb74f2262629';
-const versionId = '82d7d0ce-1885-4cb6-b27c-a9d06beed802';
 const completed = false;
 
 class QuestionnaireForm extends Component {
-  constructor(props) {
-    super(props);
-    const version = fromJS(genomeConnect).update('body', (body) => {
-      return body.map((item) => {
-        if (!item.has('answers')) {
-          return item;
-        }
-        return item.update('answers', answers =>
-          answers.map(answer =>
-            answer.set('id', cuid())
-          )
-        );
-      });
-    });
-
-    this.state = {
-      questionnaire: fromJS({
-        id: 'eda1fd27-0303-4083-93aa-a01fe8536607',
-        dateCreated: 'Thu Mar 09 2017 02:36:21 GMT+1000 (AEST)',
-        lastUpdated: 'Thu Mar 09 2017 12:42:54 GMT+1000 (AEST)',
-        status: 'molestias',
-        currentTitle: 'Id voluptas cupiditate.',
-        currentVersionId: '1615a7ad-6f52-4377-aac1-8129c20c9341',
-        creator: 'delectus'
-      }),
-      version
-    };
-
-    this.createResponse = this.createResponse.bind(this);
-    this.updateResponse = this.updateResponse.bind(this);
-    this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
-  }
-
-  componentDidMount() {
-    this.createResponse();
-
-    return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}`)
-      .then(response => response.json())
-      .then(json => json.data)
-      .then((questionnaire) => {
-        this.setState({
-          questionnaire
-        });
-        // load the current version
-        return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}/versions/${questionnaire.currentVersionId}`);
-      })
-      .then(response => response.json())
-      .then((json) => {
-        const realVersion = json.data;
-        realVersion.body = JSON.parse(realVersion.body);
-
-        if (!realVersion.body.length) {
-          return;
-        }
-        this.setState({
-          version: fromJS(realVersion)
-        });
-      })
-      .catch(console.error);
-  }
-
-  updateResponse(questionnaireResponse) {
+  static updateResponse(questionnaireResponse) {
     return fetch(`${process.env.REACT_APP_BASE_URL}/responses/${questionnaireResponse.id}`, {
       method: 'PUT',
       headers: {
@@ -88,20 +22,89 @@ class QuestionnaireForm extends Component {
       },
       body: JSON.stringify(questionnaireResponse)
     })
-    .then(response => response.json())
-    .then(json => json.data)
-    .then((response) => {
-      this.setState({
-        response
-      });
-    })
     .catch(console.error);
   }
 
-  createResponse() {
+  static getResponse(questionnaireId, userId) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/responses?questionnaireId=${questionnaireId}&userId=${userId}`)
+    .catch(console.error);
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {};
+
+    this.createResponse = this.createResponse.bind(this);
+    this.debouncedUpdateResponse = _.debounce(QuestionnaireForm.updateResponse, 500);
+    this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
+  }
+
+  componentDidMount() {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}`)
+      .then(response => response.json())
+      .then(json => json.data)
+      .then((questionnaire) => {
+        // store the questionnaire
+        this.setState({
+          questionnaire
+        });
+
+        // check for existing responses
+        return QuestionnaireForm
+          .getResponse(this.props.params.questionnaireId, this.props.params.userId)
+          .then(response => response.json())
+          .then(json => json.data)
+          .then((userResponses) => {
+            if (userResponses.length > 1) {
+              this.setState({
+                response: userResponses[0]
+              });
+              console.error('There are more than one responses for this questionnaire, each questionnaire should only have one response', userResponses);
+              return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}/versions/${userResponses[0].versionId}`);
+            }
+            if (userResponses.length === 0) {
+              // no response, make a new one
+              // use the latest version
+              return this.createResponse(questionnaire.currentVersionId)
+              .then(response => response.json())
+              .then(json => json.data)
+              .then((userResponse) => {
+                this.setState({
+                  response: userResponse
+                });
+                return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}/versions/${questionnaire.currentVersionId}`);
+              });
+            }
+            if (userResponses.length === 1) {
+              this.setState({
+                response: userResponses[0]
+              });
+              // get the version, they ahve already started filling out
+              return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}/versions/${userResponses[0].versionId}`);
+            }
+            return false;
+          });
+      })
+      .then(response => response.json())
+      .then((json) => {
+        const realVersion = json.data;
+        realVersion.body = JSON.parse(realVersion.body);
+        if (!realVersion.body.length) {
+          return;
+        }
+        const version = fromJS(realVersion);
+        this.setState({
+          version
+        });
+      })
+      .catch(console.error);
+  }
+
+  createResponse(versionId) {
     const questionnaireResponse = {
-      userId,
-      questionnaireId,
+      userId: this.props.params.userId,
+      questionnaireId: this.props.params.questionnaireId,
       versionId,
       completed,
       answeredQuestions: []
@@ -139,10 +142,14 @@ class QuestionnaireForm extends Component {
       response
     });
     // send to server
-    this.updateResponse(response);
+    this.debouncedUpdateResponse(response);
   }
 
   render() {
+    if (!this.state.questionnaire || !this.state.version) {
+      return <div className="container">Loading...</div>;
+    }
+
     let percentComplete;
     if (this.state.response) {
       percentComplete = (this.state.response.answeredQuestions.length / this.state.version.get('body').filter(question => question.get('type') !== 'section').count()) * 100;
