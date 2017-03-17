@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
+import coalesce from './coalesce';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -38,6 +39,7 @@ export default function QuestionPreview({
         id: answer.get('id'),
         text: target.value
       }];
+      console.log(newQuestionResponse);
     }
     onAnswer(newQuestionResponse);
   };
@@ -50,10 +52,20 @@ export default function QuestionPreview({
   if (question.get('type') === 'checkbox' || question.get('type') === 'radio' || question.get('type') === 'text') {
     answers = question.get('answers').map((answer) => {
       if (question.get('type') === 'text') {
+        console.log('text', questionResponse.answers);
+        const existingAnswer = _.find(questionResponse.answers, { id: answer.get('id') });
+        let value;
+        console.log('existing answer', existingAnswer);
+        if (existingAnswer) {
+          value = existingAnswer.text;
+        } else {
+          value = '';
+        }
         return (<textarea
           key={answer.get('id')}
           className="form-control"
           rows="3"
+          value={value}
           onChange={e => handleAnswer(e, answer)}
         />);
       }
@@ -64,6 +76,7 @@ export default function QuestionPreview({
             style={{ marginRight: 8 }}
             name={question.get('id')}
             type={question.get('type')}
+            checked={!!_.find(questionResponse.answers, { id: answer.get('id') })}
             onChange={e => handleAnswer(e, answer)}
           />)
           }
@@ -88,8 +101,8 @@ export default function QuestionPreview({
           <strong>{question.get('question')}</strong>
         </p>
         <p className="text-muted">
-          {question.get('type') === 'radio' && <div>Select One</div>}
-          {question.get('type') === 'checkbox' && <div>Select Any</div>}
+          {question.get('type') === 'radio' && <span>Select One</span>}
+          {question.get('type') === 'checkbox' && <span>Select Any</span>}
         </p>
         {answers}
       </div>
