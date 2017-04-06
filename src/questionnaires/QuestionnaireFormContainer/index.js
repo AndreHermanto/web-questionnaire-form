@@ -143,14 +143,41 @@ class QuestionnaireForm extends Component {
   }
 
   handleNextPage() {
+    let nextPageIndex;
+    // get the last question on this page
+    // it may have skip logic
+    const lastQuestion = this.state.pages
+      .get(this.state.selectedPageIndex)
+      .get('questions').last();
+
+    // find the users responses for this last question
+    const questionResponse = _.find(this.state.response.answeredQuestions, { id: lastQuestion.get('id') });
+
+    // see if any of the answer responses did have skip logic
+    const answersResponsesWithSkipLogic = lastQuestion.get('answers')
+      .filter(answer => answer.get('goTo'))
+      .filter(answer => _.find(
+        questionResponse.answers,
+        answerResponse => answerResponse.id === answer.get('id'))
+      );
+
+    if (answersResponsesWithSkipLogic.count()) {
+      // find the page to go to
+      nextPageIndex = _.findIndex(this.state.pages.toJSON(), page =>
+        page.heading === answersResponsesWithSkipLogic.get(0).get('goTo')
+      );
+    } else {
+      nextPageIndex = this.state.selectedPageIndex + 1;
+    }
     this.setState({
-      selectedPageIndex: this.state.selectedPageIndex + 1
+      selectedPageIndex: nextPageIndex
     });
   }
 
   renderPage() {
     const page = this.state.pages.get(this.state.selectedPageIndex);
     return (<div>
+      <h3>Page: {this.state.selectedPageIndex}</h3>
       <h2>Section: { page.get('heading') }</h2>
       {page.get('questions').map((question, index) => {
         let questionResponse;
@@ -186,39 +213,22 @@ class QuestionnaireForm extends Component {
     if (!this.state.questionnaire || !this.state.version) {
       return <div className="container">Loading...</div>;
     }
-
-    let percentComplete;
-    if (this.state.response) {
-      percentComplete = (this.state.response.answeredQuestions.length / this.state.version.get('body').filter(question => question.get('type') !== 'section').count()) * 100;
-    } else {
-      percentComplete = 0;
-    }
+    const percentComplete = ((this.state.selectedPageIndex + 1) / this.state.pages.count()) * 100;
 
     return (
       <div className="container">
         <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
+        <div>
+          <ProgressBar now={percentComplete} />
+        </div>
         <div className="row">
           <div className="col-md-9">
             {this.renderPage()}
-          </div>
-          <div className="col-md-3">
-            <div style={{ padding: 16, backgroundColor: 'white', position: 'fixed', width: '200px' }}>
-              {this.state.version.get('title')}
-              <p className="text-muted">
-                Answered: { this.state.response && this.state.response.answeredQuestions.length }
-                {' '}
-                of
-                {' '}
-                { this.state.version.get('body').filter(question => question.get('type') !== 'section').count() }
-              </p>
-              <ProgressBar now={percentComplete} />
-            </div>
           </div>
         </div>
         {this.state.response && this.state.selectedPageIndex === this.state.pages.count() - 1 &&
         <Link
           to="/submitted"
-          disabled={this.state.version.get('body').filter(question => question.get('type') !== 'section').count() !== this.state.response.answeredQuestions.length}
           className="btn btn-success btn-lg"
         >
           Submit Questionnaire
