@@ -5,7 +5,7 @@ import {
   ProgressBar
 } from 'react-bootstrap';
 import {
-  Link
+  hashHistory
 } from 'react-router';
 import { fromJS } from 'immutable';
 import _ from 'lodash';
@@ -40,6 +40,7 @@ class QuestionnaireForm extends Component {
     this.debouncedUpdateResponse = _.debounce(QuestionnaireForm.updateResponse, 500);
     this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
+    this.handeSubmitQuestionnaire = this.handeSubmitQuestionnaire.bind(this);
   }
 
   componentDidMount() {
@@ -174,6 +175,16 @@ class QuestionnaireForm extends Component {
     });
   }
 
+  handeSubmitQuestionnaire() {
+    const response = this.state.response;
+    response.completed = true;
+    this.setState({
+      response
+    });
+    // send to server
+    QuestionnaireForm.updateResponse(response);
+    hashHistory.push('/submitted');
+  }
   renderPage() {
     const page = this.state.pages.get(this.state.selectedPageIndex);
     return (<div>
@@ -227,12 +238,12 @@ class QuestionnaireForm extends Component {
           </div>
         </div>
         {this.state.response && this.state.selectedPageIndex === this.state.pages.count() - 1 &&
-        <Link
-          to="/submitted"
+        <button
+          onClick={this.handeSubmitQuestionnaire}
           className="btn btn-success btn-lg"
         >
           Submit Questionnaire
-        </Link>}
+        </button>}
       </div>
     );
   }
