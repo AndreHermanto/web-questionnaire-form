@@ -10,6 +10,7 @@ import {
 import { fromJS } from 'immutable';
 import _ from 'lodash';
 import QuestionPreview from './QuestionPreview';
+import pageMaker from './pageMaker';
 
 const completed = false;
 
@@ -38,6 +39,7 @@ class QuestionnaireForm extends Component {
     this.createResponse = this.createResponse.bind(this);
     this.debouncedUpdateResponse = _.debounce(QuestionnaireForm.updateResponse, 500);
     this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
+    this.handleNextPage = this.handleNextPage.bind(this);
   }
 
   componentDidMount() {
@@ -95,7 +97,9 @@ class QuestionnaireForm extends Component {
         }
         const version = fromJS(realVersion);
         this.setState({
-          version
+          version,
+          pages: fromJS(pageMaker(version.get('body').toJSON())),
+          selectedPageIndex: 0
         });
       })
       .catch(console.error);
@@ -115,13 +119,6 @@ class QuestionnaireForm extends Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(questionnaireResponse)
-    })
-    .then(response => response.json())
-    .then(json => json.data)
-    .then((response) => {
-      this.setState({
-        response
-      });
     })
     .catch(console.error);
   }
@@ -145,6 +142,46 @@ class QuestionnaireForm extends Component {
     this.debouncedUpdateResponse(response);
   }
 
+  handleNextPage() {
+    this.setState({
+      selectedPageIndex: this.state.selectedPageIndex + 1
+    });
+  }
+
+  renderPage() {
+    const page = this.state.pages.get(this.state.selectedPageIndex);
+    return (<div>
+      <h2>Section: { page.get('heading') }</h2>
+      {page.get('questions').map((question, index) => {
+        let questionResponse;
+        if (this.state.response) {
+          questionResponse = _.find(this.state.response.answeredQuestions, { id: question.get('id') }) || {
+            id: question.get('id'),
+            answers: []
+          };
+        } else {
+          questionResponse = { id: question.get('id'), answers: [] };
+        }
+
+        return (<QuestionPreview
+          key={question.get('id')}
+          number={index + 1}
+          question={question}
+          questionResponse={questionResponse}
+          onAnswer={this.handleQuestionAnswered}
+        />);
+      })}
+      {this.state.selectedPageIndex < this.state.pages.count() - 1 &&
+      <button
+        className="btn btn-success btn-lg"
+        onClick={this.handleNextPage}
+      >
+        Next
+      </button>
+      }
+    </div>);
+  }
+
   render() {
     if (!this.state.questionnaire || !this.state.version) {
       return <div className="container">Loading...</div>;
@@ -162,25 +199,7 @@ class QuestionnaireForm extends Component {
         <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
         <div className="row">
           <div className="col-md-9">
-            {this.state.version.get('body').map((question, index) => {
-              let questionResponse;
-              if (this.state.response) {
-                questionResponse = _.find(this.state.response.answeredQuestions, { id: question.get('id') }) || {
-                  id: question.get('id'),
-                  answers: []
-                };
-              } else {
-                questionResponse = { id: question.get('id'), answers: [] };
-              }
-
-              return (<QuestionPreview
-                key={question.get('id')}
-                number={index + 1}
-                question={question}
-                questionResponse={questionResponse}
-                onAnswer={this.handleQuestionAnswered}
-              />);
-            })}
+            {this.renderPage()}
           </div>
           <div className="col-md-3">
             <div style={{ padding: 16, backgroundColor: 'white', position: 'fixed', width: '200px' }}>
@@ -196,7 +215,7 @@ class QuestionnaireForm extends Component {
             </div>
           </div>
         </div>
-        {this.state.response &&
+        {this.state.response && this.state.selectedPageIndex === this.state.pages.count() - 1 &&
         <Link
           to="/submitted"
           disabled={this.state.version.get('body').filter(question => question.get('type') !== 'section').count() !== this.state.response.answeredQuestions.length}
