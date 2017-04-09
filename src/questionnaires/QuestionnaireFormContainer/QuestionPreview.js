@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import coalesce from './coalesce';
+import image from './image.png';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -86,6 +87,7 @@ export default function QuestionPreview({
           {answer.get('concepts') && !!answer.get('concepts').count() &&
           <span className="text-muted">({answer.get('concepts').map(concept => <small key={concept.get('id')} className="text-success">{concept.get('label')}</small>)})</span>
           }
+          <img src={answer.get('image')} alt="" className="img-responsive" />
         </AnswerOption>
       </div>);
     });
