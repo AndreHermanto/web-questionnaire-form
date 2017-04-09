@@ -2,7 +2,13 @@ import React, {
   Component
 } from 'react';
 import {
-  ProgressBar
+  ProgressBar,
+  PanelGroup,
+  Panel,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  HelpBlock
 } from 'react-bootstrap';
 import {
   hashHistory
@@ -34,7 +40,8 @@ class QuestionnaireForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+    };
 
     this.createResponse = this.createResponse.bind(this);
     this.debouncedUpdateResponse = _.debounce(QuestionnaireForm.updateResponse, 500);
@@ -224,13 +231,28 @@ class QuestionnaireForm extends Component {
     if (!this.state.questionnaire || !this.state.version) {
       return <div className="container">Loading...</div>;
     }
-    const percentComplete = ((this.state.selectedPageIndex + 1) / this.state.pages.count()) * 100;
+    const percentComplete = ((this.state.selectedPageIndex) / this.state.pages.count()) * 100;
+
+    function FieldGroup({ id, label, help, ...props }) {
+      return (
+        <FormGroup controlId={id}>
+          <ControlLabel>{label}</ControlLabel>
+          <FormControl {...props} />
+          {help && <HelpBlock>{help}</HelpBlock>}
+        </FormGroup>
+      );
+    }
 
     return (
       <div className="container">
         <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
-        <div>
-          <ProgressBar now={percentComplete} />
+        <div className="row">
+          <div className="col-sm-1">
+            {percentComplete}%
+          </div>
+          <div className="col-sm-11">
+            <ProgressBar now={percentComplete} />
+          </div>
         </div>
         <div className="row">
           <div className="col-md-9">
