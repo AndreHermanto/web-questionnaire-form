@@ -7,6 +7,7 @@ import {
 } from 'react-router';
 import QuestionnaireAdmin from '../../questionnaires/QuestionnaireAdminContainer';
 import QuestionnaireForm from '../../questionnaires/QuestionnaireFormContainer';
+import FamilyHistoryContainer from '../../questionnaires/FamilyHistoryContainer';
 import QuestionnaireFormSubmitted from '../../questionnaires/QuestionnaireFormSubmitted';
 import Container from '../Container';
 
@@ -17,8 +18,9 @@ class Routes extends Component {
       <Router history={hashHistory}>
         <Route path="/" component={Container}>
           <IndexRoute component={QuestionnaireAdmin} />
+          <Route path="/family-history" component={FamilyHistoryContainer} />
           <Route path="/users/:userId/questionnaires/:questionnaireId" component={QuestionnaireForm} />
-          <Route path="/submitted" component={QuestionnaireFormSubmitted} />
+          <Route path="/submitted" component={FamilyHistoryContainer} />
         </Route>
       </Router>
     );
