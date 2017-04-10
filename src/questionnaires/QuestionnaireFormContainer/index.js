@@ -159,6 +159,7 @@ class QuestionnaireForm extends Component {
       .get('questions').last();
 
     if (!lastQuestion) {
+      console.log('no last quetion');
       nextPageIndex = this.state.selectedPageIndex + 1;
       this.setState({
         selectedPageIndex: nextPageIndex
@@ -178,9 +179,16 @@ class QuestionnaireForm extends Component {
       );
 
     if (answersResponsesWithSkipLogic.count()) {
+      const firstAnswer = answersResponsesWithSkipLogic.get(0);
+      if (firstAnswer.get('goTo') === 'End') {
+        this.handeSubmitQuestionnaire();
+        // its the end, submit it, and go home
+      }
       // find the page to go to
       nextPageIndex = _.findIndex(this.state.pages.toJSON(), page =>
-        page.heading === answersResponsesWithSkipLogic.get(0).get('goTo')
+        page.heading === firstAnswer.get('goTo') ||
+        page.heading2 === firstAnswer.get('goTo') ||
+        page.heading3 === firstAnswer.get('goTo')
       );
     } else {
       nextPageIndex = this.state.selectedPageIndex + 1;
@@ -203,9 +211,7 @@ class QuestionnaireForm extends Component {
   renderPage() {
     const page = this.state.pages.get(this.state.selectedPageIndex);
     return (<div>
-      <h2>{ page.get('heading') }</h2>
-      <h3>{ page.get('heading2') }</h3>
-      <h4>{ page.get('heading3') }</h4>
+      <h2>{page.get('heading')}</h2>
       {page.get('questions').map((question, index) => {
         let questionResponse;
         if (this.state.response) {
@@ -253,32 +259,37 @@ class QuestionnaireForm extends Component {
     }
 
     const headings = _.uniq(this.state.pages.map(page => page.get('heading')).toJSON());
+    const currentPage = this.state.pages.get(this.state.selectedPageIndex);
     return (
       <div className="container">
         <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
         <div className="row">
-          <div className="col-sm-1">
-            {percentComplete}%
+          <div className="col-sm-3">
+            <div style={{ padding: 24, backgroundColor: 'white', border: '1px solid #eee' }}>
+              <ProgressBar now={percentComplete} />
+              <ul className="list-unstyled">
+                {headings.map(heading => <li style={{ fontWeight: currentPage.get('heading2') ? '' : 'bold' }}>
+                  {heading}
+                  {heading === currentPage.get('heading') &&
+                  <ul>
+                    {currentPage.get('heading2') && <li style={{ fontWeight: currentPage.get('heading3') ? '' : 'bold' }}>{currentPage.get('heading2')}</li>}
+                    {currentPage.get('heading3') && <li>{currentPage.get('heading3')}</li>}
+                  </ul>}
+                </li>)}
+              </ul>
+            </div>
           </div>
-          <div className="col-sm-11">
-            <ProgressBar now={percentComplete} />
-          </div>
-        </div>
-        <div>
-          {headings.map(heading => <div>{heading}</div> )}
-        </div>
-        <div className="row">
           <div className="col-md-9">
             {this.renderPage()}
+            {this.state.response && this.state.selectedPageIndex === this.state.pages.count() - 1 &&
+            <button
+              onClick={this.handeSubmitQuestionnaire}
+              className="btn btn-success btn-lg"
+            >
+              Submit Questionnaire
+            </button>}
           </div>
         </div>
-        {this.state.response && this.state.selectedPageIndex === this.state.pages.count() - 1 &&
-        <button
-          onClick={this.handeSubmitQuestionnaire}
-          className="btn btn-success btn-lg"
-        >
-          Submit Questionnaire
-        </button>}
       </div>
     );
   }

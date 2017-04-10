@@ -4,9 +4,9 @@ import _ from 'lodash';
 function pageMaker(questions) {
   return questions.reduce((sum, question, index) => {
     let page;
-    console.log('index', index);
     // new section
     if (question.type === 'section') {
+      console.log('sizes', question.size);
       // if its a heading, or the first question
       if (question.size === 1 || index === 0) {
         console.log('heading', sum, question);
@@ -47,9 +47,11 @@ function pageMaker(questions) {
         console.log('sub sub heading', sum, question);
         // look at the previous page
         const previousPage = sum[sum.length - 1];
+        console.log('previous page is empty', previousPage, previousPage.questions.length);
         if (!previousPage.questions.length) {
           // previous page was just a heading, no questions
           // so add to that
+          console.log('previous page is empty', sum);
           previousPage.heading3 = question.title;
         } else {
           page = {
@@ -61,6 +63,7 @@ function pageMaker(questions) {
             questions: []
           };
           sum.push(page);
+          debugger;
           console.log('page added');
         }
         return sum;
@@ -88,6 +91,8 @@ function pageMaker(questions) {
       sum.push({
         id: cuid(),
         heading: page.heading,
+        heading2: page.heading2,
+        heading3: page.heading3,
         sectionId: page.sectionId,
         questions: []
       });

@@ -101,6 +101,7 @@ class FamilyHistoryContainer extends Component {
   }
   goToSection(section) {
     this.setState({
+      selectedPageIndex: this.state.selectedPageIndex + 1,
       section
     });
   }
@@ -144,14 +145,6 @@ class FamilyHistoryContainer extends Component {
       <div className="container">
         {/* <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1> */}
         <h2>Family History</h2>
-        <div className="row">
-          <div className="col-sm-1">
-            {percentComplete}%
-          </div>
-          <div className="col-sm-11">
-            <ProgressBar now={percentComplete} />
-          </div>
-        </div>
 
         {this.state.section === 'buildingFamilyTree' &&
         <div style={{ backgroundColor: 'white', padding: '24' }}>
