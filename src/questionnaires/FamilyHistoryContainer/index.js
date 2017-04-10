@@ -287,7 +287,7 @@ class FamilyHistoryContainer extends Component {
           </button>
         </div>}
 
-        {/* {this.state.section === 'medicalHistory' && */}
+        {this.state.section === 'medicalHistory' &&
         <div style={{ backgroundColor: 'white', padding: '24', marginTop: 24 }}>
           <h3>Significant Medical History</h3>
           <p>For each family member, describe their medical history if you can.</p>
@@ -389,7 +389,7 @@ class FamilyHistoryContainer extends Component {
             Done
           </button>
         </div>
-      // }
+      }
       </div>
     );
   }
