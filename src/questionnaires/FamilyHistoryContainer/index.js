@@ -157,23 +157,82 @@ class FamilyHistoryContainer extends Component {
             <input
               type="number"
               className="form-control"
-              id="exampleInputEmail1"
               placeholder=""
               onChange={e => this.handleGenerateFamily('Brother', e.target.value)}
             />
           </div>
-          <p>How many sisters do you have?</p>
-          <input type="text" onChange={e => this.handleGenerateFamily('Sister', e.target.value)} />
-          <p>How many sons do you have?</p>
-          <input type="text" onChange={e => this.handleGenerateFamily('Son', e.target.value)} />
-          <p>How many daughters do you have?</p>
-          <input type="text" onChange={e => this.handleGenerateFamily('Daughter', e.target.value)} />
-          <p>How many maternal uncles do you have (mothers side)?</p>
-          <input type="text" onChange={e => this.handleGenerateFamily('Maternal Uncle', e.target.value)} />
-          <p>How many maternal aunts do you have (mothers side)?</p>
-          <input type="text" onChange={e => this.handleGenerateFamily('Maternal Aunt', e.target.value)} />
-          <p>How many paternal uncles do you have (fathers side)?</p>
-          <input type="text" onChange={e => this.handleGenerateFamily('Paternal Uncle', e.target.value)} />
+
+          <div className="form-group">
+            <label>
+              How many sisters do you have?
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              placeholder=""
+              onChange={e => this.handleGenerateFamily('Sister', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              How many sons do you have?
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              placeholder=""
+              onChange={e => this.handleGenerateFamily('Son', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              How many daughters do you have?
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              placeholder=""
+              onChange={e => this.handleGenerateFamily('Daughter', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              How many maternal uncles do you have (mothers side)?
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              placeholder=""
+              onChange={e => this.handleGenerateFamily('Maternal Uncle', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              How many maternal aunts do you have (mothers side)?
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              placeholder=""
+              onChange={e => this.handleGenerateFamily('Maternal Aunt', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              How many paternal uncles do you have?
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              placeholder=""
+              onChange={e => this.handleGenerateFamily('Paternal Uncle', e.target.value)}
+            />
+          </div>
 
           <div className="form-group">
             <label>
@@ -228,7 +287,7 @@ class FamilyHistoryContainer extends Component {
           </button>
         </div>}
 
-        {this.state.section === 'medicalHistory' &&
+        {/* {this.state.section === 'medicalHistory' && */}
         <div style={{ backgroundColor: 'white', padding: '24', marginTop: 24 }}>
           <h3>Significant Medical History</h3>
           <p>For each family member, describe their medical history if you can.</p>
@@ -241,7 +300,7 @@ class FamilyHistoryContainer extends Component {
               >
                 <div>
                   <div>
-                    Alive
+                    <p><strong>Is {family.get('name')} alive?</strong></p>
                     <div className="radio">
                       <label>
                         <input type="radio" /> Yes
@@ -259,17 +318,19 @@ class FamilyHistoryContainer extends Component {
                     </div>
                   </div>
 
-                  <div>
-                    Current age / age at Death
+                  <div className="form-group">
+                    <label>Current Age / Age at Death</label>
                     <input
-                      type="text"
+                      type="number"
+                      className="form-control" placeholder=""
                       value={this.state.familyHistory.getIn([relationshipIndex, 'age'])}
                       onChange={e => this.handleFamilyChange([relationshipIndex, 'age'], e.target.value)}
                     />
                   </div>
+
                   <h3>Health Problems</h3>
                   {family.get('significantHealthProblems').map((significantHealthProblem, significantHealthProblemIndex) =>
-                    <div key={significantHealthProblem.get('name')}>
+                    <div style={{ border: '1px solid #eee', padding: '8px 16px' }} key={significantHealthProblem.get('name')}>
                       <div className="checkbox">
                         <label>
                           <input
@@ -282,25 +343,34 @@ class FamilyHistoryContainer extends Component {
                       </div>
                       {this.state.familyHistory.getIn([relationshipIndex, 'significantHealthProblems', significantHealthProblemIndex, 'present']) &&
                       <div>
-                        <label>
-                          Age of Onset
+                        <div className="form-group">
+                          <label>Age of Onset</label>
                           <input
                             type="text"
+                            className="form-control"
                             value={this.state.familyHistory.getIn([relationshipIndex, 'significantHealthProblems', significantHealthProblemIndex, 'ageOfOnset'])}
                             onChange={e => this.handleFamilyChange([relationshipIndex, 'significantHealthProblems', significantHealthProblemIndex, 'ageOfOnset'], e.target.value)}
                           />
-                        </label>
+                        </div>
+
                         <div className="checkbox">
                           <label>
-                            <input type="checkbox" />
-                            Death from?
+                            <input
+                              type="checkbox"
+                              checked={this.state.familyHistory.getIn([relationshipIndex, 'significantHealthProblems', significantHealthProblemIndex, 'deathFrom'])}
+                              onChange={e => this.handleFamilyChange([relationshipIndex, 'significantHealthProblems', significantHealthProblemIndex, 'deathFrom'], e.target.checked)}
+                            /> Death From?
                           </label>
                         </div>
-                        <div>
-                          <label>
-                            Additional Information
-                            <input type="text" />
-                          </label>
+
+                        <div className="form-group">
+                          <label>Additional Information</label>
+                          <textarea
+                            type="text"
+                            className="form-control"
+                            value={this.state.familyHistory.getIn([relationshipIndex, 'significantHealthProblems', significantHealthProblemIndex, 'additionalInformation'])}
+                            onChange={e => this.handleFamilyChange([relationshipIndex, 'significantHealthProblems', significantHealthProblemIndex, 'additionalInformation'], e.target.value)}
+                          />
                         </div>
                       </div>}
                     </div>
@@ -318,7 +388,8 @@ class FamilyHistoryContainer extends Component {
           <button className="btn btn-lg btn-success">
             Done
           </button>
-        </div>}
+        </div>
+      // }
       </div>
     );
   }
