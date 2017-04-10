@@ -158,6 +158,14 @@ class QuestionnaireForm extends Component {
       .get(this.state.selectedPageIndex)
       .get('questions').last();
 
+    if (!lastQuestion) {
+      nextPageIndex = this.state.selectedPageIndex + 1;
+      this.setState({
+        selectedPageIndex: nextPageIndex
+      });
+      return;
+    }
+
     // find the users responses for this last question
     const questionResponse = _.find(this.state.response.answeredQuestions, { id: lastQuestion.get('id') });
 
@@ -195,8 +203,9 @@ class QuestionnaireForm extends Component {
   renderPage() {
     const page = this.state.pages.get(this.state.selectedPageIndex);
     return (<div>
-      <h3>Page: {this.state.selectedPageIndex}</h3>
-      <h2>Section: { page.get('heading') }</h2>
+      <h2>{ page.get('heading') }</h2>
+      <h3>{ page.get('heading2') }</h3>
+      <h4>{ page.get('heading3') }</h4>
       {page.get('questions').map((question, index) => {
         let questionResponse;
         if (this.state.response) {
@@ -243,6 +252,7 @@ class QuestionnaireForm extends Component {
       );
     }
 
+    const headings = _.uniq(this.state.pages.map(page => page.get('heading')).toJSON());
     return (
       <div className="container">
         <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
@@ -253,6 +263,9 @@ class QuestionnaireForm extends Component {
           <div className="col-sm-11">
             <ProgressBar now={percentComplete} />
           </div>
+        </div>
+        <div>
+          {headings.map(heading => <div>{heading}</div> )}
         </div>
         <div className="row">
           <div className="col-md-9">

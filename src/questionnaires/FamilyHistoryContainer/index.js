@@ -75,6 +75,7 @@ class FamilyHistoryContainer extends Component {
 
     this.state = {
       activeKey: 0,
+      selectedPageIndex: 0,
       section: 'buildingFamilyTree',
       familyHistory: fromJS(relationships.map(relationship => ({
         name: relationship,
@@ -122,7 +123,8 @@ class FamilyHistoryContainer extends Component {
   }
 
   render() {
-    // const percentComplete = ((this.state.selectedPageIndex + 1) / this.state.pages.count()) * 100;
+    const percentComplete =
+      ((this.state.selectedPageIndex) / (2 + this.state.familyHistory.count())) * 100;
 
     function FieldGroup({ id, label, help, ...props }) {
       return (
@@ -142,6 +144,14 @@ class FamilyHistoryContainer extends Component {
       <div className="container">
         {/* <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1> */}
         <h2>Family History</h2>
+        <div className="row">
+          <div className="col-sm-1">
+            {percentComplete}%
+          </div>
+          <div className="col-sm-11">
+            <ProgressBar now={percentComplete} />
+          </div>
+        </div>
 
         {this.state.section === 'buildingFamilyTree' &&
         <div style={{ backgroundColor: 'white', padding: '24' }}>
