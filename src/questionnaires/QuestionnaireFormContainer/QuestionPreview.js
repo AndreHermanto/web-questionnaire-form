@@ -100,7 +100,7 @@ export default function QuestionPreview({
       <div className="pull-left"><strong>{number}.</strong></div>
       <div className="media-body" style={{ paddingLeft: 16 }}>
         <p style={{ color: '#333', fontSize: 16, marginBottom: 16 }}>
-          <strong>{question.get('question')}</strong>
+          <strong>{question.get('question').split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}</strong>
         </p>
         <p className="text-muted">
           {question.get('type') === 'radio' && <span>Select One</span>}
