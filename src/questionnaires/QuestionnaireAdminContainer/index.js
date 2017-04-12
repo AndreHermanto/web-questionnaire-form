@@ -68,7 +68,7 @@ class QuestionnaireAdmin extends Component {
         <h4>Questionnaire Admin</h4>
         <ul>
           {this.state.questionnaires.map(questionnaire =>
-            <li key={questionnaire.id}><Link to={`/users/3/questionnaires/${questionnaire.id}`}>{questionnaire.currentTitle}</Link></li>
+            <li key={questionnaire.id}><Link to={`/users/3/questionnaires/${questionnaire.id}/pages/0`}>{questionnaire.currentTitle}</Link></li>
           )}
         </ul>
       </div>

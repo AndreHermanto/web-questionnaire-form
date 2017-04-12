@@ -152,18 +152,17 @@ class QuestionnaireForm extends Component {
 
   handleNextPage() {
     let nextPageIndex;
+    const currentPage = parseInt(this.props.routeParams.page, 10);
     // get the last question on this page
     // it may have skip logic
     const lastQuestion = this.state.pages
-      .get(this.state.selectedPageIndex)
+      .get(currentPage)
       .get('questions').last();
 
     if (!lastQuestion) {
       console.log('no last quetion');
-      nextPageIndex = this.state.selectedPageIndex + 1;
-      this.setState({
-        selectedPageIndex: nextPageIndex
-      });
+      nextPageIndex = currentPage + 1;
+      hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/pages/${nextPageIndex}`);
       return;
     }
 
@@ -191,11 +190,9 @@ class QuestionnaireForm extends Component {
         page.heading3 === firstAnswer.get('goTo')
       );
     } else {
-      nextPageIndex = this.state.selectedPageIndex + 1;
+      nextPageIndex = currentPage + 1;
     }
-    this.setState({
-      selectedPageIndex: nextPageIndex
-    });
+    hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/pages/${nextPageIndex}`);
   }
 
   handeSubmitQuestionnaire() {
@@ -209,7 +206,7 @@ class QuestionnaireForm extends Component {
     hashHistory.push('/submitted');
   }
   renderPage() {
-    const page = this.state.pages.get(this.state.selectedPageIndex);
+    const page = this.state.pages.get(this.props.routeParams.page);
     return (<div>
       <h2>{page.get('heading')}</h2>
       {page.get('questions').map((question, index) => {
@@ -231,7 +228,7 @@ class QuestionnaireForm extends Component {
           onAnswer={this.handleQuestionAnswered}
         />);
       })}
-      {this.state.selectedPageIndex < this.state.pages.count() - 1 &&
+      {this.props.routeParams.page < this.state.pages.count() - 1 &&
       <button
         className="btn btn-success btn-lg"
         onClick={this.handleNextPage}
@@ -246,7 +243,7 @@ class QuestionnaireForm extends Component {
     if (!this.state.questionnaire || !this.state.version) {
       return <div className="container">Loading...</div>;
     }
-    const percentComplete = ((this.state.selectedPageIndex) / this.state.pages.count()) * 100;
+    const percentComplete = ((this.props.routeParams.page) / this.state.pages.count()) * 100;
 
     function FieldGroup({ id, label, help, ...props }) {
       return (
@@ -259,7 +256,7 @@ class QuestionnaireForm extends Component {
     }
 
     const headings = _.uniq(this.state.pages.map(page => page.get('heading')).toJSON());
-    const currentPage = this.state.pages.get(this.state.selectedPageIndex);
+    const currentPage = this.state.pages.get(this.props.routeParams.page);
     return (
       <div className="container">
         <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
@@ -281,7 +278,7 @@ class QuestionnaireForm extends Component {
           </div>
           <div className="col-md-9">
             {this.renderPage()}
-            {this.state.response && this.state.selectedPageIndex === this.state.pages.count() - 1 &&
+            {this.state.response && parseInt(this.props.routeParams.page, 10) === this.state.pages.count() - 1 &&
             <button
               onClick={this.handeSubmitQuestionnaire}
               className="btn btn-success btn-lg"
