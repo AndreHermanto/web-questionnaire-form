@@ -257,6 +257,9 @@ class QuestionnaireForm extends Component {
 
     const headings = _.uniq(this.state.pages.map(page => page.get('heading')).toJSON());
     const currentPage = this.state.pages.get(this.props.routeParams.page);
+    if (!currentPage) {
+      return <div>No current page.</div>;
+    }
     return (
       <div className="container">
         <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
