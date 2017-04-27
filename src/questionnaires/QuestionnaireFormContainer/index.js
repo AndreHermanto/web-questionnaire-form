@@ -160,7 +160,6 @@ class QuestionnaireForm extends Component {
       .get('questions').last();
 
     if (!lastQuestion) {
-      console.log('no last quetion');
       nextPageIndex = currentPage + 1;
       hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/pages/${nextPageIndex}`);
       return;
@@ -179,15 +178,15 @@ class QuestionnaireForm extends Component {
 
     if (answersResponsesWithSkipLogic.count()) {
       const firstAnswer = answersResponsesWithSkipLogic.get(0);
-      if (firstAnswer.get('goTo') === 'End') {
+      const sectionIdToGoTo = firstAnswer.getIn(['goTo', 'id']);
+      if (sectionIdToGoTo === 'End') {
         this.handeSubmitQuestionnaire();
+        return;
         // its the end, submit it, and go home
       }
       // find the page to go to
       nextPageIndex = _.findIndex(this.state.pages.toJSON(), page =>
-        page.heading === firstAnswer.get('goTo') ||
-        page.heading2 === firstAnswer.get('goTo') ||
-        page.heading3 === firstAnswer.get('goTo')
+        page.sectionId === sectionIdToGoTo
       );
     } else {
       nextPageIndex = currentPage + 1;
