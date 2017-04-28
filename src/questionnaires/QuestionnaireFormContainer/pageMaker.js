@@ -1,78 +1,68 @@
 import cuid from 'cuid';
 import _ from 'lodash';
 
-function pageMaker(questions) {
-  return questions.reduce((sum, question, index) => {
+function pageMaker(elements) {
+  return elements.reduce((sum, element, index) => {
     let page;
     // new section
-    if (question.type === 'section') {
-      console.log('sizes', question.size);
-      // if its a heading, or the first question
-      if (question.size === 1 || index === 0) {
-        console.log('heading', sum, question);
+    if (element.type === 'section') {
+      // if its a heading, or the first element
+      if (element.size === 1 || index === 0) {
         page = {
           id: cuid(),
-          heading: question.title,
-          sectionId: question.id,
+          heading: element.title,
+          sectionId: element.id,
           questions: []
         };
         sum.push(page);
         return sum;
       }
 
-      if (question.size === 2) {
-        console.log('sub heading', sum, question);
+      if (element.size === 2) {
         // look at the previous page
         const previousPage = sum[sum.length - 1];
         if (!previousPage.questions.length) {
           // previous page was just a heading, no questions
           // so add to that
-          previousPage.heading2 = question.title;
+          previousPage.heading2 = element.title;
         } else {
           page = {
             id: cuid(),
             heading: previousPage.heading,
-            heading2: question.title,
+            heading2: element.title,
             heading3: undefined,
-            sectionId: question.id,
+            sectionId: element.id,
             questions: []
           };
           sum.push(page);
         }
-        console.log('new sum', sum);
         return sum;
       }
 
-      if (question.size === 3) {
-        console.log('sub sub heading', sum, question);
+      if (element.size === 3) {
         // look at the previous page
         const previousPage = sum[sum.length - 1];
-        console.log('previous page is empty', previousPage, previousPage.questions.length);
         if (!previousPage.questions.length) {
           // previous page was just a heading, no questions
           // so add to that
-          console.log('previous page is empty', sum);
-          previousPage.heading3 = question.title;
+          previousPage.heading3 = element.title;
         } else {
           page = {
             id: cuid(),
             heading: previousPage.heading,
             heading2: previousPage.heading2,
-            heading3: question.title,
-            sectionId: question.id,
+            heading3: element.title,
+            sectionId: element.id,
             questions: []
           };
           sum.push(page);
-          debugger;
-          console.log('page added');
         }
         return sum;
       }
     }
 
-    console.log('its a question');
     // its a question
-    // if (question.type !== 'section') {
+    // if (element.type !== 'section') {
       // first question, so add a page
     if (sum.length === 0) {
       sum.push({
@@ -82,12 +72,11 @@ function pageMaker(questions) {
       });
     }
     page = sum[sum.length - 1];
-    page.questions.push(question);
+    page.questions.push(element);
 
     // has skip logic, so add a new page after this question
-    const hasSkipLogic = _.find(question.answers, answer => answer.goTo);
-    if (hasSkipLogic && index !== questions.length - 1) {
-      console.log('has skip logic');
+    const hasSkipLogic = _.find(element.answers, answer => answer.goTo);
+    if (hasSkipLogic && index !== elements.length - 1) {
       sum.push({
         id: cuid(),
         heading: page.heading,
