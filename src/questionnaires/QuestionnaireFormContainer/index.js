@@ -3,8 +3,6 @@ import React, {
 } from 'react';
 import {
   ProgressBar,
-  PanelGroup,
-  Panel,
   FormGroup,
   ControlLabel,
   FormControl,
@@ -13,6 +11,7 @@ import {
 import {
   hashHistory
 } from 'react-router';
+import cuid from 'cuid';
 import { fromJS } from 'immutable';
 import _ from 'lodash';
 import QuestionPreview from './QuestionPreview';
@@ -160,6 +159,7 @@ class QuestionnaireForm extends Component {
       .get('questions').last();
 
     if (!lastQuestion) {
+      console.error('Something is probably wrong here, we didnt find a last quesiton on the page we are on');
       nextPageIndex = currentPage + 1;
       hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/pages/${nextPageIndex}`);
       return;
@@ -188,6 +188,30 @@ class QuestionnaireForm extends Component {
       nextPageIndex = _.findIndex(this.state.pages.toJSON(), page =>
         page.sectionId === sectionIdToGoTo
       );
+
+      if (nextPageIndex < currentPage) {
+        // we are looping back
+        // copy all the pages, between next and current, inclusive, and add them after current
+        const setId = cuid();
+        const duplicatePages = this.state.pages.slice(nextPageIndex, currentPage + 1)
+          .map(page => page.update('questions', questions =>
+            questions.map(question =>
+              question
+                .set('id', cuid())
+                .set('setId', setId)
+            )
+          )
+        );
+
+        const beforePages = this.state.pages.slice(0, currentPage + 1);
+        const afterPages = this.state.pages.slice(currentPage);
+        this.setState({
+          pages: beforePages.concat(duplicatePages).concat(afterPages)
+        }, () => {
+          hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/pages/${currentPage + 1}`);
+        });
+        return;
+      }
     } else {
       nextPageIndex = currentPage + 1;
     }
@@ -287,6 +311,9 @@ class QuestionnaireForm extends Component {
             >
               Submit Questionnaire
             </button>}
+
+            <div>page {this.state.pages.size}</div>
+            <div><pre>{JSON.stringify(this.state.pages, null, 2) }</pre></div>;
           </div>
         </div>
       </div>
