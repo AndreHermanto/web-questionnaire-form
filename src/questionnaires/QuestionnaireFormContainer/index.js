@@ -311,9 +311,6 @@ class QuestionnaireForm extends Component {
             >
               Submit Questionnaire
             </button>}
-
-            <div>page {this.state.pages.size}</div>
-            <div><pre>{JSON.stringify(this.state.pages, null, 2) }</pre></div>;
           </div>
         </div>
       </div>
