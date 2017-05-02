@@ -16,6 +16,7 @@ import { fromJS } from 'immutable';
 import _ from 'lodash';
 import QuestionPreview from './QuestionPreview';
 import pageMaker from './pageMaker';
+import BackButton from './components/BackButton';
 
 const completed = false;
 
@@ -29,6 +30,20 @@ class QuestionnaireForm extends Component {
       body: JSON.stringify(questionnaireResponse)
     })
     .catch(console.error);
+  }
+  static markPageAsViewedInResponse(page, response) {
+    const questionIds = page.get('questions').map(question => question.get('id')).toJSON();
+
+    return Object.assign({}, response, {
+      answeredQuestions: response.answeredQuestions.map((questionResponse) => {
+        if (questionIds.indexOf(questionResponse.id) >= 0) {
+          // its on this page
+          // mark them as view
+          return Object.assign({}, questionResponse, { viewed: true });
+        }
+        return questionResponse;
+      })
+    });
   }
 
   static getResponse(questionnaireId, userId) {
@@ -47,6 +62,7 @@ class QuestionnaireForm extends Component {
     this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handeSubmitQuestionnaire = this.handeSubmitQuestionnaire.bind(this);
+    this.goToPage = this.goToPage.bind(this);
   }
 
   componentDidMount() {
@@ -103,9 +119,24 @@ class QuestionnaireForm extends Component {
           return;
         }
         const version = fromJS(realVersion);
+        const pages = fromJS(pageMaker(version.get('body').toJSON()));
+        if (this.state.response.answeredQuestions.length === 0) {
+          // we need to add all the responses
+          let response = this.state.response;
+          // add all the questions
+          response.answeredQuestions = version.get('body').filter(element => element.get('type') !== 'section').map(question => ({
+            id: question.get('id'),
+            viewed: false,
+            answers: []
+          })).toJSON();
+          // mark the this page as viewed
+          response = QuestionnaireForm.markPageAsViewedInResponse(pages.get(this.props.routeParams.page), response);
+          this.setState(response);
+          QuestionnaireForm.updateResponse(response);
+        }
         this.setState({
           version,
-          pages: fromJS(pageMaker(version.get('body').toJSON())),
+          pages,
           selectedPageIndex: 0
         });
       })
@@ -161,12 +192,20 @@ class QuestionnaireForm extends Component {
     if (!lastQuestion) {
       console.error('Something is probably wrong here, we didnt find a last quesiton on the page we are on');
       nextPageIndex = currentPage + 1;
-      hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/pages/${nextPageIndex}`);
+      this.goToPage(nextPageIndex);
       return;
     }
 
     // find the users responses for this last question
     const questionResponse = _.find(this.state.response.answeredQuestions, { id: lastQuestion.get('id') });
+
+    if (!questionResponse) {
+      // they didnt answer the last question, just go to next page
+      // we have no idea if they should skip or not
+      // so just go ahead
+      this.goToPage(currentPage + 1);
+      return;
+    }
 
     // see if any of the answer responses did have skip logic
     const answersResponsesWithSkipLogic = lastQuestion.get('answers')
@@ -208,14 +247,26 @@ class QuestionnaireForm extends Component {
         this.setState({
           pages: beforePages.concat(duplicatePages).concat(afterPages)
         }, () => {
-          hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/pages/${currentPage + 1}`);
+          this.goToPage(currentPage + 1);
         });
         return;
       }
     } else {
       nextPageIndex = currentPage + 1;
     }
-    hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/pages/${nextPageIndex}`);
+    this.goToPage(nextPageIndex);
+  }
+
+  goToPage(pageIndex) {
+    const response = QuestionnaireForm.markPageAsViewedInResponse(
+      this.state.pages.get(pageIndex),
+      this.state.response
+    );
+    this.setState({
+      response
+    });
+    QuestionnaireForm.updateResponse(response);
+    hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/pages/${pageIndex}`);
   }
 
   handeSubmitQuestionnaire() {
@@ -256,6 +307,15 @@ class QuestionnaireForm extends Component {
           onAnswer={this.handleQuestionAnswered}
         />);
       })}
+      <BackButton
+        answeredQuestions={this.state.response.answeredQuestions}
+        pages={this.state.pages}
+        currentPageIndex={parseInt(this.props.routeParams.page, 10)}
+        {...this.props.routeParams}
+      >
+        Back
+      </BackButton>
+      {' '}
       {this.props.routeParams.page < this.state.pages.count() - 1 &&
       <button
         className="btn btn-success btn-lg"
