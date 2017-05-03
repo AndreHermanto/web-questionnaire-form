@@ -246,7 +246,7 @@ class QuestionnaireForm extends Component {
         return (<QuestionPreview
           key={question.get('id')}
           number={index + 1}
-          question={question}
+          element={question}
           questionResponse={questionResponse}
           onAnswer={this.handleQuestionAnswered}
         />);
