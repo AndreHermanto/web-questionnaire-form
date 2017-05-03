@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
+import { fromJS } from 'immutable';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -43,6 +44,8 @@ export default function QuestionPreview({
     onAnswer(newQuestionResponse);
   };
 
+  const imQuestionResponse = fromJS(questionResponse);
+
   const isQuestion = myElement => myElement.get('type') === 'checkbox' || myElement.get('type') === 'radio' || myElement.get('type') === 'text';
 
   const isSectionHeading = myElement => myElement.get('type') === 'section';
@@ -53,7 +56,7 @@ export default function QuestionPreview({
   }
 
   if (isQuestion(element)) {
-    answers = element.get('answers').map((answer) => {
+    answers = element.get('answers').map((answer, answerIndex) => {
       if (element.get('type') === 'text') {
         console.log('text', questionResponse.answers);
         const existingAnswer = _.find(questionResponse.answers, { id: answer.get('id') });
@@ -72,6 +75,9 @@ export default function QuestionPreview({
           onChange={e => handleAnswer(e, answer)}
         />);
       }
+
+      const selected = !!_.find(questionResponse.answers, { id: answer.get('id') });
+
       return (<div className={element.get('type')} key={answer.get('id')}>
         <AnswerOption active={!!_.find(questionResponse.answers, { id: answer.get('id') })}>
           {element.get('type') !== 'text' &&
@@ -79,10 +85,11 @@ export default function QuestionPreview({
             style={{ marginRight: 8 }}
             name={element.get('id')}
             type={element.get('type')}
-            checked={!!_.find(questionResponse.answers, { id: answer.get('id') })}
+            checked={selected}
             onChange={e => handleAnswer(e, answer)}
           />)
           }
+
           {' '}
           {answer.get('text')} {answer.get('goTo') && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
           {' '}
@@ -90,6 +97,20 @@ export default function QuestionPreview({
           <span className="text-muted">({answer.get('concepts').map(concept => <small key={concept.get('id')} className="text-success">{concept.get('label')}</small>)})</span>
           }
           <img src={answer.get('image')} alt="" className="img-responsive" />
+
+
+          {selected && answer.get('followUp') &&
+            <div style={{ marginTop: 8 }}>
+              <strong>{answer.getIn(['followUp', 'question'])}</strong>
+              <textarea
+                className="form-control"
+                rows="3"
+                autoFocus
+                value={imQuestionResponse.getIn(['answers', answerIndex, 'followUp', 'text'])}
+                onChange={e => onAnswer(imQuestionResponse.setIn(['answers', answerIndex, 'followUp', 'text'], e.target.value).toJSON())}
+              />
+            </div>
+          }
         </AnswerOption>
       </div>);
     });
