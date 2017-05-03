@@ -1,8 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import coalesce from './coalesce';
-import image from './image.png';
+import { fromJS } from 'immutable';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -14,14 +13,14 @@ const AnswerOption = styled.label`
 `;
 
 export default function QuestionPreview({
-  question,
+  element,
   number,
   questionResponse,
   onAnswer }) {
   const handleAnswer = (e, answer) => {
     const target = e.target;
     const newQuestionResponse = Object.assign({}, questionResponse);
-    if (question.get('type') === 'checkbox') {
+    if (element.get('type') === 'checkbox') {
       if (target.checked) {
         newQuestionResponse.answers.push({
           id: answer.get('id')
@@ -30,12 +29,12 @@ export default function QuestionPreview({
         newQuestionResponse.answers = _.reject(newQuestionResponse.answers, { id: answer.get('id') });
       }
     }
-    if (question.get('type') === 'radio') {
+    if (element.get('type') === 'radio') {
       newQuestionResponse.answers = [{
         id: answer.get('id')
       }];
     }
-    if (question.get('type') === 'text') {
+    if (element.get('type') === 'text') {
       newQuestionResponse.answers = [{
         id: answer.get('id'),
         text: target.value
@@ -45,14 +44,20 @@ export default function QuestionPreview({
     onAnswer(newQuestionResponse);
   };
 
+  const imQuestionResponse = fromJS(questionResponse);
+
+  const isQuestion = myElement => myElement.get('type') === 'checkbox' || myElement.get('type') === 'radio' || myElement.get('type') === 'text';
+
+  const isSectionHeading = myElement => myElement.get('type') === 'section';
+
   let answers = '';
-  if (question.get('type') === 'section') {
-    return <h2 style={{ marginBottom: 32, marginTop: 40 }}>{question.get('title')}</h2>;
+  if (isSectionHeading(element)) {
+    return <h2 style={{ marginBottom: 32, marginTop: 40 }}>{element.get('title')}</h2>;
   }
 
-  if (question.get('type') === 'checkbox' || question.get('type') === 'radio' || question.get('type') === 'text') {
-    answers = question.get('answers').map((answer) => {
-      if (question.get('type') === 'text') {
+  if (isQuestion(element)) {
+    answers = element.get('answers').map((answer, answerIndex) => {
+      if (element.get('type') === 'text') {
         console.log('text', questionResponse.answers);
         const existingAnswer = _.find(questionResponse.answers, { id: answer.get('id') });
         let value;
@@ -70,17 +75,21 @@ export default function QuestionPreview({
           onChange={e => handleAnswer(e, answer)}
         />);
       }
-      return (<div className={question.get('type')} key={answer.get('id')}>
+
+      const selected = !!_.find(questionResponse.answers, { id: answer.get('id') });
+
+      return (<div className={element.get('type')} key={answer.get('id')}>
         <AnswerOption active={!!_.find(questionResponse.answers, { id: answer.get('id') })}>
-          {question.get('type') !== 'text' &&
+          {element.get('type') !== 'text' &&
           (<input
             style={{ marginRight: 8 }}
-            name={question.get('id')}
-            type={question.get('type')}
-            checked={!!_.find(questionResponse.answers, { id: answer.get('id') })}
+            name={element.get('id')}
+            type={element.get('type')}
+            checked={selected}
             onChange={e => handleAnswer(e, answer)}
           />)
           }
+
           {' '}
           {answer.get('text')} {answer.get('goTo') && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
           {' '}
@@ -88,6 +97,20 @@ export default function QuestionPreview({
           <span className="text-muted">({answer.get('concepts').map(concept => <small key={concept.get('id')} className="text-success">{concept.get('label')}</small>)})</span>
           }
           <img src={answer.get('image')} alt="" className="img-responsive" />
+
+
+          {selected && answer.get('followUp') &&
+            <div style={{ marginTop: 8 }}>
+              <strong>{answer.getIn(['followUp', 'question'])}</strong>
+              <textarea
+                className="form-control"
+                rows="3"
+                autoFocus
+                value={imQuestionResponse.getIn(['answers', answerIndex, 'followUp', 'text'])}
+                onChange={e => onAnswer(imQuestionResponse.setIn(['answers', answerIndex, 'followUp', 'text'], e.target.value).toJSON())}
+              />
+            </div>
+          }
         </AnswerOption>
       </div>);
     });
@@ -100,11 +123,11 @@ export default function QuestionPreview({
       <div className="pull-left"><strong>{number}.</strong></div>
       <div className="media-body" style={{ paddingLeft: 16 }}>
         <p style={{ color: '#333', fontSize: 16, marginBottom: 16 }}>
-          <strong>{question.get('question').split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}</strong>
+          <strong>{element.get('question').split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}</strong>
         </p>
         <p className="text-muted">
-          {question.get('type') === 'radio' && <span>Select One</span>}
-          {question.get('type') === 'checkbox' && <span>Select Any</span>}
+          {element.get('type') === 'radio' && <span>Select One</span>}
+          {element.get('type') === 'checkbox' && <span>Select Any</span>}
         </p>
         {answers}
       </div>
