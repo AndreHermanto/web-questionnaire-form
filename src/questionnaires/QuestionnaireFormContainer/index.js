@@ -232,21 +232,26 @@ class QuestionnaireForm extends Component {
     const page = this.state.pages.get(this.props.routeParams.page);
     return (<div>
       <h2>{page.get('heading')}</h2>
-      {page.get('questions').map((question, index) => {
+      {page.get('questions').map((element, index) => {
+        if (element.get('type') === 'textinformation') {
+          return (<div style={{ marginBottom: 24, backgroundColor: 'white', border: '1px solid #eee', padding: 32 }}>
+            {element.get('text').split('\n').map((item, key) => <span key={key}>{item}<br/></span>)}
+          </div>);
+        }
         let questionResponse;
         if (this.state.response) {
-          questionResponse = _.find(this.state.response.answeredQuestions, { id: question.get('id') }) || {
-            id: question.get('id'),
+          questionResponse = _.find(this.state.response.answeredQuestions, { id: element.get('id') }) || {
+            id: element.get('id'),
             answers: []
           };
         } else {
-          questionResponse = { id: question.get('id'), answers: [] };
+          questionResponse = { id: element.get('id'), answers: [] };
         }
 
         return (<QuestionPreview
-          key={question.get('id')}
+          key={element.get('id')}
           number={index + 1}
-          element={question}
+          element={element}
           questionResponse={questionResponse}
           onAnswer={this.handleQuestionAnswered}
         />);
