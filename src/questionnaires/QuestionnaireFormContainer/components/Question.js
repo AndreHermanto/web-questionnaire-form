@@ -52,7 +52,7 @@ export default function Question({
   if (isQuestion(element)) {
     answers = element.get('answers').map((answer, answerIndex) => {
       if (element.get('type') === 'text') {
-        return (<div>
+        return (<div key={answer.get('id')}>
           <textarea
             key={answer.get('id')}
             className="form-control"
