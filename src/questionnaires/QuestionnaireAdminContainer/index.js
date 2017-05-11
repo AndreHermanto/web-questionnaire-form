@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import pageMaker from '../QuestionnaireFormContainer/pageMaker';
 
 class QuestionnaireAdmin extends Component {
   constructor(props) {
@@ -8,48 +7,6 @@ class QuestionnaireAdmin extends Component {
     this.state = {
       questionnaires: []
     };
-
-    const pages = pageMaker([{
-      id: 2,
-      type: 'section',
-      title: 'Genetic Testing'
-    }, {
-      id: 1,
-      type: 'radio',
-      question: 'Are you registering for yourself, your child, or another individual? (1)',
-      answers: [
-        {
-          id: 1,
-          text: 'Self',
-          type: 'radio',
-          goTo: 'Hormones / Endocrine'
-        }
-      ]
-    }, {
-      id: 3,
-      type: 'radio',
-      question: 'Have you had genetic testing? (2)',
-      description: 'Examples: chromosome microarray (CMA), single gene sequencing test, gene panel test, whole exome sequencing (WES), whole genome sequencing (WGS). (2)',
-      answers: [
-        {
-          id: 4,
-          text: 'Yes',
-          type: 'radio'
-        }
-      ]
-    }, {
-      id: 4,
-      type: 'radio',
-      question: 'Are you registering for yourself, your child, or another individual? (1)',
-      answers: [
-        {
-          id: 1,
-          text: 'Self',
-          type: 'radio',
-          goTo: 'Hormones / Endocrine'
-        }
-      ]
-    }]);
   }
   componentDidMount() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires`)

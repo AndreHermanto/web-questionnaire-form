@@ -1,7 +1,7 @@
 import React from 'react';
-import _ from 'lodash';
 import styled from 'styled-components';
 import { fromJS } from 'immutable';
+import { coalesce } from '../coalesce';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -12,84 +12,71 @@ const AnswerOption = styled.label`
   margin-bottom: 8px;
 `;
 
-export default function QuestionPreview({
+export default function Question({
   element,
   number,
-  questionResponse,
-  onAnswer }) {
+  responseElement,
+  onAnswer
+}) {
   const handleAnswer = (e, answer) => {
     const target = e.target;
-    const newQuestionResponse = Object.assign({}, questionResponse);
     if (element.get('type') === 'checkbox') {
       if (target.checked) {
-        newQuestionResponse.answers.push({
-          id: answer.get('id')
-        });
-      } else {
-        newQuestionResponse.answers = _.reject(newQuestionResponse.answers, { id: answer.get('id') });
+        return onAnswer(responseElement.update('answers', currentAnswers =>
+          currentAnswers.push(fromJS({ id: answer.get('id') })))
+        );
       }
+      return onAnswer(responseElement.update('answers', currentAnswers =>
+        currentAnswers.filter(currentAnswer =>
+          currentAnswer !== answer.get('id')
+        )
+      ));
     }
     if (element.get('type') === 'radio') {
-      newQuestionResponse.answers = [{
-        id: answer.get('id')
-      }];
+      return onAnswer(responseElement.set('answers', fromJS([{ id: answer.get('id') }])));
     }
     if (element.get('type') === 'text') {
-      newQuestionResponse.answers = [{
+      const newResponseElement = responseElement.set('answers', fromJS([{
         id: answer.get('id'),
         text: target.value
-      }];
-      console.log(newQuestionResponse);
+      }]));
+      return onAnswer(newResponseElement);
     }
-    onAnswer(newQuestionResponse);
+    return null;
   };
-
-  const imQuestionResponse = fromJS(questionResponse);
 
   const isQuestion = myElement => myElement.get('type') === 'checkbox' || myElement.get('type') === 'radio' || myElement.get('type') === 'text';
 
-  const isSectionHeading = myElement => myElement.get('type') === 'section';
-
   let answers = '';
-  if (isSectionHeading(element)) {
-    return <h2 style={{ marginBottom: 32, marginTop: 40 }}>{element.get('title')}</h2>;
-  }
 
   if (isQuestion(element)) {
     answers = element.get('answers').map((answer, answerIndex) => {
       if (element.get('type') === 'text') {
-        console.log('text', questionResponse.answers);
-        const existingAnswer = _.find(questionResponse.answers, { id: answer.get('id') });
-        let value;
-        console.log('existing answer', existingAnswer);
-        if (existingAnswer) {
-          value = existingAnswer.text;
-        } else {
-          value = '';
-        }
-        return (<textarea
-          key={answer.get('id')}
-          className="form-control"
-          rows="3"
-          value={value}
-          onChange={e => handleAnswer(e, answer)}
-        />);
+        return (<div>
+          { responseElement.getIn(['answers', answerIndex, 'text']) }
+          <textarea
+            key={answer.get('id')}
+            className="form-control"
+            rows="3"
+            value={coalesce(responseElement.getIn(['answers', answerIndex, 'text']), '')}
+            onChange={e => handleAnswer(e, answer)}
+        />
+          </div>);
       }
 
-      const selected = !!_.find(questionResponse.answers, { id: answer.get('id') });
+      const selected = responseElement.get('answers').filter(chosenAnswer => chosenAnswer.get('id') === answer.get('id')).size > 0;
 
       return (<div className={element.get('type')} key={answer.get('id')}>
-        <AnswerOption active={!!_.find(questionResponse.answers, { id: answer.get('id') })}>
+        <AnswerOption active={selected}>
           {element.get('type') !== 'text' &&
-          (<input
-            style={{ marginRight: 8 }}
-            name={element.get('id')}
-            type={element.get('type')}
-            checked={selected}
-            onChange={e => handleAnswer(e, answer)}
-          />)
+            (<input
+              style={{ marginRight: 8 }}
+              name={element.get('id')}
+              type={element.get('type')}
+              checked={selected}
+              onChange={e => handleAnswer(e, answer)}
+            />)
           }
-
           {' '}
           {answer.get('text')} {answer.get('goTo') && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
           {' '}
@@ -98,16 +85,16 @@ export default function QuestionPreview({
           }
           <img src={answer.get('image')} alt="" className="img-responsive" />
 
-
           {selected && answer.get('followUp') &&
             <div style={{ marginTop: 8 }}>
+              chachacha
               <strong>{answer.getIn(['followUp', 'question'])}</strong>
               <textarea
                 className="form-control"
                 rows="3"
                 autoFocus
-                value={imQuestionResponse.getIn(['answers', answerIndex, 'followUp', 'text'])}
-                onChange={e => onAnswer(imQuestionResponse.setIn(['answers', answerIndex, 'followUp', 'text'], e.target.value).toJSON())}
+                value={responseElement.getIn(['answers', answerIndex, 'followUp', 'text'])}
+                onChange={e => onAnswer(responseElement.setIn(['answers', answerIndex, 'followUp', 'text'], e.target.value).toJSON())}
               />
             </div>
           }
