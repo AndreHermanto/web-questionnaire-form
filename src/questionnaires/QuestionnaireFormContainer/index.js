@@ -143,7 +143,7 @@ class QuestionnaireForm extends Component {
       if (index < startIndex) {
         return carry;
       }
-      if (carry) {
+      if (carry !== null) {
         return carry;
       }
 
@@ -186,7 +186,7 @@ class QuestionnaireForm extends Component {
       if (index > endIndex) {
         return carry;
       }
-      if (carry) {
+      if (carry !== null) {
         return carry;
       }
 
