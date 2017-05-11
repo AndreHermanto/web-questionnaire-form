@@ -5,7 +5,7 @@ import Question from './Question';
 import Heading from './Heading';
 
 const propTypes = {
-  responseElements: PropTypes.instanceOf(Immutable.Map).isRequired,
+  responseElements: PropTypes.instanceOf(Immutable.List).isRequired,
   version: PropTypes.instanceOf(Immutable.Map).isRequired,
   onAnsweredQuestions: PropTypes.func.isRequired,
   onNextPage: PropTypes.func.isRequired,
@@ -28,19 +28,19 @@ function Page(props) {
 
       // text information
       if (element.get('type') === 'textinformation') {
-        return (<div style={{ marginBottom: 24, backgroundColor: 'white', border: '1px solid #eee', padding: 32 }}>
+        return (<div key={responseElement.get('id')} style={{ marginBottom: 24, backgroundColor: 'white', border: '1px solid #eee', padding: 32 }}>
           {element.get('text').split('\n').map(item => <span key={item}>{item}<br /></span>)}
         </div>);
       }
 
       // section heading
       if (element.get('type') === 'section') {
-        return <Heading text={element.get('title')} size={element.get('size')} />;
+        return <Heading key={responseElement.get('id')} text={element.get('title')} size={element.get('size')} />;
       }
 
       // questions
       return (<Question
-        key={element.get('id')}
+        key={responseElement.get('id')}
         number={index + 1}
         element={element}
         responseElement={responseElement}
