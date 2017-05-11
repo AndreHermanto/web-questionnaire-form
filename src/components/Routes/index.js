@@ -19,7 +19,7 @@ class Routes extends Component {
         <Route path="/" component={Container}>
           <IndexRoute component={QuestionnaireAdmin} />
           <Route path="/family-history" component={FamilyHistoryContainer} />
-          <Route path="/users/:userId/questionnaires/:questionnaireId(/pages/:page)" component={QuestionnaireForm} />
+          <Route path="/users/:userId/questionnaires/:questionnaireId(/start/:startIndex)(/end/:endIndex)" component={QuestionnaireForm} />
           <Route path="/submitted" component={QuestionnaireFormSubmitted} />
         </Route>
       </Router>
