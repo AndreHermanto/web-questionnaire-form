@@ -20,6 +20,11 @@ const defaultProps = {
 function Page(props) {
   const { responseElements, version } = props;
   return (<div>
+    <div style={{ marginBottom: 16, overflow: 'auto' }}>
+      {props.showBackButton && <button className="btn btn-default btn-lg" onClick={props.onPreviousPage}>Back</button>}
+      {' '}
+      {props.showNextButton && <button className="btn btn-success btn-lg pull-right" onClick={props.onNextPage}>Next</button>}
+    </div>
     {responseElements.map((responseElement, index) => {
       // find the element in the version
       const element = version.get('body').filter(myElement =>
@@ -47,9 +52,11 @@ function Page(props) {
         onAnswer={props.onAnsweredQuestions}
       />);
     })}
-    {props.showBackButton && <button className="btn btn-default btn-lg" onClick={props.onPreviousPage}>Back</button>}
-    {' '}
-    {props.showNextButton && <button className="btn btn-success btn-lg" onClick={props.onNextPage}>Next</button>}
+    <div style={{ marginBottom: 16, overflow: 'auto' }}>
+      {props.showBackButton && <button className="btn btn-default btn-lg" onClick={props.onPreviousPage}>Back</button>}
+      {' '}
+      {props.showNextButton && <button className="btn btn-success btn-lg pull-right" onClick={props.onNextPage}>Next</button>}
+    </div>
   </div>);
 }
 
