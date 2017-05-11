@@ -52,16 +52,15 @@ export default function Question({
   if (isQuestion(element)) {
     answers = element.get('answers').map((answer, answerIndex) => {
       if (element.get('type') === 'text') {
-        return (<div>
-          { responseElement.getIn(['answers', answerIndex, 'text']) }
+        return (<div key={answer.get('id')}>
           <textarea
             key={answer.get('id')}
             className="form-control"
             rows="3"
             value={coalesce(responseElement.getIn(['answers', answerIndex, 'text']), '')}
             onChange={e => handleAnswer(e, answer)}
-        />
-          </div>);
+          />
+        </div>);
       }
 
       const selected = responseElement.get('answers').filter(chosenAnswer => chosenAnswer.get('id') === answer.get('id')).size > 0;
@@ -87,7 +86,6 @@ export default function Question({
 
           {selected && answer.get('followUp') &&
             <div style={{ marginTop: 8 }}>
-              chachacha
               <strong>{answer.getIn(['followUp', 'question'])}</strong>
               <textarea
                 className="form-control"
