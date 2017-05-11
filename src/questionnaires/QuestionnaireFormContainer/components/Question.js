@@ -26,11 +26,12 @@ export default function Question({
           currentAnswers.push(fromJS({ id: answer.get('id') })))
         );
       }
-      return onAnswer(responseElement.update('answers', currentAnswers =>
+      const blah = responseElement.update('answers', currentAnswers =>
         currentAnswers.filter(currentAnswer =>
-          currentAnswer !== answer.get('id')
+          currentAnswer.get('id') !== answer.get('id')
         )
-      ));
+      );
+      return onAnswer(blah);
     }
     if (element.get('type') === 'radio') {
       return onAnswer(responseElement.set('answers', fromJS([{ id: answer.get('id') }])));
