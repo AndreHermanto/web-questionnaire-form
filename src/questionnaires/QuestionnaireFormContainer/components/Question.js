@@ -86,7 +86,6 @@ export default function Question({
 
           {selected && answer.get('followUp') &&
             <div style={{ marginTop: 8 }}>
-              chachacha
               <strong>{answer.getIn(['followUp', 'question'])}</strong>
               <textarea
                 className="form-control"
