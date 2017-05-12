@@ -390,14 +390,14 @@ class QuestionnaireForm extends Component {
         myElement.get('id') === responseElement.get('elementId')
       ).get(0);
 
-      if (element.get('type') === 'section') {
+      if (element.get('type') === 'section' && element.get('size') === 1) {
         console.log(element.get('title'));
         // find where the next one is
         const nextSectionIndex = responseElements.findIndex((myResponseElement, myIndex) => {
           const myElement = this.state.version.get('body').filter(myElement =>
             myElement.get('id') === myResponseElement.get('elementId')
           ).get(0);
-          return myIndex > index && myElement.get('type') === 'section';
+          return myIndex > index && myElement.get('type') === 'section' && myElement.get('size') === 1;
         });
 
         if (nextSectionIndex >= 0 && responseElements.getIn([nextSectionIndex, 'viewed'])) {
