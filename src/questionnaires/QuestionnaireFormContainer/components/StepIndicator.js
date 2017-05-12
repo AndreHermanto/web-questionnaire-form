@@ -1,8 +1,30 @@
 import React from 'react';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import Immutable from 'immutable';
 import {
   ProgressBar
 } from 'react-bootstrap';
+import styled from 'styled-components';
+
+const propTypes = {
+  sections: PropTypes.instanceOf(Immutable.List).isRequired
+  // version: PropTypes.instanceOf(Immutable.Map).isRequired,
+  // onAnsweredQuestions: PropTypes.func.isRequired,
+  // onNextPage: PropTypes.func.isRequired,
+  // onPreviousPage: PropTypes.func.isRequired,
+  // showBackButton: PropTypes.bool.isRequired,
+  // showNextButton: PropTypes.bool.isRequired
+};
+
+/*
+sections: {
+  heading: 'asdfasdf',
+  percentComplete: 65
+}
+*/
+
+const defaultProps = {
+};
 
 const circleRadius = 10;
 function statusColor(percentComplete) {
@@ -43,13 +65,10 @@ const StatusCircle = styled.div`
   float: left;
 `;
 
-export default function asdf({
-  progress,
-  sections
-}) {
+function StepIndicator(props) {
   return (<div>
     <ul className="list-unstyled">
-      {sections.map(section => (<li>
+      {props.sections.map(section => (<li>
         <StatusCircle percentComplete={section.percentComplete} />
         <SectionTitle>{section.heading}</SectionTitle>
         <SectionStatus percentComplete={section.percentComplete}>
@@ -62,16 +81,13 @@ export default function asdf({
         </SectionStatus>
       </li>))}
       <li>
-        <SectionTitle><StatusCircle  percentComplete={progress} /> Special Section</SectionTitle>
-        <SectionStatus percentComplete={progress}>
-          <ProgressBar
-            bsStyle="primary"
-            now={progress} />
-        </SectionStatus>
-      </li>
-      <li>
-        <SectionTitle><StatusCircle percentComplete={0}/> Summary</SectionTitle>
+        <SectionTitle><StatusCircle percentComplete={0} /> Summary</SectionTitle>
       </li>
     </ul>
   </div>);
 }
+
+StepIndicator.propTypes = propTypes;
+StepIndicator.defaultProps = defaultProps;
+
+export default StepIndicator;
