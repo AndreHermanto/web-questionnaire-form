@@ -8,6 +8,7 @@ import cuid from 'cuid';
 import { fromJS } from 'immutable';
 import _ from 'lodash';
 import Page from './components/Page';
+import StepIndicator from './components/StepIndicator';
 
 class QuestionnaireForm extends Component {
   static updateResponse(questionnaireResponse) {
@@ -384,11 +385,42 @@ class QuestionnaireForm extends Component {
       parseInt(this.props.routeParams.endIndex, 10) :
       this.getEndIndex(startIndex);
 
+    const sections = this.state.response.get('answeredQuestions').reduce((carry, responseElement, index, responseElements) => {
+      const element = this.state.version.get('body').filter(myElement =>
+        myElement.get('id') === responseElement.get('elementId')
+      ).get(0);
+
+      if (element.get('type') === 'section') {
+        console.log(element.get('title'));
+        // find where the next one is
+        const nextSectionIndex = responseElements.findIndex((myResponseElement, myIndex) => {
+          const myElement = this.state.version.get('body').filter(myElement =>
+            myElement.get('id') === myResponseElement.get('elementId')
+          ).get(0);
+          return myIndex > index && myElement.get('type') === 'section';
+        });
+
+        if (nextSectionIndex >= 0 && responseElements.getIn([nextSectionIndex, 'viewed'])) {
+          // how many are viewed, are questions, and are answered
+          return [...carry, { heading: element.get('title'), percentComplete: 100 }];
+        }
+        const slice = responseElements.slice(index, Math.min(nextSectionIndex, responseElements.size - 1));
+        console.log(slice.toJSON());
+        const percent = Math.min(90, (slice.filter(aResponseElement => aResponseElement.get('viewed')).size / slice.size) * 100);
+        return [...carry, { heading: element.get('title'), percentComplete: percent }];
+      }
+      return carry;
+    }, []);
+
     return (
       <div className="container">
         <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
         <div className="row">
-          <div className="col-sm-3" />
+          <div className="col-sm-3">
+            <div style={{ backgroundColor: 'white', padding: 16 }}>
+              <StepIndicator sections={sections} />
+            </div>
+          </div>
           <div className="col-md-9">
             <Page
               responseElements={this.state.response.get('answeredQuestions').slice(startIndex, endIndex + 1)}
