@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { addQuestionnaires } from '../../actions';
 
-class QuestionnaireAdmin extends Component {
+class QuestionnaireAdminContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,4 +53,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(QuestionnaireAdmin);
+export default connect(mapStateToProps)(QuestionnaireAdminContainer);

@@ -5,7 +5,7 @@ import {
   hashHistory,
   IndexRoute
 } from 'react-router';
-import QuestionnaireAdminContainer from '../../containers';
+import QuestionnaireAdminContainer from '../../questionnaires/QuestionnaireAdminContainer';
 import QuestionnaireForm from '../../questionnaires/QuestionnaireFormContainer';
 import QuestionnaireFormSubmitted from '../../questionnaires/QuestionnaireFormSubmitted';
 import Container from '../Container';
