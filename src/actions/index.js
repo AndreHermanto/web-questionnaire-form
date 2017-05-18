@@ -1,9 +1,9 @@
 /*
-*action: get questionnaires from form builder
+*action: addQuestionnaires to the form builder
 */
-export function getQuestionnaires(questionnaires) {
+export function addQuestionnaires(questionnaires) {
   return {
-    type: 'GET_QUESTIONNAIRES',
-    data: questionnaires
+    type: 'ADD_QUESTIONNAIRES',
+    payload: questionnaires
   };
 }

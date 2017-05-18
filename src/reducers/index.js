@@ -3,8 +3,11 @@
 */
 export default function mainReducer(state = {}, action) {
   switch (action.type) {
-    case 'GET_QUESTIONNAIRES':
-      return action.data;
+    case 'ADD_QUESTIONNAIRES':
+      return {
+        ...state,
+        questionnaires: action.payload
+      };
     default:
       return state;
   }
