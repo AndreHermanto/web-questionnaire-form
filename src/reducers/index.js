@@ -20,6 +20,16 @@ export default function mainReducer(state = {}, action) {
         ...state,
         isLoading: false,
         isError: true
+      }
+    case 'SET_RESPONSE':
+      return {
+        ...state,
+        response: action.response
+      };
+    case 'SET_VERSION':
+      return {
+        ...state,
+        version: action.version
       };
     default:
       return state;

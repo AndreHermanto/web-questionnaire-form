@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { fromJS } from 'immutable';
-import { coalesce } from '../coalesce';
+import { coalesce } from '../../../questionnaires/QuestionnaireFormContainer/coalesce.js';
 
 const AnswerOption = styled.label`
   width: 100%;

@@ -9,6 +9,7 @@ export function fetchQuestionnairesSuccess(questionnaires) {
 }
 
 /*
+<<<<<<< HEAD
 *async action: fetch all questionnaires
 */
 function fetchQuestionnairesRequest() {
@@ -32,5 +33,23 @@ export function fetchQuestionnaires() {
       .then(json => json.data)
       .then(questionnaires => dispatch(fetchQuestionnairesSuccess(questionnaires)))
       .catch(ex => dispatch(fetchQuestionnairesFailure(ex)));
+  }
+}
+
+
+/*
+* add user response 
+*/
+export function setResponse(response) {
+  return {
+    type: 'SET_RESPONSE',
+    response: response
+  };
+}
+
+export function setVersion(version) {
+  return {
+    type: 'SET_VERSION',
+    version: version
   }
 }

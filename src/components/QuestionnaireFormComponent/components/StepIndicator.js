@@ -7,7 +7,10 @@ import {
 import styled from 'styled-components';
 
 const propTypes = {
-  sections: PropTypes.instanceOf(Immutable.List).isRequired
+  sections: PropTypes.oneOfType([
+    PropTypes.instanceOf(Immutable.List).isRequired,
+    PropTypes.array
+  ])  
   // version: PropTypes.instanceOf(Immutable.Map).isRequired,
   // onAnsweredQuestions: PropTypes.func.isRequired,
   // onNextPage: PropTypes.func.isRequired,
@@ -68,7 +71,7 @@ const StatusCircle = styled.div`
 function StepIndicator(props) {
   return (<div>
     <ul className="list-unstyled">
-      {props.sections.map(section => (<li>
+      {props.sections.map((section, i) => (<li key={i}>
         <StatusCircle percentComplete={section.percentComplete} />
         <SectionTitle>{section.heading}</SectionTitle>
         <SectionStatus percentComplete={section.percentComplete}>
