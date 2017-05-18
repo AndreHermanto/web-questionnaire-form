@@ -7,11 +7,13 @@ import 'bootstrap/dist/css/bootstrap.css';
 import App from './App';
 import reducer from './reducers';
 import './index.css';
+import thunk from 'redux-thunk';
 
 // redux
 const middleware = [];
 if (process.env.NODE_ENV !== 'production') {
   middleware.push(createLogger());
+  middleware.push(thunk);
 }
 
 // create patient portal store
