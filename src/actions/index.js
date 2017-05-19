@@ -11,26 +11,26 @@ export function addQuestionnaires(questionnaires) {
 /*
 *async action: fetch all questionnaires
 */
-function fetchTodosRequest() {
+function fetchQuestionnairesRequest() {
   return {
-    type: 'FETCH_TODOS_REQUEST'
+    type: 'FETCH_QUESTIONNAIRES_REQUEST'
   }
 }
 
-function fetchTodosFailure(ex) {
+function fetchQuestionnairesFailure(ex) {
   return {
-    type: 'FETCH_TODOS_FAILURE',
+    type: 'FETCH_QUESTIONNAIRES_FAILURE',
     ex
   }
 }
 
 export function fetchQuestionnaires() {
   return dispatch => {
-    dispatch(fetchTodosRequest())
+    dispatch(fetchQuestionnairesRequest())
     return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires`)
       .then(res => res.json())
       .then(json => json.data)
       .then(questionnaires => dispatch(addQuestionnaires(questionnaires)))
-      .catch(ex => dispatch(fetchTodosFailure(ex)))
+      .catch(ex => dispatch(fetchQuestionnairesFailure(ex)))
   }
 }
