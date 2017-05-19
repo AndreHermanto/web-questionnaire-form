@@ -18,6 +18,9 @@ const propTypes = {
   showNextButton: PropTypes.bool.isRequired
 };
 
+const defaultProps = {
+};
+
 function QuestionnaireForm(props) {
   const { sections, version, responseElements } = props;
   return( 
@@ -45,4 +48,6 @@ function QuestionnaireForm(props) {
 }
 
 QuestionnaireForm.propTypes = propTypes;
+QuestionnaireForm.defaultProps = defaultProps;
+
 export default QuestionnaireForm;

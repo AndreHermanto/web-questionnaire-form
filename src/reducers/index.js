@@ -20,7 +20,12 @@ export default function mainReducer(state = {}, action) {
         ...state,
         isLoading: false,
         isError: true
-      }
+      };
+    case 'SET_SELECTED_QUESTIONNAIRE':
+      return {
+        ...state,
+        questionnaire: action.questionnaire
+      };
     case 'SET_RESPONSE':
       return {
         ...state,

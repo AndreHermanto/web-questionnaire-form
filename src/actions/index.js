@@ -9,7 +9,6 @@ export function fetchQuestionnairesSuccess(questionnaires) {
 }
 
 /*
-<<<<<<< HEAD
 *async action: fetch all questionnaires
 */
 function fetchQuestionnairesRequest() {
@@ -36,10 +35,17 @@ export function fetchQuestionnaires() {
   }
 }
 
-
 /*
-* add user response 
+* add user response
 */
+
+export function setSelectedQuestionnaire(questionnaire) {
+  return {
+    type: 'SET_SELECTED_QUESTIONNAIRE',
+    questionnaire: questionnaire
+  };
+}
+
 export function setResponse(response) {
   return {
     type: 'SET_RESPONSE',

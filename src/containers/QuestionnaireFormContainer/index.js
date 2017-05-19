@@ -8,18 +8,17 @@ import cuid from 'cuid';
 import { fromJS } from 'immutable';
 import _ from 'lodash';
 import QuestionnaireForm from '../../components/QuestionnaireFormComponent';
-
 import { connect } from 'react-redux';
-import { 
-  addQuestionnaire, 
-  setResponse, 
-  setVersion 
+import {
+  setSelectedQuestionnaire,
+  setResponse,
+  setVersion
 } from '../../actions';
 
 class QuestionnaireFormContainer extends Component {
   static updateResponse(questionnaireResponse) {
     let responseId;
-    if(!questionnaireResponse.id) {
+    if (!questionnaireResponse.id) {
       responseId = questionnaireResponse.get('id');
     }
     else {
@@ -73,7 +72,7 @@ class QuestionnaireFormContainer extends Component {
       .then(json => json.data)
       .then((questionnaire) => {
         // store the questionnaire
-        this.props.dispatch(addQuestionnaire(questionnaire));
+        this.props.dispatch(setSelectedQuestionnaire(questionnaire));
 
         // check for existing responses
         return QuestionnaireFormContainer
@@ -412,7 +411,7 @@ class QuestionnaireFormContainer extends Component {
     }, []);
 
     return (
-      <QuestionnaireForm 
+      <QuestionnaireForm
         sections={sections}
         responseElements={this.props.response.get('answeredQuestions').slice(startIndex, endIndex + 1)}
         version={this.props.version}

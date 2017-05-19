@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { fromJS } from 'immutable';
-import { coalesce } from '../../../questionnaires/QuestionnaireFormContainer/coalesce.js';
+import { coalesce } from '../../../containers/QuestionnaireFormContainer/coalesce';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -111,9 +111,9 @@ export default function Question({
         <p style={{ color: '#333', fontSize: 16, marginBottom: 16 }}>
           <strong>{element.get('question').split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}</strong>
         </p>
-        {element.get('image') && 
-        <div style={{border: '1px solid #eee', padding: '5px', marginBottom: '8px'}}>
-          <img src={element.get('image')} alt="" className="img-responsive"/>
+        {element.get('image') &&
+        <div style={{ border: '1px solid #eee', padding: '5px', marginBottom: '8px' }}>
+          <img src={element.get('image')} alt="" className="img-responsive" />
         </div>}
         <p className="text-muted">
           {element.get('type') === 'radio' && <span>Select One</span>}
