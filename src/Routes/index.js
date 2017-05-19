@@ -5,10 +5,10 @@ import {
   hashHistory,
   IndexRoute
 } from 'react-router';
-import QuestionnaireAdminContainer from '../../questionnaires/QuestionnaireAdminContainer';
-import QuestionnaireForm from '../../questionnaires/QuestionnaireFormContainer';
-import QuestionnaireFormSubmitted from '../../questionnaires/QuestionnaireFormSubmitted';
-import Container from '../Container';
+import QuestionnaireAdminContainer from '../containers/QuestionnaireAdminContainer';
+import QuestionnaireForm from '../questionnaires/QuestionnaireFormContainer';
+import QuestionnaireFormSubmitted from '../questionnaires/QuestionnaireFormSubmitted';
+import Container from '../components/Container';
 
 class Routes extends Component {
   render() {
