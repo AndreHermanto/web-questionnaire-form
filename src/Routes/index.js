@@ -6,8 +6,8 @@ import {
   IndexRoute
 } from 'react-router';
 import QuestionnaireAdminContainer from '../containers/QuestionnaireAdminContainer';
-import QuestionnaireForm from '../questionnaires/QuestionnaireFormContainer';
-import QuestionnaireFormSubmitted from '../questionnaires/QuestionnaireFormSubmitted';
+import QuestionnaireForm from '../containers/QuestionnaireFormContainer';
+import QuestionnaireFormSubmitted from '../components/QuestionnaireFormSubmitted';
 import Container from '../components/Container';
 
 class Routes extends Component {

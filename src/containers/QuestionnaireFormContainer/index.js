@@ -7,12 +7,25 @@ import {
 import cuid from 'cuid';
 import { fromJS } from 'immutable';
 import _ from 'lodash';
-import Page from './components/Page';
-import StepIndicator from './components/StepIndicator';
+import QuestionnaireForm from '../../components/QuestionnaireFormComponent';
+import { connect } from 'react-redux';
+import {
+  setSelectedQuestionnaire,
+  setResponse,
+  setVersion
+} from '../../actions';
 
-class QuestionnaireForm extends Component {
+class QuestionnaireFormContainer extends Component {
   static updateResponse(questionnaireResponse) {
-    return fetch(`${process.env.REACT_APP_BASE_URL}/responses/${questionnaireResponse.id}`, {
+    let responseId;
+    if (!questionnaireResponse.id) {
+      responseId = questionnaireResponse.get('id');
+    }
+    else {
+      responseId = questionnaireResponse.id;
+    }
+
+    return fetch(`${process.env.REACT_APP_BASE_URL}/responses/${responseId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -44,7 +57,7 @@ class QuestionnaireForm extends Component {
     };
 
     this.createResponse = this.createResponse.bind(this);
-    this.debouncedUpdateResponse = _.debounce(QuestionnaireForm.updateResponse, 500);
+    this.debouncedUpdateResponse = _.debounce(QuestionnaireFormContainer.updateResponse, 500);
     this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handlePreviousPage = this.handlePreviousPage.bind(this);
@@ -59,20 +72,17 @@ class QuestionnaireForm extends Component {
       .then(json => json.data)
       .then((questionnaire) => {
         // store the questionnaire
-        this.setState({
-          questionnaire
-        });
+        this.props.dispatch(setSelectedQuestionnaire(questionnaire));
 
         // check for existing responses
-        return QuestionnaireForm
+        return QuestionnaireFormContainer
           .getResponse(this.props.params.questionnaireId, this.props.params.userId)
           .then(response => response.json())
           .then(json => json.data)
           .then((userResponses) => {
             if (userResponses.length > 1) {
-              this.setState({
-                response: fromJS(userResponses[0])
-              });
+              this.props.dispatch(setResponse(fromJS(userResponses[0])))
+
               console.error('There are more than one responses for this questionnaire, each questionnaire should only have one response', userResponses);
               return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}/versions/${userResponses[0].versionId}`);
             }
@@ -83,16 +93,12 @@ class QuestionnaireForm extends Component {
               .then(response => response.json())
               .then(json => json.data)
               .then((userResponse) => {
-                this.setState({
-                  response: fromJS(userResponse)
-                });
+                this.props.dispatch(setResponse(fromJS(userResponse)));
                 return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}/versions/${questionnaire.currentVersionId}`);
               });
             }
             if (userResponses.length === 1) {
-              this.setState({
-                response: fromJS(userResponses[0])
-              });
+              this.props.dispatch(setResponse(fromJS(userResponses[0])));
               // get the version, they ahve already started filling out
               return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${this.props.params.questionnaireId}/versions/${userResponses[0].versionId}`);
             }
@@ -108,9 +114,9 @@ class QuestionnaireForm extends Component {
         }
         const version = fromJS(realVersion);
 
-        if (this.state.response.get('answeredQuestions').size === 0) {
+        if (this.props.response.get('answeredQuestions').size === 0) {
           // we need to add all the responses
-          const response = this.state.response.update('answeredQuestions', () =>
+          const response = this.props.response.update('answeredQuestions', () =>
             version.get('body').map(element => fromJS({
               id: cuid(),
               elementId: element.get('id'),
@@ -118,21 +124,18 @@ class QuestionnaireForm extends Component {
               answers: []
             }))
           );
-          QuestionnaireForm.updateResponse(response.toJSON());
+          QuestionnaireFormContainer.updateResponse(response.toJSON());
 
           // const pages = pageMaker(response.get('answeredQuestions'), version.get('body'));
 
           // mark the this page as viewed
-          this.setState({
-            version,
-            response
-          }, () => {
+          this.props.dispatch(setResponse(response));
+          this.props.dispatch(setVersion(version));
+          if(this.props.response || this.props.version) {
             this.goToPage(parseInt(this.props.routeParams.startIndex, 10));
-          });
+          }
         } else {
-          this.setState({
-            version
-          });
+          this.props.dispatch(setVersion(version));
         }
       })
       .catch(console.error);
@@ -140,7 +143,7 @@ class QuestionnaireForm extends Component {
 
   getEndIndex(startIndex) {
     // calculate the end index
-    return this.state.response.get('answeredQuestions').reduce((carry, responseElement, index) => {
+    return this.props.response.get('answeredQuestions').reduce((carry, responseElement, index) => {
       if (index < startIndex) {
         return carry;
       }
@@ -150,11 +153,11 @@ class QuestionnaireForm extends Component {
 
       // we have reached the end, didnt find a stopping point
       // so just include this last element
-      if (!carry && index === this.state.response.get('answeredQuestions').size - 1) {
+      if (!carry && index === this.props.response.get('answeredQuestions').size - 1) {
         return index;
       }
 
-      const element = this.state.version.get('body').filter(myElement =>
+      const element = this.props.version.get('body').filter(myElement =>
         myElement.get('id') === responseElement.get('elementId')
       ).get(0);
 
@@ -166,8 +169,8 @@ class QuestionnaireForm extends Component {
         }
 
         // there is a next element
-        const nextResponseElement = this.state.response.get('answeredQuestions').get(index + 1);
-        const nextElement = this.state.version.get('body').filter(myElement =>
+        const nextResponseElement = this.props.response.get('answeredQuestions').get(index + 1);
+        const nextElement = this.props.version.get('body').filter(myElement =>
           myElement.get('id') === nextResponseElement.get('elementId')
         ).get(0);
 
@@ -183,7 +186,7 @@ class QuestionnaireForm extends Component {
   }
 
   getStartIndex(endIndex) {
-    return this.state.response.get('answeredQuestions').reduceRight((carry, responseElement, index) => {
+    return this.props.response.get('answeredQuestions').reduceRight((carry, responseElement, index) => {
       if (index > endIndex) {
         return carry;
       }
@@ -197,11 +200,11 @@ class QuestionnaireForm extends Component {
         return index;
       }
 
-      const element = this.state.version.get('body').filter(myElement =>
+      const element = this.props.version.get('body').filter(myElement =>
         myElement.get('id') === responseElement.get('elementId')
       ).get(0);
-      const previousResponseElement = this.state.response.get('answeredQuestions').get(index - 1);
-      const previousElement = this.state.version.get('body').filter(myElement =>
+      const previousResponseElement = this.props.response.get('answeredQuestions').get(index - 1);
+      const previousElement = this.props.version.get('body').filter(myElement =>
         myElement.get('id') === previousResponseElement.get('elementId')
       ).get(0);
 
@@ -247,7 +250,7 @@ class QuestionnaireForm extends Component {
 
   handleQuestionAnswered(responseElement) {
     // replace the answer with the new answer
-    const response = this.state.response.update('answeredQuestions', responseElements =>
+    const response = this.props.response.update('answeredQuestions', responseElements =>
       fromJS(responseElements.reduce((carry, myResponseElement) => {
         if (myResponseElement.get('id') === responseElement.get('id')) {
           return [...carry, responseElement];
@@ -256,9 +259,7 @@ class QuestionnaireForm extends Component {
       }, [])));
 
     // store the change
-    this.setState({
-      response
-    });
+    this.props.dispatch(setResponse(response));
     // send to server
     this.debouncedUpdateResponse(response.toJSON());
   }
@@ -268,14 +269,14 @@ class QuestionnaireForm extends Component {
       parseInt(this.props.routeParams.endIndex, 10) :
       this.getEndIndex(parseInt(this.props.routeParams.startIndex, 10));
 
-    if (currentEndIndex === this.state.response.get('answeredQuestions').size - 1) {
+    if (currentEndIndex === this.props.response.get('answeredQuestions').size - 1) {
       // its the end
       // submit it
       return this.handeSubmitQuestionnaire();
     }
 
     // where to next?
-    const responseElement = this.state.response.getIn(['answeredQuestions', currentEndIndex]);
+    const responseElement = this.props.response.getIn(['answeredQuestions', currentEndIndex]);
 
     if (responseElement.get('answers').size === 0) {
       // no answers!
@@ -284,7 +285,7 @@ class QuestionnaireForm extends Component {
     }
 
     // last question
-    const element = this.state.version.get('body').filter(myElement => myElement.get('id') === responseElement.get('elementId')).first();
+    const element = this.props.version.get('body').filter(myElement => myElement.get('id') === responseElement.get('elementId')).first();
     // checking for skip logic
     const chosenAnswerIds = responseElement.get('answers').map(
       responseElementAnswer => responseElementAnswer.get('id')
@@ -300,7 +301,7 @@ class QuestionnaireForm extends Component {
         return this.handeSubmitQuestionnaire();
       }
       // look for section id
-      const newStartIndex = this.state.response.get('answeredQuestions').reduce((carry, myResponseElement, index) => {
+      const newStartIndex = this.props.response.get('answeredQuestions').reduce((carry, myResponseElement, index) => {
         if (carry) {
           return carry;
         }
@@ -314,14 +315,14 @@ class QuestionnaireForm extends Component {
       }
 
       // okay, this is complicated, so here goes
-      const loopBackStartIndex = this.state.response.get('answeredQuestions').reduce((carry, myResponseElement, index) => {
+      const loopBackStartIndex = this.props.response.get('answeredQuestions').reduce((carry, myResponseElement, index) => {
         if (index < currentEndIndex && myResponseElement.get('elementId') === goTo.get('id')) {
           return index;
         }
         return carry;
       }, null);
 
-      const response = this.state.response.update('answeredQuestions', (answeredQuestions) => {
+      const response = this.props.response.update('answeredQuestions', (answeredQuestions) => {
         const before = answeredQuestions.slice(0, currentEndIndex + 1);
         const after = answeredQuestions.slice(currentEndIndex + 1);
         const repeated = answeredQuestions.slice(loopBackStartIndex, currentEndIndex + 1)
@@ -330,9 +331,10 @@ class QuestionnaireForm extends Component {
           );
         return before.concat(repeated).concat(after);
       });
-      return this.setState({
-        response
-      }, () => this.goToPage(currentEndIndex + 1));
+      this.props.dispatch(setResponse(response));
+      if(this.props.response) {
+        return this.goToPage(currentEndIndex + 1);
+      }
     }
     return this.goToPage(currentEndIndex + 1);
   }
@@ -340,7 +342,7 @@ class QuestionnaireForm extends Component {
   handlePreviousPage() {
     const startIndex = parseInt(this.props.routeParams.startIndex, 10);
     // find last question, thats viewed
-    const previousEndIndex = this.state.response.get('answeredQuestions').reduce((carry, responseElement, index) => {
+    const previousEndIndex = this.props.response.get('answeredQuestions').reduce((carry, responseElement, index) => {
       if (responseElement.get('viewed') && index < startIndex) {
         return index;
       }
@@ -353,30 +355,26 @@ class QuestionnaireForm extends Component {
 
   goToPage(startIndex) {
     const endIndex = this.getEndIndex(startIndex);
-    const response = QuestionnaireForm.markPageAsViewedInResponse(
+    const response = QuestionnaireFormContainer.markPageAsViewedInResponse(
       startIndex,
       endIndex,
-      this.state.response
+      this.props.response
     );
-    this.setState({
-      response
-    });
-    QuestionnaireForm.updateResponse(response.toJSON());
+    this.props.dispatch(setResponse(response));
+    QuestionnaireFormContainer.updateResponse(response.toJSON());
     hashHistory.push(`/users/${this.props.routeParams.userId}/questionnaires/${this.props.routeParams.questionnaireId}/start/${startIndex}/end/${endIndex}`);
   }
 
   handeSubmitQuestionnaire() {
-    const response = this.state.response.set('completed', true);
-    this.setState({
-      response
-    });
+    const response = this.props.response.set('completed', true);
+    this.props.dispatch(setResponse(response));
     // send to server
-    QuestionnaireForm.updateResponse(response);
+    QuestionnaireFormContainer.updateResponse(response);
     hashHistory.push('/submitted');
   }
 
   render() {
-    if (!this.state.questionnaire || !this.state.version || !this.state.response) {
+    if (!this.props.questionnaire || !this.props.version || !this.props.response) {
       return <div className="container">Loading...</div>;
     }
 
@@ -385,8 +383,8 @@ class QuestionnaireForm extends Component {
       parseInt(this.props.routeParams.endIndex, 10) :
       this.getEndIndex(startIndex);
 
-    const sections = this.state.response.get('answeredQuestions').reduce((carry, responseElement, index, responseElements) => {
-      const element = this.state.version.get('body').filter(myElement =>
+    const sections = this.props.response.get('answeredQuestions').reduce((carry, responseElement, index, responseElements) => {
+      const element = this.props.version.get('body').filter(myElement =>
         myElement.get('id') === responseElement.get('elementId')
       ).get(0);
 
@@ -394,7 +392,7 @@ class QuestionnaireForm extends Component {
         console.log(element.get('title'));
         // find where the next one is
         const nextSectionIndex = responseElements.findIndex((myResponseElement, myIndex) => {
-          const myElement = this.state.version.get('body').filter(myElement =>
+          const myElement = this.props.version.get('body').filter(myElement =>
             myElement.get('id') === myResponseElement.get('elementId')
           ).get(0);
           return myIndex > index && myElement.get('type') === 'section' && myElement.get('size') === 1;
@@ -413,29 +411,25 @@ class QuestionnaireForm extends Component {
     }, []);
 
     return (
-      <div className="container">
-        <h1 style={{ marginBottom: 32 }}>{this.state.version.get('title')}</h1>
-        <div className="row">
-          <div className="col-sm-3">
-            <div style={{ backgroundColor: 'white', padding: 16 }}>
-              <StepIndicator sections={sections} />
-            </div>
-          </div>
-          <div className="col-md-9">
-            <Page
-              responseElements={this.state.response.get('answeredQuestions').slice(startIndex, endIndex + 1)}
-              version={this.state.version}
-              onAnsweredQuestions={this.handleQuestionAnswered}
-              onNextPage={this.handleNextPage}
-              onPreviousPage={this.handlePreviousPage}
-              showBackButton={parseInt(this.props.routeParams.startIndex, 10) !== 0}
-              showNextButton={parseInt(this.props.routeParams.startIndex, 10) !== this.state.response.get('answeredQuestions').size}
-            />
-          </div>
-        </div>
-      </div>
+      <QuestionnaireForm
+        sections={sections}
+        responseElements={this.props.response.get('answeredQuestions').slice(startIndex, endIndex + 1)}
+        version={this.props.version}
+        onAnsweredQuestions={this.handleQuestionAnswered}
+        onNextPage={this.handleNextPage}
+        onPreviousPage={this.handlePreviousPage}
+        showBackButton={parseInt(this.props.routeParams.startIndex, 10) !== 0}
+        showNextButton={parseInt(this.props.routeParams.startIndex, 10) !== this.props.response.get('answeredQuestions').size}/>
     );
   }
 }
 
-export default QuestionnaireForm;
+function mapStateToProps(state) {
+  return {
+    questionnaire: state.questionnaire,
+    response: state.response,
+    version: state.version
+  };
+}
+
+export default connect(mapStateToProps)(QuestionnaireFormContainer);

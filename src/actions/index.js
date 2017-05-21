@@ -34,3 +34,28 @@ export function fetchQuestionnaires() {
       .catch(ex => dispatch(fetchQuestionnairesFailure(ex)));
   }
 }
+
+/*
+* add user response
+*/
+
+export function setSelectedQuestionnaire(questionnaire) {
+  return {
+    type: 'SET_SELECTED_QUESTIONNAIRE',
+    questionnaire: questionnaire
+  };
+}
+
+export function setResponse(response) {
+  return {
+    type: 'SET_RESPONSE',
+    response: response
+  };
+}
+
+export function setVersion(version) {
+  return {
+    type: 'SET_VERSION',
+    version: version
+  }
+}
