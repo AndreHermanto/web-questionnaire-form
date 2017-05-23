@@ -54,13 +54,35 @@ export default function Question({
     if (element.get('type') === 'radio') {
       return onAnswer(responseElement.set('answers', fromJS([{ id: answer.get('id') }])));
     }
-    if (element.get('type') === 'text' || element.get('type') === 'weight' || element.get('type') === 'date' || element.get('type') === 'number') {
+    if (element.get('type') === 'text') {
       const newResponseElement = responseElement.set('answers', fromJS([{
         id: answer.get('id'),
         text: target.value
       }]));
       return onAnswer(newResponseElement);
+    }
+    if (element.get('type') === 'weight') {
+      const newResponseElement = responseElement.set('answers', fromJS([{
+        id: answer.get('id'),
+        weight: target.value
+      }]));
+      return onAnswer(newResponseElement);
+    }
+    if (element.get('type') === 'date') {
+      const newResponseElement = responseElement.set('answers', fromJS([{
+        id: answer.get('id'),
+        date: target.value
+      }]));
+      return onAnswer(newResponseElement);
     }    
+    if (element.get('type') === 'number') {
+      const newResponseElement = responseElement.set('answers', fromJS([{
+        id: answer.get('id'),
+        number: target.value
+      }]));
+      return onAnswer(newResponseElement);
+    }   
+
     return null;
   };
 
@@ -106,7 +128,7 @@ export default function Question({
           <Weight type="text"
             key={answer.get('id')}
             className="form-control"
-            value={coalesce(responseElement.getIn(['answers', answerIndex, 'text']), '')}
+            value={coalesce(responseElement.getIn(['answers', answerIndex, 'weight']), '')}
             onChange={e => handleAnswer(e, answer)}
           /><Description>Pounds</Description>
         </div>);
@@ -115,7 +137,7 @@ export default function Question({
           <input 
             type="date" 
             className="form-control"
-            value={coalesce(responseElement.getIn(['answers', answerIndex, 'text']), '')}
+            value={coalesce(responseElement.getIn(['answers', answerIndex, 'date']), '')}
             onChange={e => handleAnswer(e, answer)} 
           />
         </div>);
@@ -124,7 +146,7 @@ export default function Question({
           <input 
             type="number" 
             className="form-control" 
-            value={coalesce(responseElement.getIn(['answers', answerIndex, 'text']), '')}
+            value={coalesce(responseElement.getIn(['answers', answerIndex, 'number']), '')}
             onChange={e => handleAnswer(e, answer)} 
           />
         </div>);
