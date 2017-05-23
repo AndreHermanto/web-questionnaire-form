@@ -7,7 +7,7 @@ describe('mainReducer test', () => {
       lastUpdated:"Wed May 17 2017 18:44:55 GMT+1000 (AEST)",status:"qui,dolores,aut"}];
     expect(
       mainReducer({}, {
-        type: 'ADD_QUESTIONNAIRES',
+        type: 'FETCH_QUESTIONNAIRES_SUCCESS',
         payload: questionnaires
       }).questionnaires
     ).toEqual(questionnaires)
@@ -18,12 +18,12 @@ describe('mainReducer test', () => {
       lastUpdated:"Wed May 17 2017 18:44:55 GMT+1000 (AEST)",status:"qui,dolores,aut"}];
     expect(
       mainReducer({}, {
-        type: 'ADD_QUESTIONNAIRE',
-        payload: questionnaire
+        type: 'SET_SELECTED_QUESTIONNAIRE',
+        questionnaire: questionnaire
       }).questionnaire
     ).toEqual(questionnaire)
   })
-  it('should set new respone to the questionnaire', () => {
+  it('should set new response to the questionnaire', () => {
     expect(
       mainReducer({}, {
         type: 'SET_RESPONSE',
@@ -38,5 +38,24 @@ describe('mainReducer test', () => {
         version: 'test version'
       }).version
     ).toEqual('test version')
+  })
+  it('should set isLoading to true', () => {
+    expect(
+      mainReducer({}, {
+        type: 'FETCH_QUESTIONNAIRES_REQUEST'
+      }).isLoading
+    ).toEqual(true)
+  })
+  it('should set isLoading to false and isError to true', () => {
+    expect(
+      mainReducer({}, {
+        type: 'FETCH_QUESTIONNAIRES_FAILURE'
+      }).isLoading
+    ).toEqual(false)
+    expect(
+      mainReducer({}, {
+        type: 'FETCH_QUESTIONNAIRES_FAILURE'
+      }).isError
+    ).toEqual(true)
   })
 })
