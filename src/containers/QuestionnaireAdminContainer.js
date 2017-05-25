@@ -14,7 +14,7 @@ class QuestionnaireAdminContainer extends Component {
 }
 
 function mapStateToProps(state) {
-  return state;
+  return state.questionnaires;
 }
 
 export default connect(mapStateToProps)(QuestionnaireAdminContainer);

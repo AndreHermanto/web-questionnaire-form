@@ -1,47 +1,47 @@
-/*
-* example reducers with get questionnaires action
-*/
-export default function mainReducer(state = {}, action) {
-  switch (action.type) {
-    case 'FETCH_QUESTIONNAIRES_REQUEST':
-      return {
-        ...state,
-        isLoading: true
-      };
-    case 'FETCH_QUESTIONNAIRES_SUCCESS':
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        questionnaires: action.payload
-      };
-    case 'FETCH_QUESTIONNAIRES_FAILURE':
-      return {
-        ...state,
-        isLoading: false,
-        isError: true
-      };
-    case 'SET_SELECTED_QUESTIONNAIRE':
-      return {
-        ...state,
-        questionnaire: action.questionnaire
-      };
-    case 'SET_RESPONSE':
-      return {
-        ...state,
-        response: action.response
-      };
-    case 'SET_VERSION':
-      return {
-        ...state,
-        version: action.version
-      };
-    case 'SET_QUESTIONNAIRE_DEBUG':
-      return {
-        ...state,
-        debug: action.debug
-      }
-    default:
-      return state;
+import { combineReducers } from 'redux';
+import questionnaires, * as fromQuestionnaires from './questionnaires';
+import versions, * as fromVersions from './versions';
+import responses,* as fromResponses from './responses';
+
+export default combineReducers({
+  questionnaires,
+  versions,
+  responses,
+  debug: (state = { debug: true }, action) => {
+    switch (action.type) {
+      case 'SET_QUESTIONNAIRE_DEBUG':
+        return { ...state, debug: action.debug };
+      default:
+        return state;
+    }
   }
+});
+
+export const isShowingSubmit = state => {
+  const currentResponse = fromResponses
+    .getCurrentResponse(state.responses);
+  if (!currentResponse) {
+    return false;
+  }
+  return state.responses.index ===
+    currentResponse
+    .get('answeredQuestions')
+    .size - 1;
 }
+
+
+export const getQuestionnaires = state =>
+  fromQuestionnaires.getQuestionnaires(state.questionnaires);
+
+export const getVisibleQuestions = state =>
+  fromResponses.getVisibleResponseElements(state.responses)
+    .map(responseElement => {
+      const element = fromVersions.getById(state.versions, responseElement.get('elementId'));
+      return {
+        element,
+        responseElement
+      }
+    });
+
+export const getCurrentResponse = state =>
+  fromResponses.getCurrentResponse(state.responses);
