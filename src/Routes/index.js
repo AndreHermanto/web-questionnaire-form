@@ -5,10 +5,10 @@ import {
   hashHistory,
   IndexRoute
 } from 'react-router';
-import QuestionnaireAdmin from '../../questionnaires/QuestionnaireAdminContainer';
-import QuestionnaireForm from '../../questionnaires/QuestionnaireFormContainer';
-import QuestionnaireFormSubmitted from '../../questionnaires/QuestionnaireFormSubmitted';
-import Container from '../Container';
+import QuestionnaireAdminContainer from '../containers/QuestionnaireAdminContainer';
+import QuestionnaireForm from '../containers/QuestionnaireFormContainer';
+import QuestionnaireFormSubmitted from '../components/QuestionnaireFormSubmitted';
+import Container from '../components/Container';
 
 class Routes extends Component {
   render() {
@@ -16,7 +16,7 @@ class Routes extends Component {
     return (
       <Router history={hashHistory}>
         <Route path="/" component={Container}>
-          <IndexRoute component={QuestionnaireAdmin} />
+          <IndexRoute component={QuestionnaireAdminContainer} />
           <Route path="/users/:userId/questionnaires/:questionnaireId(/start/:startIndex)(/end/:endIndex)" component={QuestionnaireForm} />
           <Route path="/submitted" component={QuestionnaireFormSubmitted} />
         </Route>
