@@ -17,7 +17,7 @@ export default function QuestionnaireAdmin(props) {
         }
         {props.questionnaires && props.questionnaires.map(questionnaire =>
           (<li key={questionnaire.id}>
-            <Link to={`/users/3/questionnaires/${questionnaire.id}/start/0`}>{questionnaire.currentTitle}</Link>
+            <Link to={`/users/3/questionnaires/${questionnaire.id}/start/0?showlogic=${true}`}>{questionnaire.currentTitle}</Link>
           </li>)
         )}
       </ul>

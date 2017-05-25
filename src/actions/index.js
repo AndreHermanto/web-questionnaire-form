@@ -59,3 +59,15 @@ export function setVersion(version) {
     version: version
   }
 }
+
+
+/*
+* Set page debug mode
+*/
+
+export function setQuestionnaireDebug(debug) {
+  return {
+    type: 'SET_QUESTIONNAIRE_DEBUG',
+    debug: debug
+  };
+}

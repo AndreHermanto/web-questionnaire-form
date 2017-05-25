@@ -12,7 +12,8 @@ import { connect } from 'react-redux';
 import {
   setSelectedQuestionnaire,
   setResponse,
-  setVersion
+  setVersion,
+  setQuestionnaireDebug
 } from '../../actions';
 
 class QuestionnaireFormContainer extends Component {
@@ -64,6 +65,20 @@ class QuestionnaireFormContainer extends Component {
     this.handeSubmitQuestionnaire = this.handeSubmitQuestionnaire.bind(this);
     this.goToPage = this.goToPage.bind(this);
     this.getEndIndex = this.getEndIndex.bind(this);
+    this.setPageMode = this.setPageMode.bind(this);
+  }
+
+  setPageMode() {
+    if(this.props.location.query.showlogic === 'true') {
+      this.props.dispatch(setQuestionnaireDebug(true));
+    }
+    else {
+      this.props.dispatch(setQuestionnaireDebug(false));
+    }
+  }
+
+  componentWillMount() {
+    this.setPageMode();
   }
 
   componentDidMount() {
@@ -374,6 +389,7 @@ class QuestionnaireFormContainer extends Component {
   }
 
   render() {
+    console.log('?', this.props);
     if (!this.props.questionnaire || !this.props.version || !this.props.response) {
       return <div className="container">Loading...</div>;
     }
@@ -412,6 +428,7 @@ class QuestionnaireFormContainer extends Component {
 
     return (
       <QuestionnaireForm
+        showlogic={this.props.debug}
         sections={sections}
         responseElements={this.props.response.get('answeredQuestions').slice(startIndex, endIndex + 1)}
         version={this.props.version}
@@ -428,7 +445,8 @@ function mapStateToProps(state) {
   return {
     questionnaire: state.questionnaire,
     response: state.response,
-    version: state.version
+    version: state.version,
+    debug: state.debug
   };
 }
 
