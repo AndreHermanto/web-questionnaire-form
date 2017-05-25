@@ -15,14 +15,15 @@ const propTypes = {
   onNextPage: PropTypes.func.isRequired,
   onPreviousPage: PropTypes.func.isRequired,
   showBackButton: PropTypes.bool.isRequired,
-  showNextButton: PropTypes.bool.isRequired
+  showNextButton: PropTypes.bool.isRequired,
+  showlogic: PropTypes.bool.isRequired
 };
 
 const defaultProps = {
 };
 
 function QuestionnaireForm(props) {
-  const { sections, version, responseElements } = props;
+  const { sections, version, responseElements, showlogic } = props;
   return( 
     <div className="container">
       <h1 style={{ marginBottom: 32 }}>{version.get('title')}</h1>
@@ -41,6 +42,7 @@ function QuestionnaireForm(props) {
             onPreviousPage={props.onPreviousPage}
             showBackButton={props.showBackButton}
             showNextButton={props.showNextButton}
+            showlogic={showlogic}
           />
         </div>
       </div>

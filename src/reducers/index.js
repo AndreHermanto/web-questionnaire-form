@@ -36,6 +36,11 @@ export default function mainReducer(state = {}, action) {
         ...state,
         version: action.version
       };
+    case 'SET_QUESTIONNAIRE_DEBUG':
+      return {
+        ...state,
+        debug: action.debug
+      }
     default:
       return state;
   }

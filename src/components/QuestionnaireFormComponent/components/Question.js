@@ -34,7 +34,8 @@ export default function Question({
   element,
   number,
   responseElement,
-  onAnswer
+  onAnswer,
+  showlogic
 }) {
   const handleAnswer = (e, answer) => {
     const target = e.target;
@@ -182,7 +183,7 @@ export default function Question({
             />)
           }
           {' '}
-          {answer.get('text')} {answer.get('goTo') && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
+          {answer.get('text')} {(answer.get('goTo') && showlogic === true) && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
           {' '}
           {answer.get('concepts') && !!answer.get('concepts').count() &&
           <span className="text-muted">({answer.get('concepts').map(concept => <small key={concept.get('id')} className="text-success">{concept.get('label')}</small>)})</span>
