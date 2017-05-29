@@ -6,7 +6,8 @@ const initialState = {
   items: fromJS({}),
   isError: false,
   isLoading: false,
-  index: null
+  index: null,
+  currentId: null
 };
 
 export const getVisibleResponseElements = (state) => {
@@ -20,6 +21,10 @@ export const getVisibleResponseElements = (state) => {
 }
 
 export const getCurrentResponse = (state) => {
+  if (state.currentId) {
+    return state.items.get(state.currentId);
+  }
+  // TODO: remove this, should always use current id
   return state.items.size ? state.items.first() : null;
 }
 export const getCurrentResponseIndex = (state) => {
@@ -214,15 +219,20 @@ const responses = (state = initialState, action) => {
       const responses = fromJS(action.payload.responses);
       return {
         ...state,
+        currentId: responses.size ? responses.last().get('id') : null,
         items: responses.reduce((carry, response) => carry.set(response.get('id'), response), state.items)
       };
     }
     case types.CREATE_RESPONSE_REQUEST:
-      return state;
+      return {
+        ...state,
+        currentId: null
+      };
     case types.CREATE_RESPONSE_SUCCESS: {
       const response = fromJS(action.payload);
       return {
         ...state,
+        currentId: response.get('id'),
         items: state.items.set(response.get('id'), response)
       };
     }

@@ -45,5 +45,7 @@ export const getVisibleQuestions = state =>
       }
     });
 
+export const getCurrentVersion = state =>
+  fromVersions.getCurrentVersion(state.versions);
 export const getCurrentResponse = state =>
   fromResponses.getCurrentResponse(state.responses);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import cuid from 'cuid';
 
 export default function QuestionnaireAdmin(props) {
   return (
@@ -17,7 +18,7 @@ export default function QuestionnaireAdmin(props) {
         }
         {props.items && props.items.map(questionnaire =>
           (<li key={questionnaire.id}>
-            <Link to={`/users/3/questionnaires/${questionnaire.get('id')}/start/0?showlogic=true`}>{questionnaire.get('currentTitle')}</Link>
+            <Link to={`/users/${cuid()}/questionnaires/${questionnaire.get('id')}/start/0?showlogic=true`}>{questionnaire.get('currentTitle')}</Link>
           </li>)
         )}
       </ul>

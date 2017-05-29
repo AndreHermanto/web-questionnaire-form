@@ -16,7 +16,9 @@ import Question from '../components/Question';
 import {
   getVisibleQuestions,
   isLastQuestion,
-  isFirstQuestion
+  isFirstQuestion,
+  getCurrentResponse,
+  getCurrentVersion
 } from '../reducers';
 import Heading from '../components/Heading';
 
@@ -139,11 +141,11 @@ class QuestionnaireFormContainer extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const showSubmit = isLastQuestion(state);
   const props = {
-    response: state.responses.items.first(),
-    version: state.versions.items.first(),
+    response: getCurrentResponse(state),
+    version: getCurrentVersion(state),
     visibleQuestions: getVisibleQuestions(state),
     isShowingSubmit: showSubmit,
     isShowingNext: !showSubmit,
