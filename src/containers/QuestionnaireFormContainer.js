@@ -114,7 +114,7 @@ class QuestionnaireFormContainer extends Component {
           <Question
             key={visibleQuestion.responseElement.get('id')}
             element={element}
-            number={1}
+            number={index + 1}
             responseElement={responseElement}
             onAnswer={this.handleQuestionAnswered}
             showlogic={this.props.debug}
