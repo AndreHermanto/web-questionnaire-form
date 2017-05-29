@@ -8,7 +8,7 @@ const initialState = {
 };
 
 export const getCurrentVersion = (state) => {
-  return state.items.first() || null;
+  return state.items.size ? state.items.first() : null;
 }
 
 export const getById = (state, id) => {

@@ -1,5 +1,9 @@
 import { fromJS } from 'immutable';
-import responses, { getCurrentResponse, getVisibleResponseElements } from './responses';
+import responses, {
+  getCurrentResponse,
+  getVisibleResponseElements,
+  isLastQuestion
+} from './responses';
 import {
   resumeQuestionnaire,
   previousQuestion,
@@ -9,6 +13,68 @@ import {
 test('responses exists', () => {
   expect(!!responses).toBe(true);
 });
+
+describe('isLastQuestion', () => {
+  it('is true if we are on the actual last question', () => {
+    const questionnaireId = 'abcd';
+    const state = {
+      index: 1,
+      items: fromJS({ [questionnaireId]: {
+        id: questionnaireId,
+        answeredQuestions: [
+          { id: 1, viewed: true },
+          { id: 2, viewed: true }
+        ]
+      }})
+    };
+    expect(isLastQuestion(state, {})).toBe(true);
+  });
+  it('is false if we are not on the actual last question, and there is no skip logic', () => {
+    const questionnaireId = 'abcd';
+    const state = {
+      index: 0,
+      items: fromJS({ [questionnaireId]: {
+        id: questionnaireId,
+        answeredQuestions: [
+          { id: 1, viewed: true, elementId: 'sdfg', answers: [] },
+          { id: 2, viewed: true }
+        ]
+      }})
+    };
+    expect(isLastQuestion(state, fromJS({ id: 'sdfg' }))).toBe(false);
+  });
+  it('is true if a "go to end" answer is selected', () => {
+    const questionnaireId = 'abcd';
+    const element = fromJS({ id: 'sdfg', type: 'radio', answers: [{ id: 100, goTo: { id: 'End' } }]})
+    const state = {
+      index: 0,
+      items: fromJS({ [questionnaireId]: {
+        id: questionnaireId,
+        answeredQuestions: [
+          { id: 1, viewed: true, elementId: 'sdfg', answers: [{ id: 100 }]},
+          { id: 2, viewed: true }
+        ]
+      }})
+    };
+    expect(isLastQuestion(state, element)).toBe(true);
+  });
+
+  it('is false if answer has skip logic, but not "go to end"', () => {
+    const questionnaireId = 'abcd';
+    const element = fromJS({ id: 'sdfg', answers: [{ id: 100, goTo: { id: '1232112' } }]})
+    const state = {
+      index: 0,
+      items: fromJS({ [questionnaireId]: {
+        id: questionnaireId,
+        answeredQuestions: [
+          { id: 1, viewed: true, elementId: 'sdfg', answers: [{ id: 100 }]},
+          { id: 2, viewed: true }
+        ]
+      }})
+    };
+    expect(isLastQuestion(state, element)).toBe(false);
+  });
+})
 
 describe('resuming a questionnaire', () => {
   it('goes to first question and mark it as viewed if the user hasnt started yet', () => {
@@ -128,7 +194,7 @@ describe('next question', () => {
       ]}})
     }, nextQuestion({ element }));
     expect(state.index).toBe(2);
-  })
+  });
 
   it('wont go past the last question', () => {
     const questionnaireId = 'abcd';

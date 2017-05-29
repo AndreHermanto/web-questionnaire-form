@@ -17,18 +17,20 @@ export default combineReducers({
   }
 });
 
-export const isShowingSubmit = state => {
-  const currentResponse = fromResponses
-    .getCurrentResponse(state.responses);
-  if (!currentResponse) {
+export const isFirstQuestion = state => fromResponses.isFirstQuestion(state.responses);
+
+export const isLastQuestion = state => {
+  if (!fromResponses.getCurrentResponse(state.responses) ||
+    !fromVersions.getCurrentVersion(state.versions)) {
     return false;
   }
-  return state.responses.index ===
-    currentResponse
-    .get('answeredQuestions')
-    .size - 1;
+  const currentElementId = fromResponses.getCurrentElementId(state.responses);
+  if (!currentElementId) {
+    return false;
+  }
+  const element = fromVersions.getById(state.versions, currentElementId);
+  return fromResponses.isLastQuestion(state.responses, element);
 }
-
 
 export const getQuestionnaires = state =>
   fromQuestionnaires.getQuestionnaires(state.questionnaires);

@@ -15,7 +15,8 @@ import {
 import Question from '../components/Question';
 import {
   getVisibleQuestions,
-  isShowingSubmit
+  isLastQuestion,
+  isFirstQuestion
 } from '../reducers';
 import Heading from '../components/Heading';
 
@@ -80,7 +81,7 @@ class QuestionnaireFormContainer extends Component {
           return (<div key={responseElement.get('id')} style={{ marginBottom: 24, backgroundColor: 'white', border: '1px solid #eee', padding: 32 }}>
             {element.get('text').split('\n').map(item => <span key={item}>{item}<br /></span>)}
 
-            {index === this.props.visibleQuestions.size - 1 &&
+            {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
             <button
               className="btn btn-primary btn-lg"
               onClick={() => this.props.dispatch(nextQuestion({ element }))}
@@ -94,9 +95,9 @@ class QuestionnaireFormContainer extends Component {
 
         // section heading
         if (element.get('type') === 'section') {
-          return <div key={responseElement.get('id')}>
+          return <div key={responseElement.get('id')} >
             <Heading text={element.get('title')} size={element.get('size')} />
-            {index === this.props.visibleQuestions.size - 1 &&
+            {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
             <button
               className="btn btn-primary btn-lg"
               onClick={() => this.props.dispatch(nextQuestion({ element }))}
@@ -116,8 +117,7 @@ class QuestionnaireFormContainer extends Component {
             onAnswer={this.handleQuestionAnswered}
             showlogic={this.props.debug}
           />
-          {index === this.props.visibleQuestions.size - 1 &&
-            this.props.visibleQuestions.size !== this.props.response.get('answeredQuestions').size &&
+          {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
           <button
             className="btn btn-primary btn-lg"
             onClick={() => this.props.dispatch(nextQuestion({ element }))}
@@ -129,7 +129,7 @@ class QuestionnaireFormContainer extends Component {
         );
       })}
         {this.props.isShowingSubmit &&
-          <button className="btn btn-primary"
+          <button className="btn btn-primary btn-lg"
             onClick={this.handeSubmitQuestionnaire}>
             Submit
           </button>
@@ -140,11 +140,14 @@ class QuestionnaireFormContainer extends Component {
 }
 
 function mapStateToProps(state) {
+  const showSubmit = isLastQuestion(state);
   const props = {
     response: state.responses.items.first(),
     version: state.versions.items.first(),
     visibleQuestions: getVisibleQuestions(state),
-    isShowingSubmit: isShowingSubmit(state),
+    isShowingSubmit: showSubmit,
+    isShowingNext: !showSubmit,
+    isShowingBack: isFirstQuestion(state),
     debug: state.debug.debug
   };
   return props;

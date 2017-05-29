@@ -1,7 +1,7 @@
 import { fromJS, List } from 'immutable';
 import cuid from 'cuid';
 import * as types from '../constants/ActionTypes';
-
+import { isQuestion } from '../helpers/questions';
 const initialState = {
   items: fromJS({}),
   isError: false,
@@ -20,16 +20,43 @@ export const getVisibleResponseElements = (state) => {
 }
 
 export const getCurrentResponse = (state) => {
-  return state.items.first() || null;
+  return state.items.size ? state.items.first() : null;
 }
 export const getCurrentResponseIndex = (state) => {
   return state.items.first().get('id');
 }
+export const getCurrentElementId = (state) => {
+  return getCurrentResponse(state).getIn(['answeredQuestions', state.index, 'elementId']);
+}
+export const isLastQuestion = (state, currentElement) => {
+  const response = getCurrentResponse(state);
+  if (state.index ===
+      response
+      .get('answeredQuestions')
+      .size - 1) {
+    return true;
+  }
+  if (!isQuestion(currentElement)) {
+    return false;
+  }
+  // go to end?
+  const goToEndAnswerIds = currentElement.get('answers').filter(answer => answer.getIn(['goTo', 'id']) === 'End').map(answer => answer.get('id'));
+  if (goToEndAnswerIds.size === 0) {
+    return false;
+  }
+  const responseAnswerIds = response
+  .getIn(['answeredQuestions', state.index, 'answers']).map(answer => answer.get('id'));
 
-export const isLastQuestion = state =>
-  state.index === getCurrentResponse(state).get('answeredQuestions').size - 1;
-export const isShowingBackButton = state => state.index !== 0;
-export const isShowingNextButton = state => !isLastQuestion(state)
+  const responseAnswerIdsWithGoToEnd =
+    responseAnswerIds.filter(answerId => goToEndAnswerIds.contains(answerId));
+
+  if (responseAnswerIdsWithGoToEnd.size === 0) {
+    return false;
+  }
+  return true;
+}
+
+export const isFirstQuestion = state => state.index !== 0;
 
 const markQuestionAsViewed = (state, responseId, responseElementIndex) => {
   return state.items.setIn([
