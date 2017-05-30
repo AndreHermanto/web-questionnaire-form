@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'immutable';
-import Page from './components/Page';
-import StepIndicator from './components/StepIndicator';
+import Page from './Page';
+import StepIndicator from './StepIndicator';
 
 const propTypes = {
   sections: PropTypes.oneOfType([
@@ -15,21 +15,22 @@ const propTypes = {
   onNextPage: PropTypes.func.isRequired,
   onPreviousPage: PropTypes.func.isRequired,
   showBackButton: PropTypes.bool.isRequired,
-  showNextButton: PropTypes.bool.isRequired
+  showNextButton: PropTypes.bool.isRequired,
+  showlogic: PropTypes.bool.isRequired
 };
 
 const defaultProps = {
 };
 
 function QuestionnaireForm(props) {
-  const { sections, version, responseElements } = props;
+  const { sections, version, responseElements, showlogic } = props;
   return( 
     <div className="container">
       <h1 style={{ marginBottom: 32 }}>{version.get('title')}</h1>
       <div className="row">
         <div className="col-sm-3">
           <div style={{ backgroundColor: 'white', padding: 16 }}>
-          <StepIndicator sections={sections} />
+            <StepIndicator sections={sections} />
           </div>
         </div>
         <div className="col-md-9">
@@ -41,10 +42,12 @@ function QuestionnaireForm(props) {
             onPreviousPage={props.onPreviousPage}
             showBackButton={props.showBackButton}
             showNextButton={props.showNextButton}
+            showlogic={showlogic}
           />
         </div>
       </div>
-    </div>)
+    </div>
+  );
 }
 
 QuestionnaireForm.propTypes = propTypes;

@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import { fromJS } from 'immutable';
-import { coalesce } from '../../../containers/QuestionnaireFormContainer/coalesce';
+import { coalesce } from '../helpers/coalesce';
 
 const AnswerOption = styled.label`
   width: 100%;
-  border: ${props => props.active ? '1px solid #96C65E' : '1px solid #eee'};
+  border: ${props => (props.active ? '1px solid #96C65E' : '1px solid #eee')};
   padding: 16px 16px 16px 36px !important;
-  color: ${props => props.active ? '#7bb13d' : '#666'};
-  background-color: ${props => props.active ? '#F0F7E7' : 'white'};
+  color: ${props => (props.active ? '#7bb13d' : '#666')};
+  background-color: ${props => (props.active ? '#F0F7E7' : 'white')};
   margin-bottom: 8px;
 `;
 
@@ -34,8 +34,15 @@ export default function Question({
   element,
   number,
   responseElement,
-  onAnswer
+  onAnswer,
+  showlogic
 }) {
+  if(!element) {
+    return <div>Loading Question...</div>;
+  }
+  if(!responseElement) {
+    return <div>Loading Response...</div>;
+  }
   const handleAnswer = (e, answer) => {
     const target = e.target;
     if (element.get('type') === 'checkbox') {
@@ -175,14 +182,14 @@ export default function Question({
           {element.get('type') !== 'text' &&
             (<input
               style={{ marginRight: 8 }}
-              name={element.get('id')}
+              name={`${responseElement.get('id')}-${answer.get('id')}`}
               type={element.get('type')}
               checked={selected}
               onChange={e => handleAnswer(e, answer)}
             />)
           }
           {' '}
-          {answer.get('text')} {answer.get('goTo') && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
+          {answer.get('text')} {(answer.get('goTo') && showlogic === true) && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
           {' '}
           {answer.get('concepts') && !!answer.get('concepts').count() &&
           <span className="text-muted">({answer.get('concepts').map(concept => <small key={concept.get('id')} className="text-success">{concept.get('label')}</small>)})</span>

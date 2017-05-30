@@ -11,14 +11,15 @@ const propTypes = {
   onNextPage: PropTypes.func.isRequired,
   onPreviousPage: PropTypes.func.isRequired,
   showBackButton: PropTypes.bool.isRequired,
-  showNextButton: PropTypes.bool.isRequired
+  showNextButton: PropTypes.bool.isRequired,
+  showlogic: PropTypes.bool.isRequired
 };
 
 const defaultProps = {
 };
 
 function Page(props) {
-  const { responseElements, version } = props;
+  const { responseElements, version, showlogic } = props;
   return (<div>
     <div style={{ marginBottom: 16, overflow: 'auto' }}>
       {props.showBackButton && <button className="btn btn-default btn-lg" onClick={props.onPreviousPage}>Back</button>}
@@ -50,6 +51,7 @@ function Page(props) {
         element={element}
         responseElement={responseElement}
         onAnswer={props.onAnsweredQuestions}
+        showlogic={showlogic}
       />);
     })}
     <div style={{ marginBottom: 16, overflow: 'auto' }}>

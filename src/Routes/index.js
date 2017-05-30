@@ -17,7 +17,7 @@ class Routes extends Component {
       <Router history={hashHistory}>
         <Route path="/" component={Container}>
           <IndexRoute component={QuestionnaireAdminContainer} />
-          <Route path="/users/:userId/questionnaires/:questionnaireId(/start/:startIndex)(/end/:endIndex)" component={QuestionnaireForm} />
+          <Route path="/users/:userId/questionnaires/:questionnaireId(/start/:startIndex)(/end/:endIndex)(?showlogic=:showlogic)" component={QuestionnaireForm} />
           <Route path="/submitted" component={QuestionnaireFormSubmitted} />
         </Route>
       </Router>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import cuid from 'cuid';
 
 export default function QuestionnaireAdmin(props) {
   return (
@@ -12,12 +13,12 @@ export default function QuestionnaireAdmin(props) {
         {props.isError &&
           <p>Error loading quesitonnaires.</p>
         }
-        {(props.questionnaires && props.questionnaires.length === 0) &&
+        {(props.items && props.items.length === 0) &&
           <p className="text-muted">No questionnaires</p>
         }
-        {props.questionnaires && props.questionnaires.map(questionnaire =>
+        {props.items && props.items.map(questionnaire =>
           (<li key={questionnaire.id}>
-            <Link to={`/users/3/questionnaires/${questionnaire.id}/start/0`}>{questionnaire.currentTitle}</Link>
+            <Link to={`/users/${cuid()}/questionnaires/${questionnaire.get('id')}/start/0?showlogic=true`}>{questionnaire.get('currentTitle')}</Link>
           </li>)
         )}
       </ul>
