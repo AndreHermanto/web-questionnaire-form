@@ -9,7 +9,7 @@ const defaultProps = {
 };
 
 function Heading(props) {
-  return (<h2 style={{ marginBottom: 32, marginTop: 40 }}>
+  return (<h2 style={{ marginBottom: 32, marginTop: 40 }} className="text-capitalize">
     {props.text}
   </h2>);
 }

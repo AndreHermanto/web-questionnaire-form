@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'immutable';
-import Page from './components/Page';
-import StepIndicator from './components/StepIndicator';
+import Page from './Page';
+import StepIndicator from './StepIndicator';
 
 const propTypes = {
   sections: PropTypes.oneOfType([
@@ -30,7 +30,7 @@ function QuestionnaireForm(props) {
       <div className="row">
         <div className="col-sm-3">
           <div style={{ backgroundColor: 'white', padding: 16 }}>
-          <StepIndicator sections={sections} />
+            <StepIndicator sections={sections} />
           </div>
         </div>
         <div className="col-md-9">
@@ -46,7 +46,8 @@ function QuestionnaireForm(props) {
           />
         </div>
       </div>
-    </div>)
+    </div>
+  );
 }
 
 QuestionnaireForm.propTypes = propTypes;
