@@ -266,7 +266,31 @@ describe('next question', () => {
     }, nextQuestion({ element }));
     expect(state.items.getIn([questionnaireId, 'answeredQuestions']).size).toEqual(7);
   });
+
+  it('goes forward until it finds a visible element', () => {
+    const state = {
+      index: 0,
+      currentId: 'asdf',
+      items: createItems()
+    }
+    const elements = [];
+    const newState = responses(state, nextQuestion({ elements }));
+  });
 })
+
+const createItems = (mergeMe = {}) => {
+  const questionnaireId = 'abcd';
+  return fromJS({
+    [questionnaireId]: {
+      id: questionnaireId,
+      answeredQuestions: [
+        { id: 1, elementId: 100, viewed: true, answers: [] },
+        { id: 2, elementId: 200, viewed: false, answers: [] },
+        { id: 3, elementId: 300, viewed: false, answers: [] },
+        { id: 4, elementId: 400, viewed: false, answers: [] }
+    ]}
+  }).mergeDeep(mergeMe);
+}
 
 describe('getVisibleResponseElements', () => {
   it('returns empty array if no current response', () => {
