@@ -137,7 +137,8 @@ export const createResponse = (questionnaireId, userId, version) => (dispatch) =
       id: cuid(),
       elementId: element.id,
       viewed: false,
-      answers: []
+      answers: [],
+      logic: element.logic
     }))
   };
   return api.createResponse(initialResponse)
