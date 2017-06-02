@@ -2,7 +2,8 @@ import { fromJS } from 'immutable';
 import responses, {
   getCurrentResponse,
   getVisibleResponseElements,
-  isLastQuestion
+  isLastQuestion,
+  getLogicStatement
 } from './responses';
 import {
   resumeQuestionnaire,
@@ -77,7 +78,7 @@ describe('isLastQuestion', () => {
 })
 
 describe('resuming a questionnaire', () => {
-  it('goes to first question and mark it as viewed if the user hasnt started yet', () => {
+  it('goes to first question and marks it as viewed if the user hasnt started yet', () => {
     const userId = 1;
     const versionId = 1;
     const questionnaireId = 'abcd';
@@ -142,11 +143,50 @@ describe('previous question', () => {
 })
 
 describe('next question', () => {
+  it('goes forward until it finds a visible question', () => {
+    const questionnaireId = 'abcd';
+    const element = fromJS({ answers: [{ id: '1231', goTo: { id: 10 } }]})
+    const state = responses({
+      index: 0,
+      currentId: questionnaireId,
+      items: fromJS({ [questionnaireId]: {
+        id: questionnaireId,
+        answeredQuestions: [
+          {
+            id: '1',
+            viewed: true,
+            elementId: '100',
+            answers: [ { id: '1001' }] },
+          {
+            id: '2',
+            viewed: false,
+            elementId: '200',
+            logic: '{what is your gender - male / 100 1000}',
+            answers: []
+          },
+          {
+            id: '3',
+            viewed: false,
+            elementId: '300',
+            logic: '{what is your gender - female / 100 1001}',
+            answers: []
+          },
+          {
+            id: '3',
+            viewed: false,
+            elementId: '300',
+            answers: []
+          }
+      ]}})
+    }, nextQuestion({ element }));
+    expect(state.index).toBe(2);
+  })
   it('marks the next question as viewed', () => {
     const questionnaireId = 'abcd';
     const element = fromJS({ answers: [{ id: 100, goTo: { id: 10 } }]})
     const state = responses({
       index: 0,
+      currentId: questionnaireId,
       items: fromJS({ [questionnaireId]: {
         id: questionnaireId,
         answeredQuestions: [
@@ -161,63 +201,14 @@ describe('next question', () => {
       'answeredQuestions',
       1,
       'viewed'])).toBe(true);
-  })
-  it('goes to the next question, if no skip logic', () => {
-    const questionnaireId = 'abcd';
-    const element = fromJS({ answers: [{ id: 100, goTo: { id: 10 } }]})
-    const state = responses({
-      index: 0,
-      items: fromJS({ [questionnaireId]: {
-        id: questionnaireId,
-        answeredQuestions: [
-          { id: 1, viewed: true, answers: [] },
-          { id: 2, viewed: false, answers: [] },
-          { id: 3, viewed: false, answers: [] },
-          { id: 4, viewed: false, answers: [] }
-      ]}})
-    }, nextQuestion({ element }));
-    expect(state.index).toBe(1);
-  })
-
-  it('follows the skip logic', () => {
-    const questionnaireId = 'abcd';
-    const element = fromJS({ answers: [{ id: 100, goTo: { id: 10 } }]})
-    const state = responses({
-      index: 0,
-      items: fromJS({ [questionnaireId]: {
-        id: questionnaireId,
-        answeredQuestions: [
-          { id: 1, viewed: true, answers: [{ id: 100 }] },
-          { id: 2, viewed: false, answers: [] },
-          { id: 3, elementId: 10, viewed: false },
-          { id: 4, viewed: false, answers: [] }
-      ]}})
-    }, nextQuestion({ element }));
-    expect(state.index).toBe(2);
   });
-
-  it('wont go past the last question', () => {
-    const questionnaireId = 'abcd';
-    const element = fromJS({ answers: [{ id: 100, goTo: { id: 10 } }]})
-    const state = responses({
-      index: 3,
-      items: fromJS({ [questionnaireId]: {
-        id: questionnaireId,
-        answeredQuestions: [
-          { id: 1, viewed: true, answers: [] },
-          { id: 2, viewed: true, answers: [] },
-          { id: 3, viewed: true, answers: [] },
-          { id: 4, viewed: true, answers: [] }
-      ]}})
-    }, nextQuestion({ element }));
-    expect(state.index).toBe(3);
-  })
 
   it('just goes forward if heading', () => {
     const questionnaireId = 'abcd';
     const element = fromJS({ id: 'a', type: 'section' });
     const state = responses({
       index: 0,
+      currentId: questionnaireId,
       items: fromJS({ [questionnaireId]: {
         id: questionnaireId,
         answeredQuestions: [
@@ -234,6 +225,7 @@ describe('next question', () => {
     const element = fromJS({ id: 'a', type: 'textinformation' });
     const state = responses({
       index: 0,
+      currentId: questionnaireId,
       items: fromJS({ [questionnaireId]: {
         id: questionnaireId,
         answeredQuestions: [
@@ -255,42 +247,19 @@ describe('next question', () => {
     });
     const state = responses({
       index: 2,
+      currentId: questionnaireId,
       items: fromJS({ [questionnaireId]: {
         id: questionnaireId,
         answeredQuestions: [
           { id: 1, elementId: 200, viewed: true, answers: [] },
           { id: 2, viewed: true, answers: [] },
-          { id: 3, elementId: 500, viewed: true, answers: [{ id: 100 }] },
+          { id: 3, elementId: 500, viewed: true, answers: [{ id: 100, loopBackTo: 200 }] },
           { id: 4, viewed: true, answers: [] }
       ]}})
     }, nextQuestion({ element }));
     expect(state.items.getIn([questionnaireId, 'answeredQuestions']).size).toEqual(7);
   });
-
-  it('goes forward until it finds a visible element', () => {
-    const state = {
-      index: 0,
-      currentId: 'asdf',
-      items: createItems()
-    }
-    const elements = [];
-    const newState = responses(state, nextQuestion({ elements }));
-  });
 })
-
-const createItems = (mergeMe = {}) => {
-  const questionnaireId = 'abcd';
-  return fromJS({
-    [questionnaireId]: {
-      id: questionnaireId,
-      answeredQuestions: [
-        { id: 1, elementId: 100, viewed: true, answers: [] },
-        { id: 2, elementId: 200, viewed: false, answers: [] },
-        { id: 3, elementId: 300, viewed: false, answers: [] },
-        { id: 4, elementId: 400, viewed: false, answers: [] }
-    ]}
-  }).mergeDeep(mergeMe);
-}
 
 describe('getVisibleResponseElements', () => {
   it('returns empty array if no current response', () => {
@@ -301,23 +270,65 @@ describe('getVisibleResponseElements', () => {
     const visibleQuestions = getVisibleResponseElements(state);
     expect(visibleQuestions).toEqual(fromJS([]));
   })
-  it('gets all viewed questions before the current index', () => {
+  it('gets all questions that are visible', () => {
     const questionnaireId = 'abcd';
     const state = {
       index: 2,
       items: fromJS({ [questionnaireId]: {
         id: questionnaireId,
         answeredQuestions: [
-          { id: 1, viewed: true},
-          { id: 2, viewed: false },
-          { id: 3, viewed: true },
-          { id: 4, viewed: false }
+          { id: 1, visible: true },
+          { id: 2, visible: false },
+          { id: 3, visible: true },
+          { id: 4, visible: false }
       ]}})
     };
     const visibleQuestions = getVisibleResponseElements(state);
     expect(visibleQuestions).toEqual(fromJS([
-      { id: 1, viewed: true },
-      { id: 3, viewed: true }
+      { id: 1, visible: true },
+      { id: 3, visible: true }
     ]))
   })
+})
+
+
+describe('visibility', () => {
+  it('changes the visibility whenever a user hits next', () => {
+    const responseElements = fromJS([
+      {
+        id: '1',
+        viewed: true,
+        elementId: '100',
+        answers: [{ id: '1001' }]
+      },
+      {
+        id: '2',
+        viewed: false,
+        elementId: '200',
+        answers: [{ id: '2000' }]
+      },
+      {
+        id: '3',
+        viewed: false,
+        elementId: '300',
+        answers: []
+      },
+      {
+        id: '4',
+        viewed: false,
+        elementId: '300',
+        answers: []
+      }
+    ]);
+    const logicStatement = getLogicStatement(
+      '{what is your gender - female / 100 1001} && {do you like cake - yes / 200 2000}',
+      responseElements
+    );
+    expect(logicStatement).toEqual('true && true')
+    const logicStatement2 = getLogicStatement(
+      '{what is your gender - male / 100 1000} && {do you like cake - yes / 200 2000}',
+      responseElements
+    );
+    expect(logicStatement2).toEqual('false && true');
+  });
 })

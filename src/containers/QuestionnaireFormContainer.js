@@ -111,6 +111,7 @@ class QuestionnaireFormContainer extends Component {
         }
 
         return (<div key={responseElement.get('id')}>
+          is it visible? {responseElement.get('visible') ? 'true' : 'false'}
           <Question
             key={visibleQuestion.responseElement.get('id')}
             element={element}
