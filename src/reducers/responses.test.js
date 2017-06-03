@@ -293,42 +293,67 @@ describe('getVisibleResponseElements', () => {
 
 
 describe('visibility', () => {
-  it('changes the visibility whenever a user hits next', () => {
-    const responseElements = fromJS([
-      {
-        id: '1',
-        viewed: true,
-        elementId: '100',
-        answers: [{ id: '1001' }]
-      },
-      {
-        id: '2',
-        viewed: false,
-        elementId: '200',
-        answers: [{ id: '2000' }]
-      },
-      {
-        id: '3',
-        viewed: false,
-        elementId: '300',
-        answers: []
-      },
-      {
-        id: '4',
-        viewed: false,
-        elementId: '300',
-        answers: []
-      }
-    ]);
+  const responseElements = fromJS([
+    {
+      id: '1',
+      viewed: true,
+      elementId: '100',
+      answers: [{ id: '1001' }]
+    },
+    {
+      id: '2',
+      viewed: false,
+      elementId: '200',
+      answers: [{ id: '2000' }]
+    },
+    {
+      id: '3',
+      viewed: false,
+      elementId: '300',
+      answers: []
+    },
+    {
+      id: '4',
+      viewed: false,
+      elementId: '300',
+      answers: []
+    },
+    {
+      id: '5',
+      viewed: true,
+      elementId: '100',
+      answers: [{ id: '1000' }]
+    },
+    {
+      id: '6',
+      viewed: true,
+      elementId: '600',
+      answers: []
+    }
+  ]);
+
+  it('works out the visibility based on previous answers', () => {
     const logicStatement = getLogicStatement(
       '{what is your gender - female / 100 1001} && {do you like cake - yes / 200 2000}',
-      responseElements
+      responseElements,
+      3
     );
     expect(logicStatement).toEqual('true && true')
     const logicStatement2 = getLogicStatement(
       '{what is your gender - male / 100 1000} && {do you like cake - yes / 200 2000}',
-      responseElements
+      responseElements,
+      3
     );
     expect(logicStatement2).toEqual('false && true');
+  });
+  it('uses the last answer that matched before this question', () => {
+    // this is so any repeats, it wont take the first repeated elementId
+    // it will take the last one
+    const logicStatement3 = getLogicStatement(
+      '{what is your gender - male / 100 1000}',
+      responseElements,
+      5
+    );
+    expect(logicStatement3).toEqual('true');
   });
 })

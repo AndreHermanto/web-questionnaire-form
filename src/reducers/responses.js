@@ -10,7 +10,7 @@ const initialState = {
   currentId: null
 };
 
-export const getLogicStatement = (logic, responseElements) => {
+export const getLogicStatement = (logic, responseElements, currentIndex) => {
   if(!logic) {
     return true;
   }
@@ -24,10 +24,15 @@ export const getLogicStatement = (logic, responseElements) => {
         }
         return Object.assign({}, acc, { answerId: id.slice(0, id.length - 1) });
       }, {});
-    return responseElements.find(responseElement => {
-      return responseElement.get('elementId') === ids.elementId &&
-        responseElement.get('answers').find(answer => answer.get('id') === ids.answerId);
-    }) ? 'true' : 'false';
+    const matchingResponseElement = responseElements.findLast((responseElement, index) =>
+      responseElement.get('elementId') === ids.elementId &&
+        index < currentIndex
+    );
+    if (!matchingResponseElement) {
+      return false;
+    }
+    return matchingResponseElement.get('answers').find(answer => answer.get('id') === ids.answerId)
+      ? 'true' : 'false';
   });
 }
 
@@ -161,8 +166,12 @@ const responses = (state = initialState, action) => {
 
       // calculate visibility
       items = items.updateIn([state.currentId, 'answeredQuestions'], responseElements => {
-        return responseElements.map(responseElement => {
-          return responseElement.set('visible', eval(getLogicStatement(responseElement.get('logic'), responseElements)));
+        return responseElements.map((responseElement, index) => {
+          return responseElement.set('visible', eval(getLogicStatement(
+            responseElement.get('logic'),
+            responseElements,
+            index
+          )));
         });
       });
       // calculate next visible item
@@ -273,7 +282,16 @@ const responses = (state = initialState, action) => {
       const response = fromJS(action.response);
       return {
         ...state,
-        items: state.items.set(response.get('id'), response)
+        items: state.items
+          .set(response.get('id'), response)
+          .updateIn([state.currentId, 'answeredQuestions'], responseElements =>
+            responseElements.map((responseElement, index) =>
+              responseElement.set('visible', eval(getLogicStatement(
+                responseElement.get('logic'),
+                responseElements,
+                index
+              ))))
+          )
       };
     }
     case types.FETCH_RESPONSES_FAILURE:

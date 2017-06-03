@@ -133,13 +133,14 @@ export const createResponse = (questionnaireId, userId, version) => (dispatch) =
     questionnaireId,
     versionId: version.id,
     completed: false,
-    answeredQuestions: version.body.map(element => ({
+    answeredQuestions: version.body.map((element, index) => ({
       id: cuid(),
       elementId: element.id,
       viewed: false,
       answers: [],
       logic: element.logic,
-      loopBackTo: element.getIn(['goTo', 'id'])
+      loopBackTo: element.goTo ? element.goTo.id : null,
+      visible: index === 0
     }))
   };
   return api.createResponse(initialResponse)
