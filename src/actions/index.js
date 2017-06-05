@@ -64,6 +64,13 @@ export function setVersion(version) {
   };
 }
 
+export function setResume(resume) {
+  return {
+    type: 'SET_RESUME',
+    resume: resume
+  };
+}
+
 export const fetchQuestionnaireRequest = () => ({
   type: types.FETCH_QUESTIONNAIRE_REQUEST
 });
