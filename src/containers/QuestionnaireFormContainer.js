@@ -6,6 +6,7 @@ import {
   hashHistory
 } from 'react-router';
 import { fromJS } from 'immutable';
+import { animateScroll } from 'react-scroll';
 import {
   setResponse,
   setupQuestionnaire,
@@ -47,6 +48,12 @@ class QuestionnaireFormContainer extends Component {
   componentDidMount() {
     const { questionnaireId, userId } = this.props.params;
     this.props.dispatch(setupQuestionnaire({ questionnaireId, userId }));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.visibleQuestions.size !== this.props.visibleQuestions.size) {
+        animateScroll.scrollToBottom();
+    }
   }
 
   handleQuestionAnswered(responseElement) {
