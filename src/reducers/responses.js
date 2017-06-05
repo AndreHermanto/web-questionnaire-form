@@ -10,6 +10,32 @@ const initialState = {
   currentId: null
 };
 
+export const getLogicStatement = (logic, responseElements, currentIndex) => {
+  if(!logic) {
+    return true;
+  }
+  return logic.replace(/{(.*?)}/g, bits => {
+    const parts = bits.split('/');
+    const ids = parts[1].trim().split(' ')
+      .map(id => id.trim())
+      .reduce((acc, id, index) => {
+        if (index === 0) {
+          return Object.assign({}, acc, { elementId: id });
+        }
+        return Object.assign({}, acc, { answerId: id.slice(0, id.length - 1) });
+      }, {});
+    const matchingResponseElement = responseElements.findLast((responseElement, index) =>
+      responseElement.get('elementId') === ids.elementId &&
+        index < currentIndex
+    );
+    if (!matchingResponseElement) {
+      return false;
+    }
+    return matchingResponseElement.get('answers').find(answer => answer.get('id') === ids.answerId)
+      ? 'true' : 'false';
+  });
+}
+
 export const getVisibleResponseElements = (state) => {
   if (!state.items.size) {
     return List();
@@ -17,7 +43,7 @@ export const getVisibleResponseElements = (state) => {
   return getCurrentResponse(state)
     .get('answeredQuestions')
     .slice(0, state.index + 1)
-    .filter(responseElement => responseElement.get('viewed'))
+    .filter(responseElement => responseElement.get('visible'));
 }
 
 export const getCurrentResponse = (state) => {
@@ -111,105 +137,161 @@ const responses = (state = initialState, action) => {
       };
     }
     case types.NEXT_QUESTION: {
-      const response = getCurrentResponse(state);
-      const { element } = action.payload;
-      if (state.index ===
-        response.get('answeredQuestions').size - 1) {
-        return state;
-      }
-      let nextIndex;
-      if (
-        element.get('type') === 'textinformation' ||
-        element.get('type') === 'section'
-      ) {
-        nextIndex = Math.min(state.index + 1, getCurrentResponse(state).get('answeredQuestions').size - 1);
-      } else {
-        const responseElement = response.getIn(['answeredQuestions', state.index]);
-        const chosenAnswerWithSkipLogic =
-          element
-            .get('answers')
-            .filter(answer =>
-              answer.get('goTo') &&
-              responseElement
-                .get('answers')
-                .find(chosenAnswer =>
-                  answer.get('id') === chosenAnswer.get('id')
-                )
-            );
-        if(!chosenAnswerWithSkipLogic.size) {
-          nextIndex = Math.min(state.index + 1, getCurrentResponse(state).get('answeredQuestions').size - 1);
-        } else {
-          nextIndex = response
-            .get('answeredQuestions')
-            .findIndex((responseElement, index) =>
-              index > state.index &&
-              responseElement.get('elementId') ===
-                chosenAnswerWithSkipLogic
-                  .first()
-                  .getIn(['goTo', 'id'])
-            );
-          // couldnt find it forward, looking backwards
-          if(nextIndex === -1) {
-            // just go to the next question
-            nextIndex = Math.min(state.index + 1, getCurrentResponse(state).get('answeredQuestions').size - 1);
-            var lookBackToIndex = response
-              .get('answeredQuestions')
-              .findLastIndex((responseElement, index) =>
-                index < state.index &&
-                responseElement.get('elementId') ===
-                  chosenAnswerWithSkipLogic
-                    .first()
-                    .getIn(['goTo', 'id'])
-              );
-            // const lookBackToIndex2 = 0;
-            if (lookBackToIndex === -1) {
-              throw new Error('Skip logic found no matching section');
-            }
-            // duplicate stuff
-            // TODO: refactor this section, move it to actions, no cuid() should be used in the reducer
-            const items = state.items
-              .updateIn([
-                response.get('id'),
-                'answeredQuestions'],
-                responseElements =>
+      let items = state.items;
+      // does this question have a loop back?
+      const answersWithLoopBack = state.items.getIn([state.currentId, 'answeredQuestions', state.index, 'answers']).filter(answer => !!answer.get('loopBackTo'));
+      if (answersWithLoopBack.size) {
+        const loopBackToIndex = state.items.getIn([state.currentId, 'answeredQuestions']).findLastIndex((responseElement, index) =>
+          index < state.index &&
+          responseElement.get('elementId') === answersWithLoopBack.getIn([0, 'loopBackTo'])
+        );
+        items = items
+          .updateIn([
+            state.currentId,
+            'answeredQuestions'],
+            responseElements =>
+              responseElements
+                .slice(0, state.index + 1)
+                .concat(
                   responseElements
-                    .slice(0, state.index + 1)
-                    .concat(
-                      responseElements
-                        .slice(lookBackToIndex, state.index + 1)
-                        .map(responseElement => responseElement.set('id', cuid()).set('viewed', false).set('answers', fromJS([])))
-                        .setIn([0, 'viewed'], true)
-                    )
-                    .concat(
-                      responseElements.slice(state.index + 1)
-                    )
-              );
-            return {
-              ...state,
-              index: nextIndex,
-              items
-            };
-
-          }
-        }
-
+                    .slice(loopBackToIndex, state.index + 1)
+                    .map(responseElement => responseElement.set('id', cuid()).set('viewed', false).set('answers', fromJS([])))
+                    .setIn([0, 'viewed'], true)
+                )
+                .concat(
+                  responseElements.slice(state.index + 1)
+                )
+          );
       }
 
-      const items = markQuestionAsViewed(
-        state,
-        response.get('id'),
-        nextIndex);
+      // calculate visibility
+      items = items.updateIn([state.currentId, 'answeredQuestions'], responseElements => {
+        return responseElements.map((responseElement, index) => {
+          return responseElement.set('visible', eval(getLogicStatement(
+            responseElement.get('logic'),
+            responseElements,
+            index
+          )));
+        });
+      });
+      // calculate next visible item
+      const index = items.get(state.currentId).get('answeredQuestions').findIndex((responseElement, index) => {
+        return index > state.index && responseElement.get('visible');
+      });
       return {
         ...state,
-        index: nextIndex,
-        items
+        index,
+        items: items.setIn([state.currentId, 'answeredQuestions', index, 'viewed'], true) // mark as viewed
       };
     }
+      //
+      // const { element } = action.payload;
+      // if (state.index ===
+      //   response.get('answeredQuestions').size - 1) {
+      //   return state;
+      // }
+      // let nextIndex;
+      // if (
+      //   element.get('type') === 'textinformation' ||
+      //   element.get('type') === 'section'
+      // ) {
+      //   nextIndex = Math.min(state.index + 1, getCurrentResponse(state).get('answeredQuestions').size - 1);
+      // } else {
+      //   const responseElement = response.getIn(['answeredQuestions', state.index]);
+      //   const chosenAnswerWithSkipLogic =
+      //     element
+      //       .get('answers')
+      //       .filter(answer =>
+      //         answer.get('goTo') &&
+      //         responseElement
+      //           .get('answers')
+      //           .find(chosenAnswer =>
+      //             answer.get('id') === chosenAnswer.get('id')
+      //           )
+      //       );
+      //   if(!chosenAnswerWithSkipLogic.size) {
+      //     nextIndex = Math.min(state.index + 1, getCurrentResponse(state).get('answeredQuestions').size - 1);
+      //   } else {
+      //     nextIndex = response
+      //       .get('answeredQuestions')
+      //       .findIndex((responseElement, index) =>
+      //         index > state.index &&
+      //         responseElement.get('elementId') ===
+      //           chosenAnswerWithSkipLogic
+      //             .first()
+      //             .getIn(['goTo', 'id'])
+      //       );
+      //     // couldnt find it forward, looking backwards
+      //     if(nextIndex === -1) {
+      //       // just go to the next question
+      //       nextIndex = Math.min(state.index + 1, getCurrentResponse(state).get('answeredQuestions').size - 1);
+      //       var lookBackToIndex = response
+      //         .get('answeredQuestions')
+      //         .findLastIndex((responseElement, index) =>
+      //           index < state.index &&
+      //           responseElement.get('elementId') ===
+      //             chosenAnswerWithSkipLogic
+      //               .first()
+      //               .getIn(['goTo', 'id'])
+      //         );
+      //       // const lookBackToIndex2 = 0;
+      //       if (lookBackToIndex === -1) {
+      //         throw new Error('Skip logic found no matching section');
+      //       }
+      //       // duplicate stuff
+      //       // TODO: refactor this section, move it to actions, no cuid() should be used in the reducer
+      //       const items = state.items
+      //         .updateIn([
+      //           response.get('id'),
+      //           'answeredQuestions'],
+      //           responseElements =>
+      //             responseElements
+      //               .slice(0, state.index + 1)
+      //               .concat(
+      //                 responseElements
+      //                   .slice(lookBackToIndex, state.index + 1)
+      //                   .map(responseElement => responseElement.set('id', cuid()).set('viewed', false).set('answers', fromJS([])))
+      //                   .setIn([0, 'viewed'], true)
+      //               )
+      //               .concat(
+      //                 responseElements.slice(state.index + 1)
+      //               )
+      //         );
+      //       return {
+      //         ...state,
+      //         index: nextIndex,
+      //         items
+      //       };
+
+          // }
+        // }
+    //
+    //   }
+    //
+    //   const items = markQuestionAsViewed(
+    //     state,
+    //     response.get('id'),
+    //     nextIndex);
+    //   return {
+    //     ...state,
+    //     index: nextIndex,
+    //     items
+    //   };
+    // }
     case 'SET_RESPONSE': {
       const response = fromJS(action.response);
       return {
         ...state,
-        items: state.items.set(response.get('id'), response)
+        items: state.items
+          .set(response.get('id'), response)
+          .updateIn([state.currentId, 'answeredQuestions'], responseElements =>
+            responseElements.map((responseElement, index) =>
+              responseElement.set('visible', eval(getLogicStatement(
+                responseElement.get('logic'),
+                responseElements,
+                index
+              ))))
+          )
       };
     }
     case types.FETCH_RESPONSES_FAILURE:

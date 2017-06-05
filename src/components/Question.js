@@ -93,7 +93,7 @@ export default function Question({
   };
 
   const handleAnswerHeight = (e, answer, unit) => {
-    const target = e.target; 
+    const target = e.target;
     if (unit === 'feet') {
       const newResponseElement = responseElement.set('answers', fromJS([{
         id: answer.get('id'),
