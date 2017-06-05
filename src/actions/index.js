@@ -133,11 +133,14 @@ export const createResponse = (questionnaireId, userId, version) => (dispatch) =
     questionnaireId,
     versionId: version.id,
     completed: false,
-    answeredQuestions: version.body.map(element => ({
+    answeredQuestions: version.body.map((element, index) => ({
       id: cuid(),
       elementId: element.id,
       viewed: false,
-      answers: []
+      answers: [],
+      logic: element.logic,
+      loopBackTo: element.goTo ? element.goTo.id : null,
+      visible: index === 0
     }))
   };
   return api.createResponse(initialResponse)
@@ -177,9 +180,9 @@ export const fetchVersion = (questionnaireId, versionId) => (dispatch) => {
     .catch(e => dispatch(fetchVersionFailure(e)));
 };
 
-export const nextQuestion = ({ element }) => ({
+export const nextQuestion = ({ element, responseElements }) => ({
   type: types.NEXT_QUESTION,
-  payload: { element }
+  payload: { responseElements }
 });
 export const previousQuestion = () => ({
   type: types.PREVIOUS_QUESTION
