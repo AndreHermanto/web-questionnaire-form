@@ -230,11 +230,11 @@ export const updateResponse = (responseId, response) => (dispatch) => {
 
 
 
-export const setupQuestionnaire = ({ questionnaireId, userId }) => (dispatch, getState) => {
+export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (dispatch, getState) => {
   // get the responses
   dispatch(fetchResponses(questionnaireId, userId))
     .then((responses) => {
-      if (responses.length) {
+      if (responses.length && resume === 'true') {
         const response = responses[0];
         // there are responses
         return dispatch(fetchVersion(questionnaireId, response.versionId)).then(() => response);

@@ -29,7 +29,7 @@ export default function QuestionnaireAdmin(props) {
         }
         {props.items && props.items.valueSeq().map(questionnaire =>
           (<li key={questionnaire.get('id')}>
-            <Link to={`/users/${cuid()}/questionnaires/${questionnaire.get('id')}?showlogic=true&resume=${props.resume}`}>{questionnaire.get('currentTitle')}</Link>
+            <Link to={`/users/admin/questionnaires/${questionnaire.get('id')}?showlogic=true&resume=${props.resume}`}>{questionnaire.get('currentTitle')}</Link>
           </li>)
         )}
       </ul>

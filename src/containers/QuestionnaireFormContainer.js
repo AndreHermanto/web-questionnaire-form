@@ -46,8 +46,8 @@ class QuestionnaireFormContainer extends Component {
   }
 
   componentDidMount() {
-    const { questionnaireId, userId } = this.props.params;
-    this.props.dispatch(setupQuestionnaire({ questionnaireId, userId }));
+    const { questionnaireId, userId, resume } = this.props.params;
+    this.props.dispatch(setupQuestionnaire({ questionnaireId, userId, resume }));
   }
 
   componentDidUpdate(prevProps, prevState) {
