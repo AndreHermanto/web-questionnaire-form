@@ -16,8 +16,8 @@ export default function QuestionnaireAdmin(props) {
         {(props.items && props.items.length === 0) &&
           <p className="text-muted">No questionnaires</p>
         }
-        {props.items && props.items.map(questionnaire =>
-          (<li key={questionnaire.id}>
+        {props.items && props.items.valueSeq().map(questionnaire =>
+          (<li key={questionnaire.get('id')}>
             <Link to={`/users/${cuid()}/questionnaires/${questionnaire.get('id')}/start/0?showlogic=true`}>{questionnaire.get('currentTitle')}</Link>
           </li>)
         )}
