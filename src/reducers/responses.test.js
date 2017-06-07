@@ -28,52 +28,37 @@ describe('isLastQuestion', () => {
         ]
       }})
     };
-    expect(isLastQuestion(state, {})).toBe(true);
+    expect(isLastQuestion(state)).toBe(true);
   });
-  it('is false if we are not on the actual last question, and there is no skip logic', () => {
+  it('true if any question after this, is hidden', () => {
     const questionnaireId = 'abcd';
     const state = {
       index: 0,
       items: fromJS({ [questionnaireId]: {
         id: questionnaireId,
         answeredQuestions: [
-          { id: 1, viewed: true, elementId: 'sdfg', answers: [] },
-          { id: 2, viewed: true }
+          { id: '1', viewed: true, visible: true, elementId: 'sdfg', answers: [] },
+          { id: '2', visible: false },
+          { id: '3', visible: false }
         ]
       }})
     };
-    expect(isLastQuestion(state, fromJS({ id: 'sdfg' }))).toBe(false);
+    expect(isLastQuestion(state)).toBe(true);
   });
-  it('is true if a "go to end" answer is selected', () => {
+  it('false if there are more visibile questions', () => {
     const questionnaireId = 'abcd';
-    const element = fromJS({ id: 'sdfg', type: 'radio', answers: [{ id: 100, goTo: { id: 'End' } }]})
     const state = {
       index: 0,
       items: fromJS({ [questionnaireId]: {
         id: questionnaireId,
         answeredQuestions: [
-          { id: 1, viewed: true, elementId: 'sdfg', answers: [{ id: 100 }]},
-          { id: 2, viewed: true }
+          { id: '1', viewed: true, visible: true, elementId: 'sdfg', answers: [] },
+          { id: '2', visible: true },
+          { id: '3', visible: true }
         ]
       }})
     };
-    expect(isLastQuestion(state, element)).toBe(true);
-  });
-
-  it('is false if answer has skip logic, but not "go to end"', () => {
-    const questionnaireId = 'abcd';
-    const element = fromJS({ id: 'sdfg', answers: [{ id: 100, goTo: { id: '1232112' } }]})
-    const state = {
-      index: 0,
-      items: fromJS({ [questionnaireId]: {
-        id: questionnaireId,
-        answeredQuestions: [
-          { id: 1, viewed: true, elementId: 'sdfg', answers: [{ id: 100 }]},
-          { id: 2, viewed: true }
-        ]
-      }})
-    };
-    expect(isLastQuestion(state, element)).toBe(false);
+    expect(isLastQuestion(state)).toBe(false);
   });
 })
 
@@ -143,6 +128,63 @@ describe('previous question', () => {
 })
 
 describe('next question', () => {
+  it('skips hidden sections', () => {
+    const responseElements = fromJS([{
+        id: '1',
+        viewed: true,
+        elementId: '100',
+        type: 'radio',
+        answers: [ { id: '1001' }]
+      }, {
+        id: '2',
+        viewed: false,
+        type: 'section',
+        elementId: '200',
+        logic: '{what is your gender - male / 100 1000}',
+        answers: []
+      }, {
+        id: '3',
+        viewed: false,
+        type: 'radio',
+        elementId: '300',
+        logic: '{what is your gender - male / 100 1000}',
+        answers: []
+      }, {
+        id: '4',
+        viewed: false,
+        type: 'radio',
+        logic: '{what is your gender - male / 100 1000}',
+        elementId: '300',
+        answers: []
+      }, {
+        id: '5',
+        viewed: false,
+        type: 'section',
+        logic: 'true',
+        elementId: '400',
+        answers: []
+      }, {
+        id: '6',
+        viewed: false,
+        type: 'radio',
+        logic: 'true',
+        elementId: '300',
+        answers: []
+      }
+      ]);
+    const questionnaireId = 'abcd';
+    const state = responses({
+      index: 0,
+      currentId: questionnaireId,
+      items: fromJS({
+        [questionnaireId]: {
+          id: questionnaireId,
+          answeredQuestions: responseElements
+        }
+      })
+    }, nextQuestion());
+    expect(state.index).toBe(5);
+  });
   it('goes forward until it finds a visible question', () => {
     const questionnaireId = 'abcd';
     const element = fromJS({ answers: [{ id: '1231', goTo: { id: 10 } }]})
