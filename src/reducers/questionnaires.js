@@ -4,7 +4,8 @@ import * as types from '../constants/ActionTypes';
 const initialState = {
   items: fromJS({}),
   isError: false,
-  isLoading: false
+  isLoading: false,
+  resume: false
 };
 
 export const getQuestionnaires = state => state.items;
@@ -57,6 +58,11 @@ const questionnaires = (state = initialState, action) => {
       return {
         ...state,
         version: action.version
+      };
+    case 'SET_RESUME':
+      return {
+        ...state,
+        resume: action.resume
       };
     default:
       return state;
