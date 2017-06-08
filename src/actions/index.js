@@ -133,23 +133,24 @@ export const createResponseFailure = error => ({
   error: true,
   playload: error
 });
+const createInitialResponse = (questionnaireId, userId, version) => ({
+  userId,
+  questionnaireId,
+  versionId: version.id,
+  completed: false,
+  answeredQuestions: version.body.map((element, index) => ({
+    id: cuid(),
+    elementId: element.id,
+    viewed: false,
+    answers: [],
+    logic: element.logic,
+    loopBackTo: element.goTo ? element.goTo.id : null,
+    visible: index === 0
+  }))
+  });
 export const createResponse = (questionnaireId, userId, version) => (dispatch) => {
   dispatch(createResponseRequest());
-  const initialResponse = {
-    userId,
-    questionnaireId,
-    versionId: version.id,
-    completed: false,
-    answeredQuestions: version.body.map((element, index) => ({
-      id: cuid(),
-      elementId: element.id,
-      viewed: false,
-      answers: [],
-      logic: element.logic,
-      loopBackTo: element.goTo ? element.goTo.id : null,
-      visible: index === 0
-    }))
-  };
+  const initialResponse = createInitialResponse(questionnaireId, userId, version);
   return api.createResponse(initialResponse)
     .then(response => response.json())
     .then(json => json.data)
@@ -234,7 +235,7 @@ export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (disp
   // get the responses
   dispatch(fetchResponses(questionnaireId, userId))
     .then((responses) => {
-      if (responses.length && resume === 'true') {
+      if (responses.length && (userId !== 'admin' || (userId === 'admin' && resume === true))) {
         const response = responses[0];
         // there are responses
         return dispatch(fetchVersion(questionnaireId, response.versionId)).then(() => response);
@@ -244,8 +245,15 @@ export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (disp
       return dispatch(fetchQuestionnaire(questionnaireId))
         .then(questionnaire =>
           dispatch(fetchVersion(questionnaireId, questionnaire.currentVersionId)))
-        .then(version =>
-          dispatch(createResponse(questionnaireId, userId, version)));
+        .then(version => {
+          if (responses.length && (userId === 'admin' && resume === false)) {
+            // overwrite the existing
+            const overwritingResponse = Object.assign(responses[0], createInitialResponse(questionnaireId, userId, version));
+            return dispatch(setResponse(overwritingResponse));
+          } else {
+            return dispatch(createResponse(questionnaireId, userId, version));
+          }
+        });
     })
     .then(() => {
       // resumse

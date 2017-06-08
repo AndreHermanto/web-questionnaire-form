@@ -8,7 +8,7 @@ class QuestionnaireAdminContainer extends Component {
     super(props);
     this.handleChangeResume = this.handleChangeResume.bind(this);
   }
-  componentWillMount() {
+  componentDidMount() {
     return this.props.dispatch(fetchQuestionnaires());
   }
   handleChangeResume() {
