@@ -1,11 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router';
-import cuid from 'cuid';
 
 export default function QuestionnaireAdmin(props) {
   return (
     <div className="container">
       <h4>Questionnaire Admin</h4>
+        <form>
+          <label>
+            Resume:
+            <input
+              name="resume"
+              type="checkbox"
+              checked={props.resume}
+              onChange={props.handleChangeResume}
+          />
+        </label>
+      </form>
       <ul>
         {props.isLoading &&
           <p>Loading questionnaires...</p>
@@ -17,8 +27,8 @@ export default function QuestionnaireAdmin(props) {
           <p className="text-muted">No questionnaires</p>
         }
         {props.items && props.items.map(questionnaire =>
-          (<li key={questionnaire.id}>
-            <Link to={`/users/${cuid()}/questionnaires/${questionnaire.get('id')}/start/0?showlogic=true`}>{questionnaire.get('currentTitle')}</Link>
+          (<li key={questionnaire.get('id')}>
+            <Link to={`/users/admin/questionnaires/${questionnaire.get('id')}?resume=${props.resume}&showlogic=true`}>{questionnaire.get('currentTitle')}</Link>
           </li>)
         )}
       </ul>

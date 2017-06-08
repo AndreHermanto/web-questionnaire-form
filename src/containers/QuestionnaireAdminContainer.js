@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchQuestionnaires } from '../actions';
+import { fetchQuestionnaires, setResume } from '../actions';
 import QuestionnaireAdmin from '../components/QuestionnaireAdmin';
 
 class QuestionnaireAdminContainer extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+    this.handleChangeResume = this.handleChangeResume.bind(this);
+  }
+  componentDidMount() {
     return this.props.dispatch(fetchQuestionnaires());
   }
-
+  handleChangeResume() {
+    this.props.dispatch(setResume(!this.props.resume));
+  }
   render() {
-    return <QuestionnaireAdmin {...this.props} />;
+    return <QuestionnaireAdmin {...this.props} handleChangeResume={this.handleChangeResume} />;
   }
 }
 
