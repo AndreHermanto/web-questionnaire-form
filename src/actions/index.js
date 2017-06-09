@@ -145,7 +145,7 @@ const createInitialResponse = (questionnaireId, userId, version) => {
         // remove all sections >= this section size
         // e.g. if this is a size 2, remove all the 2s and 3s
         sections = sections
-          .filter(section => section.size > element.size)
+          .filter(section => section.size < element.size)
           .concat([element]);
       }
       const logic =
