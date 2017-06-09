@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Helpers } from 'react-scroll';
+import toJS from './toJS';
 
 const propTypes = {
   text: PropTypes.string.isRequired
@@ -17,4 +19,4 @@ function Heading(props) {
 Heading.propTypes = propTypes;
 Heading.defaultProps = defaultProps;
 
-export default Heading;
+export default Helpers.Element(toJS(Heading));

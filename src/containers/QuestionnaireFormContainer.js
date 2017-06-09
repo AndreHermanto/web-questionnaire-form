@@ -6,7 +6,7 @@ import {
   hashHistory
 } from 'react-router';
 import { fromJS } from 'immutable';
-import { animateScroll } from 'react-scroll';
+import { scroller } from 'react-scroll';
 import {
   setResponse,
   setupQuestionnaire,
@@ -14,6 +14,7 @@ import {
   setQuestionnaireDebug
 } from '../actions';
 import Question from '../components/Question';
+import TextInformation from '../components/TextInformation';
 import {
   getVisibleQuestions,
   isLastQuestion,
@@ -57,7 +58,11 @@ class QuestionnaireFormContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.visibleQuestions.size !== this.props.visibleQuestions.size) {
-        animateScroll.scrollToBottom();
+      scroller.scrollTo(this.props.visibleQuestions.last().responseElement.get('id'), {
+        duration: 500,
+        delay: 0,
+        smooth: true,
+      });
     }
   }
 
@@ -70,9 +75,12 @@ class QuestionnaireFormContainer extends Component {
         }
         return [...carry, myResponseElement];
       }, [])));
-
     // store the change
     this.props.dispatch(setResponse(response));
+
+    if(responseElement.get('type') === 'radio') {
+      this.props.dispatch(nextQuestion());
+    }
   }
 
   handeSubmitQuestionnaire() {
@@ -92,9 +100,11 @@ class QuestionnaireFormContainer extends Component {
           return <div>Loading question and reponse...</div>;
         }
         if (element.get('type') === 'textinformation') {
-          return (<div key={responseElement.get('id')} style={{ marginBottom: 24, backgroundColor: 'white', border: '1px solid #eee', padding: 32 }}>
-            {element.get('text').split('\n').map(item => <span key={item}>{item}<br /></span>)}
-
+          return (<div key={responseElement.get('id')}>
+            <TextInformation
+              name={responseElement.get('id')}
+              text={element.get('text')}
+            />
             {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
             <button
               className="btn btn-primary btn-lg"
@@ -103,14 +113,17 @@ class QuestionnaireFormContainer extends Component {
               {responseElement.get('answers').size ? 'Next' : 'Skip'}
             </button>
             }
-
           </div>);
         }
 
         // section heading
         if (element.get('type') === 'section') {
           return <div key={responseElement.get('id')} >
-            <Heading text={element.get('title')} size={element.get('size')} />
+            <Heading
+              text={element.get('title')}
+              size={element.get('size')}
+              name={responseElement.get('id')}
+            />
             {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
             <button
               className="btn btn-primary btn-lg"
@@ -124,6 +137,7 @@ class QuestionnaireFormContainer extends Component {
 
         return (<div key={responseElement.get('id')}>
           <Question
+            name={responseElement.get('id')}
             key={visibleQuestion.responseElement.get('id')}
             element={element}
             number={index + 1}
