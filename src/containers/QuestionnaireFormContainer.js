@@ -67,20 +67,7 @@ class QuestionnaireFormContainer extends Component {
   }
 
   handleQuestionAnswered(responseElement) {
-    // replace the answer with the new answer
-    const response = this.props.response.update('answeredQuestions', responseElements =>
-      fromJS(responseElements.reduce((carry, myResponseElement) => {
-        if (myResponseElement.get('id') === responseElement.get('id')) {
-          return [...carry, responseElement];
-        }
-        return [...carry, myResponseElement];
-      }, [])));
-    // store the change
-    this.props.dispatch(setResponse(response));
-
-    if(responseElement.get('type') === 'radio') {
-      this.props.dispatch(nextQuestion());
-    }
+    this.props.dispatch(setQuestionAnswer({ responseElement }));
   }
 
   handeSubmitQuestionnaire() {
