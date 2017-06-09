@@ -133,21 +133,38 @@ export const createResponseFailure = error => ({
   error: true,
   playload: error
 });
-const createInitialResponse = (questionnaireId, userId, version) => ({
-  userId,
-  questionnaireId,
-  versionId: version.id,
-  completed: false,
-  answeredQuestions: version.body.map((element, index) => ({
-    id: cuid(),
-    elementId: element.id,
-    viewed: false,
-    answers: [],
-    logic: element.logic,
-    loopBackTo: element.goTo ? element.goTo.id : null,
-    visible: index === 0
-  }))
-  });
+const createInitialResponse = (questionnaireId, userId, version) => {
+  let sections = [];
+  return {
+    userId,
+    questionnaireId,
+    versionId: version.id,
+    completed: false,
+    answeredQuestions: version.body.map((element, index) => {
+      const logic =
+        sections.map(section => section.logic ? `(${section.logic.replace(/{(.*?)\//g, bits => '{/')})` : 'true')
+        .concat([element.logic ? `(${element.logic.replace(/{(.*?)\//g, bits => '{/')})` : 'true']).join(' && ');
+
+      if (element.type === 'section') {
+        // remove all sections >= this section size
+        // e.g. if this is a size 2, remove all the 2s and 3s
+        sections = sections
+          .filter(section => section.size < element.size)
+          .concat([element]);
+      }
+      return {
+        id: cuid(),
+        elementId: element.id,
+        viewed: false,
+        answers: [],
+        type: element.type,
+        logic,
+        loopBackTo: element.goTo ? element.goTo.id : null,
+        visible: index === 0
+      };
+    })
+  };
+};
 export const createResponse = (questionnaireId, userId, version) => (dispatch) => {
   dispatch(createResponseRequest());
   const initialResponse = createInitialResponse(questionnaireId, userId, version);
@@ -188,9 +205,8 @@ export const fetchVersion = (questionnaireId, versionId) => (dispatch) => {
     .catch(e => dispatch(fetchVersionFailure(e)));
 };
 
-export const nextQuestion = ({ element, responseElements }) => ({
-  type: types.NEXT_QUESTION,
-  payload: { responseElements }
+export const nextQuestion = () => ({
+  type: types.NEXT_QUESTION
 });
 export const previousQuestion = () => ({
   type: types.PREVIOUS_QUESTION

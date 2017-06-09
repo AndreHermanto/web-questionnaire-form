@@ -98,7 +98,7 @@ class QuestionnaireFormContainer extends Component {
             {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
             <button
               className="btn btn-primary btn-lg"
-              onClick={() => this.props.dispatch(nextQuestion({ element }))}
+              onClick={() => this.props.dispatch(nextQuestion())}
             >
               {responseElement.get('answers').size ? 'Next' : 'Skip'}
             </button>
@@ -114,7 +114,7 @@ class QuestionnaireFormContainer extends Component {
             {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
             <button
               className="btn btn-primary btn-lg"
-              onClick={() => this.props.dispatch(nextQuestion({ element }))}
+              onClick={() => this.props.dispatch(nextQuestion())}
             >
               Okay
             </button>
@@ -134,7 +134,7 @@ class QuestionnaireFormContainer extends Component {
           {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
           <button
             className="btn btn-primary btn-lg"
-            onClick={() => this.props.dispatch(nextQuestion({ element }))}
+            onClick={() => this.props.dispatch(nextQuestion())}
           >
             {responseElement.get('answers').size ? 'Next' : 'Skip'}
           </button>
