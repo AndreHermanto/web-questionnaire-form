@@ -1,7 +1,6 @@
 import { fromJS, List } from 'immutable';
 import cuid from 'cuid';
 import * as types from '../constants/ActionTypes';
-import { isQuestion } from '../helpers/questions';
 const initialState = {
   items: fromJS({}),
   isError: false,
@@ -67,24 +66,15 @@ export const isLastQuestion = (state, currentElement) => {
       .size - 1) {
     return true;
   }
-  if (!isQuestion(currentElement)) {
-    return false;
+  if (response
+    .get('answeredQuestions')
+    .slice(state.index + 1)
+    .reduce((acc, responseElement) =>
+      acc & !responseElement.get('visible'), true)
+    ) {
+    return true;
   }
-  // go to end?
-  const goToEndAnswerIds = currentElement.get('answers').filter(answer => answer.getIn(['goTo', 'id']) === 'End').map(answer => answer.get('id'));
-  if (goToEndAnswerIds.size === 0) {
-    return false;
-  }
-  const responseAnswerIds = response
-  .getIn(['answeredQuestions', state.index, 'answers']).map(answer => answer.get('id'));
-
-  const responseAnswerIdsWithGoToEnd =
-    responseAnswerIds.filter(answerId => goToEndAnswerIds.contains(answerId));
-
-  if (responseAnswerIdsWithGoToEnd.size === 0) {
-    return false;
-  }
-  return true;
+  return false;
 }
 
 export const isFirstQuestion = state => state.index !== 0;
@@ -176,11 +166,13 @@ const responses = (state = initialState, action) => {
       });
       // calculate next visible item
       const index = items.get(state.currentId).get('answeredQuestions').findIndex((responseElement, index) => {
-        return index > state.index && responseElement.get('visible');
+        return index > state.index && responseElement.get('type') !== 'section' && responseElement.get('visible');
       });
       return {
         ...state,
-        index,
+        index: index !== -1 ?
+          index
+          : items.get(state.currentId).get('answeredQuestions').size - 1, // cant find one, go to the end
         items: items.setIn([state.currentId, 'answeredQuestions', index, 'viewed'], true) // mark as viewed
       };
     }

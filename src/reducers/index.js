@@ -24,12 +24,7 @@ export const isLastQuestion = state => {
     !fromVersions.getCurrentVersion(state.versions)) {
     return false;
   }
-  const currentElementId = fromResponses.getCurrentElementId(state.responses);
-  if (!currentElementId) {
-    return false;
-  }
-  const element = fromVersions.getById(state.versions, currentElementId);
-  return fromResponses.isLastQuestion(state.responses, element);
+  return fromResponses.isLastQuestion(state.responses);
 }
 
 export const getQuestionnaires = state =>
