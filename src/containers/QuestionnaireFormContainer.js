@@ -75,9 +75,12 @@ class QuestionnaireFormContainer extends Component {
         }
         return [...carry, myResponseElement];
       }, [])));
-
     // store the change
     this.props.dispatch(setResponse(response));
+
+    if(responseElement.get('type') === 'radio') {
+      this.props.dispatch(nextQuestion());
+    }
   }
 
   handeSubmitQuestionnaire() {
