@@ -9,6 +9,11 @@ const initialState = {
   currentId: null
 };
 
+/**
+currentIndex is needed, because when we have looping questions we look for the
+answers closest to the current question (because they might have appeared 5 times cause of the looping)
+we only look for the closest one
+*/
 export const getLogicStatement = (logic, responseElements, currentIndex) => {
   if(!logic) {
     return true;
@@ -270,6 +275,26 @@ const responses = (state = initialState, action) => {
     //     items
     //   };
     // }
+    case types.SET_QUESTION_ANSWER: {
+      // find the index
+      const { index, responseElement } = action.payload;
+      return {
+        ...state,
+        items: state.items
+          .setIn(
+            [state.currentId, 'answeredQuestions', index],
+            responseElement
+          ).updateIn([state.currentId, 'answeredQuestions'], responseElements =>
+            responseElements.map((responseElement, index) =>
+            responseElement.set('visible', eval(getLogicStatement(
+              responseElement.get('logic'),
+              responseElements,
+              index
+            )))
+          )
+        )
+      }
+    }
     case 'SET_RESPONSE': {
       const response = fromJS(action.response);
       return {

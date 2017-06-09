@@ -145,7 +145,7 @@ const createInitialResponse = (questionnaireId, userId, version) => {
         // remove all sections >= this section size
         // e.g. if this is a size 2, remove all the 2s and 3s
         sections = sections
-          .filter(section => section.size > element.size)
+          .filter(section => section.size < element.size)
           .concat([element]);
       }
       const logic =
@@ -288,3 +288,18 @@ export function setQuestionnaireDebug(debug) {
     debug: debug
   };
 }
+
+export const setQuestionAnswer = ({ responseElement }) => (dispatch, getState) => {
+  const state = getState().responses;
+  const index = state.items.getIn([state.currentId, 'answeredQuestions']).findIndex(myResponseElement =>
+    myResponseElement.get('id') === responseElement.get('id')
+  );
+  dispatch({
+    type: types.SET_QUESTION_ANSWER,
+    payload: { responseElement, index }
+  });
+  if (index === state.index && responseElement.get('type') === 'radio') {
+    dispatch(nextQuestion());
+  }
+};
+
