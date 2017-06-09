@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { fromJS } from 'immutable';
 import { coalesce } from '../helpers/coalesce';
+import { Helpers } from 'react-scroll';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -30,7 +31,7 @@ const Height = styled.input`
   float: left;
 `;
 
-export default function Question({
+function Question({
   element,
   number,
   responseElement,
@@ -235,3 +236,5 @@ export default function Question({
     </div>
   </div>);
 }
+
+export default Helpers.Element(Question);

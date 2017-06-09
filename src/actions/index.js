@@ -252,7 +252,7 @@ export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (disp
   dispatch(fetchResponses(questionnaireId, userId))
     .then((responses) => {
       if (responses.length && (userId !== 'admin' || (userId === 'admin' && resume === true))) {
-        const response = responses[0];
+        const response = responses[responses.length - 1];
         // there are responses
         return dispatch(fetchVersion(questionnaireId, response.versionId)).then(() => response);
       }
@@ -264,7 +264,7 @@ export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (disp
         .then(version => {
           if (responses.length && (userId === 'admin' && resume === false)) {
             // overwrite the existing
-            const overwritingResponse = Object.assign(responses[0], createInitialResponse(questionnaireId, userId, version));
+            const overwritingResponse = Object.assign(responses[responses.length - 1], createInitialResponse(questionnaireId, userId, version));
             return dispatch(setResponse(overwritingResponse));
           } else {
             return dispatch(createResponse(questionnaireId, userId, version));
