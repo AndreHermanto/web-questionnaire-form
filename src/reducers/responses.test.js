@@ -3,7 +3,8 @@ import responses, {
   getCurrentResponse,
   getVisibleResponseElements,
   isLastQuestion,
-  getLogicStatement
+  getLogicStatement,
+  getAnsweredResponseElements
 } from './responses';
 import {
   resumeQuestionnaire,
@@ -329,6 +330,36 @@ describe('getVisibleResponseElements', () => {
     expect(visibleQuestions).toEqual(fromJS([
       { id: 1, visible: true },
       { id: 3, visible: true }
+    ]))
+  })
+})
+
+describe('getAnsweredResponseElements', () => {
+  it('returns empty array if no current response', () => {
+    const state = {
+      index: 2,
+      items: fromJS({})
+    };
+    const hasAnswerQuestions = getAnsweredResponseElements(state);
+    expect(hasAnswerQuestions).toEqual(fromJS([]));
+  })
+  it('gets all questions that are has answers', () => {
+    const questionnaireId = 'abcd';
+    const state = {
+      index: 2,
+      items: fromJS({ [questionnaireId]: {
+        id: questionnaireId,
+        answeredQuestions: [
+          { id: 1, answers: [] },
+          { id: 2, answers: ['a', 'b', 'c'] },
+          { id: 3, answers: [] },
+          { id: 4, answers: ['d', 'e'] }
+      ]}})
+    };
+    const hasAnswerQuestions = getAnsweredResponseElements(state);
+    expect(hasAnswerQuestions).toEqual(fromJS([
+      { id: 2, answers: ['a', 'b', 'c'] },
+      { id: 4, answers: ['d', 'e'] }
     ]))
   })
 })

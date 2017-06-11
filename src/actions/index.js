@@ -133,6 +133,7 @@ export const createResponseFailure = error => ({
   error: true,
   playload: error
 });
+
 const createInitialResponse = (questionnaireId, userId, version) => {
   let sections = [];
   return {
@@ -165,6 +166,7 @@ const createInitialResponse = (questionnaireId, userId, version) => {
     })
   };
 };
+
 export const createResponse = (questionnaireId, userId, version) => (dispatch) => {
   dispatch(createResponseRequest());
   const initialResponse = createInitialResponse(questionnaireId, userId, version);

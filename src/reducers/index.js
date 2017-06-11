@@ -40,6 +40,16 @@ export const getVisibleQuestions = state =>
       }
     });
 
+export const getAnsweredQuestions = state =>
+  fromResponses.getAnsweredResponseElements(state.responses)
+    .map(responseElement => {
+      const element = fromVersions.getById(state.versions, responseElement.get('elementId'));
+      return {
+        element,
+        responseElement
+      }
+    });
+
 export const getCurrentVersion = state =>
   fromVersions.getCurrentVersion(state.versions);
 export const getCurrentResponse = state =>

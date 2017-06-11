@@ -20,9 +20,11 @@ import {
   isLastQuestion,
   isFirstQuestion,
   getCurrentResponse,
-  getCurrentVersion
+  getCurrentVersion,
+  getAnsweredQuestions
 } from '../reducers';
 import Heading from '../components/Heading';
+import ProgressBar from '../components/ProgressBar';
 
 class QuestionnaireFormContainer extends Component {
 
@@ -112,12 +114,15 @@ class QuestionnaireFormContainer extends Component {
               name={responseElement.get('id')}
             />
             {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
-            <button
-              className="btn btn-primary btn-lg"
-              onClick={() => this.props.dispatch(nextQuestion())}
-            >
-              Okay
-            </button>
+            <div style={{ width: '100%', height: '80px'}}>  
+              <ProgressBar completed={this.props.answeredQuestions.size} total={this.props.response.get('answeredQuestions').filter(responseElement => responseElement.get('type') !== "section").size}/>
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={() => this.props.dispatch(nextQuestion())}
+              >
+                Okay
+              </button>
+            </div>
             }
           </div>
         }
@@ -132,22 +137,39 @@ class QuestionnaireFormContainer extends Component {
             onAnswer={this.handleQuestionAnswered}
             showlogic={this.props.debug}
           />
+
           {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
+<<<<<<< HEAD
           <button
             className="btn btn-primary btn-lg"
             onClick={() => this.props.dispatch(nextQuestion())}
           >
             {responseElement.get('answers').size ? 'Next' : 'Skip'}
           </button>
+=======
+          <div style={{ width: '100%', height: '80px'}}>  
+            <ProgressBar completed={this.props.answeredQuestions.size} total={this.props.response.get('answeredQuestions').filter(responseElement => responseElement.get('type') !== "section").size}/>
+            <button
+              className="btn btn-primary btn-lg"
+              onClick={() => this.props.dispatch(nextQuestion({ element }))}
+            >
+              {responseElement.get('answers').size ? 'Next' : 'Skip'}
+            </button>
+          </div>
+>>>>>>> 🆕Simple progress bar
           }
         </div>
         );
       })}
+
         {this.props.isShowingSubmit &&
+        <div style={{ width: '100%', height: '80px'}}>
+          <ProgressBar completed={this.props.answeredQuestions.size} total={this.props.response.get('answeredQuestions').filter(responseElement => responseElement.get('type') !== "section").size}/>
           <button className="btn btn-primary btn-lg"
             onClick={this.handeSubmitQuestionnaire}>
             Submit
-          </button>
+          </button>       
+        </div>
         }
       </div>
     );
@@ -160,6 +182,7 @@ function mapStateToProps(state, ownProps) {
     response: getCurrentResponse(state),
     version: getCurrentVersion(state),
     visibleQuestions: getVisibleQuestions(state),
+    answeredQuestions: getAnsweredQuestions(state),
     isShowingSubmit: showSubmit,
     isShowingNext: !showSubmit,
     isShowingBack: isFirstQuestion(state),
