@@ -41,14 +41,10 @@ export const getVisibleQuestions = state =>
     });
 
 export const getAnsweredQuestions = state =>
-  fromResponses.getAnsweredResponseElements(state.responses)
-    .map(responseElement => {
-      const element = fromVersions.getById(state.versions, responseElement.get('elementId'));
-      return {
-        element,
-        responseElement
-      }
-    });
+  fromResponses.getAnsweredResponseElements(state.responses);
+
+export const getQuestions = state =>
+  fromResponses.getQuestionsElements(state.responses);
 
 export const getCurrentVersion = state =>
   fromVersions.getCurrentVersion(state.versions);

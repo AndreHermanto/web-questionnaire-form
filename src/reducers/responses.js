@@ -67,6 +67,15 @@ export const getAnsweredResponseElements = (state) => {
     .filter(responseElement => responseElement.get('answers').size > 0);
 }
 
+export const getQuestionsElements = (state) => {
+  if (!state.items.size) {
+    return List();
+  }
+  return getCurrentResponse(state)
+    .get('answeredQuestions')
+    .filter(responseElement => responseElement.get('type') !== "section" && responseElement.get('type') !== "textinformation")
+}
+
 export const getCurrentResponseIndex = (state) => {
   return state.items.first().get('id');
 }

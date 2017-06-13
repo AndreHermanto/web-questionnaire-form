@@ -4,7 +4,8 @@ import responses, {
   getVisibleResponseElements,
   isLastQuestion,
   getLogicStatement,
-  getAnsweredResponseElements
+  getAnsweredResponseElements,
+  getQuestionsElements
 } from './responses';
 import {
   resumeQuestionnaire,
@@ -364,6 +365,37 @@ describe('getAnsweredResponseElements', () => {
   })
 })
 
+describe('getQuestionsElements', () => {
+  it('returns empty array if no current response', () => {
+    const state = {
+      index: 2,
+      items: fromJS({})
+    };
+    const hasAnswerQuestions = getQuestionsElements(state);
+    expect(hasAnswerQuestions).toEqual(fromJS([]));
+  })
+  it('gets all questions', () => {
+    const questionnaireId = 'abcd';
+    const state = {
+      index: 2,
+      items: fromJS({ [questionnaireId]: {
+        id: questionnaireId,
+        answeredQuestions: [
+          { id: 1, answers: [] },
+          { id: 2, answers: ['a', 'b', 'c'] },
+          { id: 3, answers: [] },
+          { id: 4, answers: ['d', 'e'] }
+      ]}})
+    };
+    const hasAnswerQuestions = getQuestionsElements(state);
+    expect(hasAnswerQuestions).toEqual(fromJS([
+          { id: 1, answers: [] },
+          { id: 2, answers: ['a', 'b', 'c'] },
+          { id: 3, answers: [] },
+          { id: 4, answers: ['d', 'e'] }
+      ]))
+  })
+})
 
 describe('visibility', () => {
   const responseElements = fromJS([
