@@ -192,7 +192,13 @@ function Question({
           {answer.get('text')} {(answer.get('goTo') && showlogic === true) && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
           {' '}
           {answer.get('concepts') && !!answer.get('concepts').count() &&
-          <span className="text-muted">({answer.get('concepts').map(concept => <small key={concept.get('id')} className="text-success">{concept.get('label')}</small>)})</span>
+          <span className="text-muted">
+          {answer.get('concepts') && !!answer.get('concepts').count() &&
+            <small className="text-muted text-success">
+              ({answer.get('concepts').map(concept => concept.get('label')).join(', ')})
+            </small>
+          }
+          </span>
           }
           <img src={answer.get('image')} alt="" className="img-responsive" />
 
