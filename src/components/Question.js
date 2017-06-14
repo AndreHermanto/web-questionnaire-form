@@ -177,7 +177,6 @@ function Question({
       }
 
       const selected = responseElement.get('answers').filter(chosenAnswer => chosenAnswer.get('id') === answer.get('id')).size > 0;
-      const conceptsLength = answer.get('concepts').size;
 
       return (<div className={element.get('type')} key={answer.get('id')}>
         <AnswerOption active={selected}>
@@ -195,17 +194,11 @@ function Question({
           {' '}
           {answer.get('concepts') && !!answer.get('concepts').count() &&
           <span className="text-muted">
-            ({answer.get('concepts').map((concept, i) => 
-              { 
-                let concepts;
-                if(i === (conceptsLength - 1)) {
-                  concepts = <small key={concept.get('id')} className="text-success">{concept.get('label')}</small>
-                }else{
-                  concepts = <small key={concept.get('id')} className="text-success">{concept.get('label') + ", "}</small>
-                }
-                return concepts;
-              })
-            })
+          {answer.get('concepts') && !!answer.get('concepts').count() &&
+            <small className="text-muted text-success">
+              ({answer.get('concepts').map(concept => concept.get('label')).join(', ')})
+            </small>
+          }
           </span>
           }
           <img src={answer.get('image')} alt="" className="img-responsive" />
