@@ -3,7 +3,9 @@ import responses, {
   getCurrentResponse,
   getVisibleResponseElements,
   isLastQuestion,
-  getLogicStatement
+  getLogicStatement,
+  getAnsweredResponseElements,
+  getQuestionsElements
 } from './responses';
 import {
   resumeQuestionnaire,
@@ -333,6 +335,66 @@ describe('getVisibleResponseElements', () => {
   })
 })
 
+describe('getAnsweredResponseElements', () => {
+  it('returns empty array if no current response', () => {
+    const state = {
+      index: 2,
+      items: fromJS({})
+    };
+    const hasAnswerQuestions = getAnsweredResponseElements(state);
+    expect(hasAnswerQuestions).toEqual(fromJS([]));
+  })
+  it('gets all questions that are has answers', () => {
+    const questionnaireId = 'abcd';
+    const state = {
+      index: 2,
+      items: fromJS({ [questionnaireId]: {
+        id: questionnaireId,
+        answeredQuestions: [
+          { id: 1, answers: [] },
+          { id: 2, answers: ['a', 'b', 'c'] },
+          { id: 3, answers: [] },
+          { id: 4, answers: ['d', 'e'] }
+      ]}})
+    };
+    const hasAnswerQuestions = getAnsweredResponseElements(state);
+    expect(hasAnswerQuestions).toEqual(fromJS([
+      { id: 2, answers: ['a', 'b', 'c'] },
+      { id: 4, answers: ['d', 'e'] }
+    ]))
+  })
+})
+
+describe('getQuestionsElements', () => {
+  it('returns empty array if no current response', () => {
+    const state = {
+      index: 2,
+      items: fromJS({})
+    };
+    const hasAnswerQuestions = getQuestionsElements(state);
+    expect(hasAnswerQuestions).toEqual(fromJS([]));
+  })
+  it('gets all questions', () => {
+    const questionnaireId = 'abcd';
+    const state = {
+      index: 2,
+      items: fromJS({ [questionnaireId]: {
+        id: questionnaireId,
+        answeredQuestions: [
+          { id: 1, answers: [], type: "checkbox" },
+          { id: 2, answers: ['a', 'b', 'c'], type: "date" },
+          { id: 3, answers: [] , type: "radio"},
+          { id: 4, answers: ['d', 'e'] }
+      ]}})
+    };
+    const hasAnswerQuestions = getQuestionsElements(state);
+    expect(hasAnswerQuestions).toEqual(fromJS([
+          { id: 1, answers: [], type: "checkbox" },
+          { id: 2, answers: ['a', 'b', 'c'], type: "date" },
+          { id: 3, answers: [], type: "radio" }
+      ]))
+  })
+})
 
 describe('visibility', () => {
   const responseElements = fromJS([

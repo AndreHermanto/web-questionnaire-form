@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { fromJS } from 'immutable';
 import { coalesce } from '../helpers/coalesce';
 import { Helpers } from 'react-scroll';
+import { isQuestion } from '../helpers/questions';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -113,8 +114,6 @@ function Question({
     }
     return null;
   };
-
-  const isQuestion = myElement => myElement.get('type') === 'checkbox' || myElement.get('type') === 'radio' || myElement.get('type') === 'text' || myElement.get('type') === 'weight' || myElement.get('type') === 'date' || myElement.get('type') === 'number' || myElement.get('type') === 'height';
 
   let answers = '';
 
