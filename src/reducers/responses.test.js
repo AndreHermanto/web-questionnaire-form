@@ -381,18 +381,17 @@ describe('getQuestionsElements', () => {
       items: fromJS({ [questionnaireId]: {
         id: questionnaireId,
         answeredQuestions: [
-          { id: 1, answers: [] },
-          { id: 2, answers: ['a', 'b', 'c'] },
-          { id: 3, answers: [] },
+          { id: 1, answers: [], type: "checkbox" },
+          { id: 2, answers: ['a', 'b', 'c'], type: "date" },
+          { id: 3, answers: [] , type: "radio"},
           { id: 4, answers: ['d', 'e'] }
       ]}})
     };
     const hasAnswerQuestions = getQuestionsElements(state);
     expect(hasAnswerQuestions).toEqual(fromJS([
-          { id: 1, answers: [] },
-          { id: 2, answers: ['a', 'b', 'c'] },
-          { id: 3, answers: [] },
-          { id: 4, answers: ['d', 'e'] }
+          { id: 1, answers: [], type: "checkbox" },
+          { id: 2, answers: ['a', 'b', 'c'], type: "date" },
+          { id: 3, answers: [], type: "radio" }
       ]))
   })
 })

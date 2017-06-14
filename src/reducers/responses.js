@@ -1,6 +1,7 @@
 import { fromJS, List } from 'immutable';
 import cuid from 'cuid';
 import * as types from '../constants/ActionTypes';
+import { isQuestion } from '../helpers/questions';
 const initialState = {
   items: fromJS({}),
   isError: false,
@@ -73,7 +74,7 @@ export const getQuestionsElements = (state) => {
   }
   return getCurrentResponse(state)
     .get('answeredQuestions')
-    .filter(responseElement => responseElement.get('type') !== "section" && responseElement.get('type') !== "textinformation")
+    .filter(responseElement => isQuestion(responseElement))
 }
 
 export const getCurrentResponseIndex = (state) => {
