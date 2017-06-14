@@ -11,7 +11,8 @@ import {
   setResponse,
   setupQuestionnaire,
   nextQuestion,
-  setQuestionnaireDebug
+  setQuestionnaireDebug,
+  setQuestionAnswer
 } from '../actions';
 import Question from '../components/Question';
 import TextInformation from '../components/TextInformation';
