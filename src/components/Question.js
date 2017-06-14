@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { fromJS } from 'immutable';
 import { coalesce } from '../helpers/coalesce';
 import { Helpers } from 'react-scroll';
+import { isQuestion } from '../helpers/questions';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -114,8 +115,6 @@ function Question({
     return null;
   };
 
-  const isQuestion = myElement => myElement.get('type') === 'checkbox' || myElement.get('type') === 'radio' || myElement.get('type') === 'text' || myElement.get('type') === 'weight' || myElement.get('type') === 'date' || myElement.get('type') === 'number' || myElement.get('type') === 'height';
-
   let answers = '';
 
   if (isQuestion(element)) {
@@ -193,7 +192,13 @@ function Question({
           {answer.get('text')} {(answer.get('goTo') && showlogic === true) && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
           {' '}
           {answer.get('concepts') && !!answer.get('concepts').count() &&
-          <span className="text-muted">({answer.get('concepts').map(concept => <small key={concept.get('id')} className="text-success">{concept.get('label')}</small>)})</span>
+          <span className="text-muted">
+          {answer.get('concepts') && !!answer.get('concepts').count() &&
+            <small className="text-muted text-success">
+              ({answer.get('concepts').map(concept => concept.get('label')).join(', ')})
+            </small>
+          }
+          </span>
           }
           <img src={answer.get('image')} alt="" className="img-responsive" />
 

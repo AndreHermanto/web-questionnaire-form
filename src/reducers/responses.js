@@ -1,6 +1,7 @@
 import { fromJS, List } from 'immutable';
 import cuid from 'cuid';
 import * as types from '../constants/ActionTypes';
+import { isQuestion } from '../helpers/questions';
 const initialState = {
   items: fromJS({}),
   isError: false,
@@ -40,6 +41,14 @@ export const getLogicStatement = (logic, responseElements, currentIndex) => {
   });
 }
 
+export const getCurrentResponse = (state) => {
+  if (state.currentId) {
+    return state.items.get(state.currentId);
+  }
+  // TODO: remove this, should always use current id
+  return state.items.size ? state.items.first() : null;
+}
+
 export const getVisibleResponseElements = (state) => {
   if (!state.items.size) {
     return List();
@@ -50,13 +59,24 @@ export const getVisibleResponseElements = (state) => {
     .filter(responseElement => responseElement.get('visible'));
 }
 
-export const getCurrentResponse = (state) => {
-  if (state.currentId) {
-    return state.items.get(state.currentId);
+export const getAnsweredResponseElements = (state) => {
+  if (!state.items.size) {
+    return List();
   }
-  // TODO: remove this, should always use current id
-  return state.items.size ? state.items.first() : null;
+  return getCurrentResponse(state)
+    .get('answeredQuestions')
+    .filter(responseElement => responseElement.get('answers').size > 0);
 }
+
+export const getQuestionsElements = (state) => {
+  if (!state.items.size) {
+    return List();
+  }
+  return getCurrentResponse(state)
+    .get('answeredQuestions')
+    .filter(responseElement => isQuestion(responseElement))
+}
+
 export const getCurrentResponseIndex = (state) => {
   return state.items.first().get('id');
 }

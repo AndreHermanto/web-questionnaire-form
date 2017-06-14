@@ -40,6 +40,12 @@ export const getVisibleQuestions = state =>
       }
     });
 
+export const getAnsweredQuestions = state =>
+  fromResponses.getAnsweredResponseElements(state.responses);
+
+export const getQuestions = state =>
+  fromResponses.getQuestionsElements(state.responses);
+
 export const getCurrentVersion = state =>
   fromVersions.getCurrentVersion(state.versions);
 export const getCurrentResponse = state =>
