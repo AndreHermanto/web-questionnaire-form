@@ -23,7 +23,8 @@ import {
   getCurrentResponse,
   getCurrentVersion,
   getAnsweredQuestions,
-  getQuestions
+  getQuestions,
+  getDebug
 } from '../reducers';
 import Heading from '../components/Heading';
 import ProgressBar from '../components/ProgressBar';
@@ -139,7 +140,6 @@ class QuestionnaireFormContainer extends Component {
             onAnswer={this.handleQuestionAnswered}
             showlogic={this.props.debug}
           />
-
           {index === this.props.visibleQuestions.size - 1 && !this.props.isShowingSubmit &&
           <div style={{ width: '100%', height: '80px'}}>  
             <ProgressBar completed={this.props.answeredQuestions.size} total={this.props.questions.size}/>
@@ -180,7 +180,7 @@ function mapStateToProps(state, ownProps) {
     isShowingSubmit: showSubmit,
     isShowingNext: !showSubmit,
     isShowingBack: isFirstQuestion(state),
-    debug: state.debug.debug
+    debug: getDebug(state)
   };
   return props;
 }
