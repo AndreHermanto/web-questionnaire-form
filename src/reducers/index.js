@@ -7,10 +7,10 @@ export default combineReducers({
   questionnaires,
   versions,
   responses,
-  debug: (state = { debug: true }, action) => {
+  debug: (state = { value: true }, action) => {
     switch (action.type) {
       case 'SET_QUESTIONNAIRE_DEBUG':
-        return { ...state, debug: action.debug };
+        return { ...state, value: action.debug };
       default:
         return state;
     }
@@ -50,3 +50,7 @@ export const getCurrentVersion = state =>
   fromVersions.getCurrentVersion(state.versions);
 export const getCurrentResponse = state =>
   fromResponses.getCurrentResponse(state.responses);
+
+export const getDebug = (state) => {
+    return state.debug.value;
+}

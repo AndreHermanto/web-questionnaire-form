@@ -191,7 +191,7 @@ function Question({
           {' '}
           {answer.get('text')} {(answer.get('goTo') && showlogic === true) && <small className="text-muted">Go to: {answer.getIn(['goTo', 'title'])}</small>}
           {' '}
-          {answer.get('concepts') && !!answer.get('concepts').count() &&
+          {answer.get('concepts') && !!answer.get('concepts').count() && showlogic &&
           <span className="text-muted">
           {answer.get('concepts') && !!answer.get('concepts').count() &&
             <small className="text-muted text-success">
