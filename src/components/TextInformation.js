@@ -11,7 +11,7 @@ function TextInformation(props) {
     <div
       style={{ marginBottom: 24, backgroundColor: 'white', border: '1px solid #eee', padding: 32 }}
     >
-      {props.text.split('\n').map|(item => <span key={item}>{item}<br /></span>)}
+      {props.text.split('\n').map(item => <span key={item}>{item}<br /></span>)}
     </div>
   );
 }
