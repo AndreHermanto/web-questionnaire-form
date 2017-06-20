@@ -112,6 +112,15 @@ const markQuestionAsViewed = (state, responseId, responseElementIndex) => {
     'viewed'
   ], true);
 }
+const updateLogic = responseElements =>
+  responseElements.map((responseElement, index) =>
+    responseElement.set('visible', eval(getLogicStatement(
+      responseElement.get('logic'),
+      responseElements,
+      index
+    )))
+  )
+
 const responses = (state = initialState, action) => {
   switch (action.type) {
     case types.RESUME_QUESTIONNAIRE: {
@@ -132,7 +141,8 @@ const responses = (state = initialState, action) => {
         items: markQuestionAsViewed(
           state,
           response.get('id'),
-          lastViewedIndex)
+          lastViewedIndex
+        ).updateIn([state.currentId, 'answeredQuestions'], updateLogic)
       };
       return nextState;
     }
@@ -180,15 +190,7 @@ const responses = (state = initialState, action) => {
       }
 
       // calculate visibility
-      items = items.updateIn([state.currentId, 'answeredQuestions'], responseElements => {
-        return responseElements.map((responseElement, index) => {
-          return responseElement.set('visible', eval(getLogicStatement(
-            responseElement.get('logic'),
-            responseElements,
-            index
-          )));
-        });
-      });
+      items = items.updateIn([state.currentId, 'answeredQuestions'], updateLogic);
       // calculate next visible item
       const index = items.get(state.currentId).get('answeredQuestions').findIndex((responseElement, index) => {
         return index > state.index && responseElement.get('type') !== 'section' && responseElement.get('visible');
@@ -304,31 +306,17 @@ const responses = (state = initialState, action) => {
           .setIn(
             [state.currentId, 'answeredQuestions', index],
             responseElement
-          ).updateIn([state.currentId, 'answeredQuestions'], responseElements =>
-            responseElements.map((responseElement, index) =>
-            responseElement.set('visible', eval(getLogicStatement(
-              responseElement.get('logic'),
-              responseElements,
-              index
-            )))
           )
-        )
+          .updateIn([state.currentId, 'answeredQuestions'], updateLogic)
       }
     }
-    case 'SET_RESPONSE': {
+    case types.SET_RESPONSE: {
       const response = fromJS(action.response);
       return {
         ...state,
         items: state.items
           .set(response.get('id'), response)
-          .updateIn([state.currentId, 'answeredQuestions'], responseElements =>
-            responseElements.map((responseElement, index) =>
-              responseElement.set('visible', eval(getLogicStatement(
-                responseElement.get('logic'),
-                responseElements,
-                index
-              ))))
-          )
+          .updateIn([state.currentId, 'answeredQuestions'], updateLogic)
       };
     }
     case types.FETCH_RESPONSES_FAILURE:
