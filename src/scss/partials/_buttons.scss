@@ -1,0 +1,51 @@
+
+.btn-dashboard-base {
+	position: relative;
+	float: right;
+	top: 14px;
+	right: 12px;
+	width:75px;
+	height: 40px;
+	border-radius: 3px;
+	font-size: 9px;
+	font-family: 'Nunito Sans', sans-serif;
+	font-weight: 800;
+	text-align: center;
+	letter-spacing: 1px;
+	line-height: 40px;
+	cursor: pointer;
+}
+
+.btn-to-do {
+	background-color: #fff;
+	color: $sanford-dark-blue;
+	border: 1px solid $sanford-dark-blue;
+}
+
+.btn-to-do:hover {
+	background-color: $sanford-dark-blue;
+	color: #fff;
+}
+
+.btn-in-progress {
+	background-color: $sanford-dark-blue;
+	color: #fff;
+	border: 1px solid $sanford-dark-blue;
+}
+
+.btn-in-progress:hover {
+	background-color: #fff;
+	color: $sanford-dark-blue;
+}
+
+.btn-completed {
+	background-color: #fff;
+	color: $light-grey;
+	border: 1px solid $light-grey;
+}
+
+.btn-completed:hover {
+	background-color: $forrest-green;
+	color: #fff;
+	border: 1px solid $forrest-green;
+}
