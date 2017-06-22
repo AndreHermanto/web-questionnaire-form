@@ -305,3 +305,8 @@ export const setQuestionAnswer = ({ responseElement }) => (dispatch, getState) =
   }
 };
 
+export function setResponseSubmitted() {
+  return {
+    type: 'SUBMIT_RESPONSE'
+  };
+}

@@ -10,7 +10,8 @@ import responses, {
 import {
   resumeQuestionnaire,
   previousQuestion,
-  nextQuestion
+  nextQuestion,
+  setResponseSubmitted
 } from '../actions';
 
 test('responses exists', () => {
@@ -461,3 +462,24 @@ describe('visibility', () => {
     expect(logicStatement3).toEqual('true');
   });
 })
+
+describe('Submit a questionnaire', () => {
+  it('submit a questionnaire will change completed to true', () => {
+    const userId = 1;
+    const versionId = 1;
+    const questionnaireId = 'abcd';
+    const state = responses({
+      currentId: questionnaireId,
+      items: fromJS({
+        [questionnaireId]: {
+          id: questionnaireId,
+          completed: false
+        }
+      })
+    }, setResponseSubmitted());
+
+    expect(state.items
+    .getIn([questionnaireId, 'completed']))
+    .toBe(true);
+  });
+});
