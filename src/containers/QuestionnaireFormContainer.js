@@ -87,6 +87,12 @@ class QuestionnaireFormContainer extends Component {
     }
     return (
       <div className="container">
+        {this.props.version &&
+          <div>
+            <h3 style={{textAlign: 'center', 'letter-spacing': 1}}>{this.props.version.get('title')}</h3>
+            <hr style={{borderColor:'#c9c9c9'}}/>
+          </div>
+        }
         {this.props.visibleQuestions.map((visibleQuestion, index) => {
           const { element, responseElement } = visibleQuestion;
           if (!element || !responseElement) {
