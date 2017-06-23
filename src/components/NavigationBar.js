@@ -7,7 +7,7 @@ import {
   Link
 } from 'react-router';
 import styled from 'styled-components';
-import logo from '../assets/images/sanford-health-logo.png';
+import logo from '../assets/images/sanford-logo.jpg';
 
 const WhiteNavbar = styled(Navbar)`
   background-color: white !important;
@@ -23,7 +23,7 @@ export default class NavigationBar extends React.Component {
       <WhiteNavbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to="/"><img src={logo} alt="logo" width="104px" height="40px" /></Link> v0.0.1
+            <Link to="/"><img src={logo} alt="logo" width="120px" height="29px" /></Link> v0.0.1
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>

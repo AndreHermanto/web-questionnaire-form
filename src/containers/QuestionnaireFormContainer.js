@@ -76,9 +76,7 @@ class QuestionnaireFormContainer extends Component {
   }
 
   handeSubmitQuestionnaire() {
-    const response = this.props.response.set('completed', true);
-    this.props.dispatch(setResponse(response));
-    hashHistory.push('/submitted');
+    hashHistory.push(`/users/${this.props.params.userId}/questionnaires/${this.props.params.questionnaireId}/summary`);
   }
 
   render() {

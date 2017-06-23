@@ -345,6 +345,15 @@ const responses = (state = initialState, action) => {
     }
     case types.CREATE_RESPONSE_FAILURE:
       return state;
+    case types.SUBMIT_RESPONSE:
+      return {
+        ...state,
+        items: state.items
+          .setIn(
+            [state.currentId, 'completed'],
+            true
+          )
+      };
     default:
       return state;
   }
