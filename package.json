@@ -6,7 +6,8 @@
     "husky": "^0.13.3",
     "lint-staged": "^3.5.0",
     "prettier": "^1.3.1",
-    "react-scripts": "1.0.6"
+    "react-scripts": "1.0.6",
+    "@storybook/react": "^3.1.5"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
@@ -32,7 +33,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "json-server": "node node_modules/web-questionnaire-builder-mockserver"
+    "json-server": "node node_modules/web-questionnaire-builder-mockserver",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": "react-app"
