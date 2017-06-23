@@ -5,6 +5,7 @@ import {
   hashHistory,
   IndexRoute
 } from 'react-router';
+import PatientHomeContainer from '../containers/PatientHomeContainer';
 import QuestionnaireAdminContainer from '../containers/QuestionnaireAdminContainer';
 import QuestionnaireForm from '../containers/QuestionnaireFormContainer';
 import QuestionnaireSummary from '../containers/QuestionnaireSummaryContainer';
@@ -21,6 +22,7 @@ class Routes extends Component {
           <Route path="/users/:userId/questionnaires/:questionnaireId(?resume:resume)(?showlogic=:showlogic)" component={QuestionnaireForm} />
           <Route path="/users/:userId/questionnaires/:questionnaireId/summary" component={QuestionnaireSummary} />
           <Route path="/submitted" component={QuestionnaireFormSubmitted} />
+          <Route path="/home" component={PatientHomeContainer} />
         </Route>
       </Router>
     );

@@ -1,0 +1,156 @@
+
+
+h2 {
+	font-size: 24px;
+	font-family: 'Nunito Sans', sans-serif;
+	font-weight: 700;
+	letter-spacing: 1px;
+	margin: 5px 0px 0px 0px;
+}
+
+h3 {
+	font-family: 'Nunito Sans', sans-serif;
+	font-weight: 800;
+	font-size: 13px;
+	letter-spacing: 1px;
+	color: #fff;
+	text-align: center;
+	margin: 5px 0px 0px 0px;
+}
+
+p {
+	font-size: 12px;
+	font-family: 'Nunito Sans', sans-serif;
+	font-weight: 400;
+	color: $mid-grey;
+	margin-top: 25px;
+	max-width: 500px;
+	letter-spacing: 1px;
+}
+
+.dashboard-intro-copy {
+	margin: 60px 0px 0px 0px;
+}
+
+
+.dashboard-container {
+	background-color: #fff;
+	padding: 0px 30px 60px 30px;
+	@media screen and (max-width: 480px) {
+		padding: 0px 0px 60px 0px;
+	}
+	margin: 80px 0px 80px 0px;
+	border: 1px solid #C9C9C9;
+
+	.dashboard-header {
+		height: 200px;
+		margin-bottom: 30px;
+
+		.dashboard-icon {
+			position: relative;
+			top: 35px;
+			margin: 0 auto;
+			width: 300px;
+			height: 100px;
+
+			.icon {
+				position: relative;
+				margin: 0 auto;
+				width: 50px;
+				height: 50px;
+				left:-5px;
+				margin-bottom: 12px;
+				background-image: url(assets/images/paper-stack.svg);
+			}
+		}
+
+		hr {
+			position: relative;
+			top: 50px;
+			border-top: 1px solid #C9C9C9;
+			opacity: 0.5;
+		}
+
+	}
+
+	.col-questionnaires {
+		position: relative;
+		min-height: 200px;
+		margin-bottom: 20px;
+
+		ul {
+			padding: 0;
+			list-style-type: none;
+		}
+
+		.questionnaire-item {
+			position: relative;
+			min-height: 70px;
+			width: 100%;
+			background-color: #F8F8FB;
+			border: 1px solid #C9C9C9;
+			margin: 15px 0px 15px 0px;
+
+			.questionnaire-info {
+				position: relative;
+				display: block;
+				overflow: auto;
+				width: 70%;
+				padding: 12px;
+				float: left;
+				span {
+					display: block;
+					font-size: 12px;
+					font-family: 'Nunito Sans', sans-serif;
+					line-height: 12px;
+					margin-bottom: 3px;
+					letter-spacing: 1px;
+					
+				}
+				.percentage-complete-container {
+					width: 100%;
+					height: 6px;
+					background-color: #fff;
+					border-radius: 12px;
+					margin-top: 7px;
+					border: 1px solid #C9C9C9;
+
+					.percentage-complete-fill {
+						height: 5px;
+						border-radius: 12px;
+						background-color: $sanford-dark-blue;
+					}
+				}
+			}
+		}
+
+		.item-completed {
+			background-color: #fff;
+			border: 1px solid $forrest-green;
+			.questionnaire-info {
+				padding-left: 50px;
+				padding-top: 21px;
+			}
+			.tick-icon {
+				position: absolute;
+				width: 18px;
+				height: 18px;
+				left: 17px;
+				top: 26px;
+				background-image: url(assets/images/checked.svg);
+				background-size: contain;
+			}
+		}
+
+	}
+
+
+}
+
+
+
+
+
+
+
+
