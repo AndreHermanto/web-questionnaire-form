@@ -7,6 +7,7 @@ import {
 } from 'react-router';
 import QuestionnaireAdminContainer from '../containers/QuestionnaireAdminContainer';
 import QuestionnaireForm from '../containers/QuestionnaireFormContainer';
+import QuestionnaireSummary from '../containers/QuestionnaireSummaryContainer';
 import QuestionnaireFormSubmitted from '../components/QuestionnaireFormSubmitted';
 import Container from '../components/Container';
 
@@ -18,6 +19,7 @@ class Routes extends Component {
         <Route path="/" component={Container}>
           <IndexRoute component={QuestionnaireAdminContainer} />
           <Route path="/users/:userId/questionnaires/:questionnaireId(?resume:resume)(?showlogic=:showlogic)" component={QuestionnaireForm} />
+          <Route path="/users/:userId/questionnaires/:questionnaireId/summary" component={QuestionnaireSummary} />
           <Route path="/submitted" component={QuestionnaireFormSubmitted} />
         </Route>
       </Router>
