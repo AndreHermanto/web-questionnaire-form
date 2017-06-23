@@ -35,10 +35,17 @@
     "eject": "react-scripts eject",
     "json-server": "node node_modules/web-questionnaire-builder-mockserver",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "precommit": "lint-staged"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   },
   "homepage": "/questionnaire-form"
 }
