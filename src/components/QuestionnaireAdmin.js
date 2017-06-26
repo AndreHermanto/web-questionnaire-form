@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
+import Immutable from 'immutable';
 
 const propTypes = {
   resume: PropTypes.bool.isRequired,
