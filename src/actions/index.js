@@ -29,12 +29,14 @@ function fetchQuestionnairesFailure(ex) {
 }
 
 export function fetchQuestionnaires() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(fetchQuestionnairesRequest());
     return fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires`)
       .then(res => res.json())
       .then(json => json.data)
-      .then(questionnaires => dispatch(fetchQuestionnairesSuccess(questionnaires)))
+      .then(questionnaires =>
+        dispatch(fetchQuestionnairesSuccess(questionnaires))
+      )
       .catch(ex => dispatch(fetchQuestionnairesFailure(ex)));
   };
 }
@@ -83,12 +85,13 @@ export const fetchQuestionnaireFailure = error => ({
   error: true,
   playload: error
 });
-export const fetchQuestionnaire = questionnaireId => (dispatch) => {
+export const fetchQuestionnaire = questionnaireId => dispatch => {
   dispatch(fetchQuestionnaireRequest());
-  return api.fetchQuestionnaire(questionnaireId)
+  return api
+    .fetchQuestionnaire(questionnaireId)
     .then(response => response.json())
     .then(json => json.data)
-    .then((questionnaire) => {
+    .then(questionnaire => {
       dispatch(fetchQuestionnaireSuccess(questionnaire));
       return questionnaire;
     })
@@ -108,12 +111,13 @@ export const fetchResponsesFailure = error => ({
   error: true,
   playload: error
 });
-export const fetchResponses = (questionnaireId, userId) => (dispatch) => {
+export const fetchResponses = (questionnaireId, userId) => dispatch => {
   dispatch(fetchResponsesRequest());
-  return api.fetchResponses(questionnaireId, userId)
+  return api
+    .fetchResponses(questionnaireId, userId)
     .then(response => response.json())
     .then(json => json.data)
-    .then((responses) => {
+    .then(responses => {
       dispatch(fetchResponsesSuccess(responses));
       return responses;
     })
@@ -149,9 +153,19 @@ const createInitialResponse = (questionnaireId, userId, version) => {
           .filter(section => section.size < element.size)
           .concat([element]);
       }
-      const logic =
-        sections.map(section => section.logic ? `(${section.logic.replace(/{(.*?)\//g, bits => '{/')})` : 'true')
-        .concat([element.logic ? `(${element.logic.replace(/{(.*?)\//g, bits => '{/')})` : 'true']).join(' && ');
+      const logic = sections
+        .map(
+          section =>
+            section.logic
+              ? `(${section.logic.replace(/{(.*?)\//g, bits => '{/')})`
+              : 'true'
+        )
+        .concat([
+          element.logic
+            ? `(${element.logic.replace(/{(.*?)\//g, bits => '{/')})`
+            : 'true'
+        ])
+        .join(' && ');
 
       return {
         id: cuid(),
@@ -160,20 +174,28 @@ const createInitialResponse = (questionnaireId, userId, version) => {
         answers: [],
         type: element.type,
         logic,
-        loopBackTo: element.goTo ? element.goTo.id : null,
         visible: index === 0
       };
     })
   };
 };
 
-export const createResponse = (questionnaireId, userId, version) => (dispatch) => {
+export const createResponse = (
+  questionnaireId,
+  userId,
+  version
+) => dispatch => {
   dispatch(createResponseRequest());
-  const initialResponse = createInitialResponse(questionnaireId, userId, version);
-  return api.createResponse(initialResponse)
+  const initialResponse = createInitialResponse(
+    questionnaireId,
+    userId,
+    version
+  );
+  return api
+    .createResponse(initialResponse)
     .then(response => response.json())
     .then(json => json.data)
-    .then((response) => {
+    .then(response => {
       dispatch(createResponseSuccess(response));
       return response;
     })
@@ -193,12 +215,13 @@ export const fetchVersionFailure = error => ({
   error: true,
   playload: error
 });
-export const fetchVersion = (questionnaireId, versionId) => (dispatch) => {
+export const fetchVersion = (questionnaireId, versionId) => dispatch => {
   dispatch(fetchVersionRequest());
-  return api.fetchVersion(questionnaireId, versionId)
+  return api
+    .fetchVersion(questionnaireId, versionId)
     .then(response => response.json())
     .then(json => json.data)
-    .then((version) => {
+    .then(version => {
       const realVersion = version;
       realVersion.body = JSON.parse(realVersion.body);
       dispatch(fetchVersionSuccess(realVersion));
@@ -214,7 +237,9 @@ export const previousQuestion = () => ({
   type: types.PREVIOUS_QUESTION
 });
 
-export const resumeQuestionnaire = ({ userId = null, versionId = null} = {}) => ({
+export const resumeQuestionnaire = (
+  { userId = null, versionId = null } = {}
+) => ({
   type: types.RESUME_QUESTIONNAIRE,
   payload: {
     userId,
@@ -235,38 +260,51 @@ export const updateResponseFailure = error => ({
   error: true,
   playload: error
 });
-export const updateResponse = (responseId, response) => (dispatch) => {
+export const updateResponse = (responseId, response) => dispatch => {
   dispatch(updateResponseRequest());
-  return api.updateResponse(responseId, response)
+  return api
+    .updateResponse(responseId, response)
     .then(httpResponse => httpResponse.json())
     .then(json => json.data)
-    .then((newResponse) => {
+    .then(newResponse => {
       dispatch(updateResponseSuccess(newResponse));
       return newResponse;
     })
     .catch(e => dispatch(updateResponseFailure(e)));
 };
 
-
-
-export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (dispatch, getState) => {
+export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (
+  dispatch,
+  getState
+) => {
   // get the responses
   dispatch(fetchResponses(questionnaireId, userId))
-    .then((responses) => {
-      if (responses.length && (userId !== 'admin' || (userId === 'admin' && resume === true))) {
+    .then(responses => {
+      if (
+        responses.length &&
+        (userId !== 'admin' || (userId === 'admin' && resume === true))
+      ) {
         const response = responses[responses.length - 1];
         // there are responses
-        return dispatch(fetchVersion(questionnaireId, response.versionId)).then(() => response);
+        return dispatch(fetchVersion(questionnaireId, response.versionId)).then(
+          () => response
+        );
       }
       // no responses
       // find out what the current version is
       return dispatch(fetchQuestionnaire(questionnaireId))
         .then(questionnaire =>
-          dispatch(fetchVersion(questionnaireId, questionnaire.currentVersionId)))
+          dispatch(
+            fetchVersion(questionnaireId, questionnaire.currentVersionId)
+          )
+        )
         .then(version => {
           if (responses.length && (userId === 'admin' && resume === false)) {
             // overwrite the existing
-            const overwritingResponse = Object.assign(responses[responses.length - 1], createInitialResponse(questionnaireId, userId, version));
+            const overwritingResponse = Object.assign(
+              responses[responses.length - 1],
+              createInitialResponse(questionnaireId, userId, version)
+            );
             return dispatch(setResponse(overwritingResponse));
           } else {
             return dispatch(createResponse(questionnaireId, userId, version));
@@ -277,8 +315,7 @@ export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (disp
       // resumse
       return dispatch(resumeQuestionnaire(userId));
     });
-}
-
+};
 
 /*
 * Set page debug mode
@@ -291,11 +328,17 @@ export function setQuestionnaireDebug(debug) {
   };
 }
 
-export const setQuestionAnswer = ({ responseElement }) => (dispatch, getState) => {
+export const setQuestionAnswer = ({ responseElement }) => (
+  dispatch,
+  getState
+) => {
   const state = getState().responses;
-  const index = state.items.getIn([state.currentId, 'answeredQuestions']).findIndex(myResponseElement =>
-    myResponseElement.get('id') === responseElement.get('id')
-  );
+  const index = state.items
+    .getIn([state.currentId, 'answeredQuestions'])
+    .findIndex(
+      myResponseElement =>
+        myResponseElement.get('id') === responseElement.get('id')
+    );
   dispatch({
     type: types.SET_QUESTION_ANSWER,
     payload: { responseElement, index }
