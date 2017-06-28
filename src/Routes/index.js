@@ -9,7 +9,7 @@ import PatientHomeContainer from '../containers/PatientHomeContainer';
 import QuestionnaireAdminContainer from '../containers/QuestionnaireAdminContainer';
 import QuestionnaireForm from '../containers/QuestionnaireFormContainer';
 import QuestionnaireSummary from '../containers/QuestionnaireSummaryContainer';
-import QuestionnaireFormSubmitted from '../components/QuestionnaireFormSubmitted';
+import QuestionnaireFormSubmittedContainer from '../containers/QuestionnaireFormSubmittedContainer';
 import Container from '../components/Container';
 
 class Routes extends Component {
@@ -21,7 +21,7 @@ class Routes extends Component {
           <IndexRoute component={QuestionnaireAdminContainer} />
           <Route path="/users/:userId/questionnaires/:questionnaireId(?resume:resume)(?showlogic=:showlogic)" component={QuestionnaireForm} />
           <Route path="/users/:userId/questionnaires/:questionnaireId/summary" component={QuestionnaireSummary} />
-          <Route path="/submitted" component={QuestionnaireFormSubmitted} />
+          <Route path="/submitted" component={QuestionnaireFormSubmittedContainer} />
           <Route path="/home" component={PatientHomeContainer} />
         </Route>
       </Router>
