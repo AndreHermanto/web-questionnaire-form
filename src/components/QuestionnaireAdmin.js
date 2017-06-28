@@ -38,8 +38,10 @@ function QuestionnaireAdmin(props) {
           props.items.map(questionnaire =>
             <li key={questionnaire.get('id')}>
               <Link
-                to={`/users/admin/questionnaires/${questionnaire.get(
+                to={`/start/questionnaires/${questionnaire.get(
                   'id'
+                )}/versions/${questionnaire.get(
+                  'currentVersionId'
                 )}?resume=${props.resume}&showlogic=true`}
               >
                 {questionnaire.get('currentTitle')}
