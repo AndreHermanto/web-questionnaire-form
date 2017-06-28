@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
-import { fromJS } from 'immutable';
 import { scroller } from 'react-scroll';
 import {
-  setResponse,
   setupQuestionnaire,
   nextQuestion,
   setQuestionnaireDebug,
@@ -31,6 +29,7 @@ class QuestionnaireFormContainer extends Component {
     this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
     this.handeSubmitQuestionnaire = this.handeSubmitQuestionnaire.bind(this);
     this.setPageMode = this.setPageMode.bind(this);
+    this.renderButton = this.renderButton.bind(this);
   }
 
   setPageMode() {
@@ -79,6 +78,32 @@ class QuestionnaireFormContainer extends Component {
       `/users/${this.props.params.userId}/questionnaires/${this.props.params
         .questionnaireId}/summary`
     );
+  }
+
+  renderButton(isRequired, answerSize) {
+    if (isRequired) {
+      if (answerSize) {
+        return (
+          <button
+            className="btn btn-primary btn-lg"
+            onClick={() => this.props.dispatch(nextQuestion())}
+          >
+            Next
+          </button>
+        );
+      } else {
+        return null;
+      }
+    } else {
+      return (
+        <button
+          className="btn btn-primary btn-lg"
+          onClick={() => this.props.dispatch(nextQuestion())}
+        >
+          {answerSize ? 'Next' : 'Prefer not to answer'}
+        </button>
+      );
+    }
   }
 
   render() {
@@ -156,14 +181,10 @@ class QuestionnaireFormContainer extends Component {
                     completed={this.props.answeredQuestions.size}
                     total={this.props.questions.size}
                   />
-                  <button
-                    className="btn btn-primary btn-lg"
-                    onClick={() => this.props.dispatch(nextQuestion())}
-                  >
-                    {responseElement.get('answers').size
-                      ? 'Next'
-                      : 'Prefer not to answer'}
-                  </button>
+                  {this.renderButton(
+                    element.get('required'),
+                    responseElement.get('answers').size
+                  )}
                 </div>}
             </div>
           );
