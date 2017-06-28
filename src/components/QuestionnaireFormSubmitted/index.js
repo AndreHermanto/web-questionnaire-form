@@ -45,7 +45,7 @@ function QuestionnaireFormSubmitted({ version }) {
             </DisplayText>
             {version.getIn(['endPage', 'buttonText']) !== '' &&
               <DisplayButton>
-                <a className="btn btn-primary btn-lg" href="#">
+                <a className="btn btn-primary btn-lg" href="/">
                   {' '}{version.getIn(['endPage', 'buttonText'])}{' '}
                 </a>
               </DisplayButton>}
