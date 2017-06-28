@@ -15,7 +15,12 @@ class QuestionnaireAdminContainer extends Component {
     this.props.dispatch(setResume(!this.props.resume));
   }
   render() {
-    return <QuestionnaireAdmin {...this.props} handleChangeResume={this.handleChangeResume} />;
+    return (
+      <QuestionnaireAdmin
+        {...this.props}
+        handleChangeResume={this.handleChangeResume}
+      />
+    );
   }
 }
 

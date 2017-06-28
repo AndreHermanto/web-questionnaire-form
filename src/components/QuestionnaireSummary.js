@@ -4,9 +4,7 @@ import Heading from './Heading';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-const Header = styled.h2`
-  text-align: center;
-`;
+const Header = styled.h2`text-align: center;`;
 
 const ButtonContainer = styled.div`
   margin: 0 auto;
@@ -20,9 +18,7 @@ const propTypes = {
   isCompleted: PropTypes.bool.isRequired
 };
 
-const defaultProps = {
-};
-
+const defaultProps = {};
 
 function QuestionnaireSummary(props) {
   return (
@@ -34,50 +30,61 @@ function QuestionnaireSummary(props) {
           return <div>Loading question and reponse...</div>;
         }
         if (element.get('type') === 'textinformation') {
-          return (<div key={responseElement.get('id')}>
-            <div style={{ marginBottom: 15 }} name={responseElement.get('id')}>
-              {element.get('text').split('\n').map(item => <span key={item}>{item}<br /></span>)}
+          return (
+            <div key={responseElement.get('id')}>
+              <div
+                style={{ marginBottom: 15 }}
+                name={responseElement.get('id')}
+              >
+                {element.get('text').split('\n').map(item => (
+                  <span key={item}>
+                    {item}
+                    <br />
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>);
+          );
         }
 
         // section heading
         if (element.get('type') === 'section') {
-          return <div key={responseElement.get('id')} >
-            <h2 style={{ marginBottom: 32, marginTop: 40 }} className="text-capitalize">
-            </h2>
-            <Heading
-              text={element.get('title')}
-              size={element.get('size')}
-              name={responseElement.get('id')}
-            />
-          </div>
+          return (
+            <div key={responseElement.get('id')}>
+              <h2
+                style={{ marginBottom: 32, marginTop: 40 }}
+                className="text-capitalize"
+              />
+              <Heading
+                text={element.get('title')}
+                size={element.get('size')}
+                name={responseElement.get('id')}
+              />
+            </div>
+          );
         }
 
-        return (<div key={responseElement.get('id')}>
-          <Summary
-            name={responseElement.get('id')}
-            key={question.responseElement.get('id')}
-            element={element}
-            number={index + 1}
-            responseElement={responseElement}
-          />
-        </div>
+        return (
+          <div key={responseElement.get('id')}>
+            <Summary
+              name={responseElement.get('id')}
+              key={question.responseElement.get('id')}
+              element={element}
+              number={index + 1}
+              responseElement={responseElement}
+            />
+          </div>
         );
       })}
-      {!props.isCompleted && 
+      {!props.isCompleted &&
         <ButtonContainer>
-          <button className="btn btn-primary btn-lg"
-            onClick={props.onSubmit}>
+          <button className="btn btn-primary btn-lg" onClick={props.onSubmit}>
             Submit
-          </button>
-          {' '}
-          <button className="btn btn-default btn-lg"
-            onClick={props.onEdit}>
+          </button>{' '}
+          <button className="btn btn-default btn-lg" onClick={props.onEdit}>
             Edit
           </button>
-        </ButtonContainer>
-      }
+        </ButtonContainer>}
       <br />
     </div>
   );
@@ -87,4 +94,3 @@ QuestionnaireSummary.propTypes = propTypes;
 QuestionnaireSummary.defaultProps = defaultProps;
 
 export default QuestionnaireSummary;
-

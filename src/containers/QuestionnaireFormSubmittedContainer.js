@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  getCurrentVersion
-} from '../reducers';
-import QuestionnaireFormSubmitted from '../components/QuestionnaireFormSubmitted';
+import { getCurrentVersion } from '../reducers';
+import QuestionnaireFormSubmitted
+  from '../components/QuestionnaireFormSubmitted';
 
 class QuestionnaireFormSubmittedContainer extends Component {
   render() {

@@ -8,8 +8,8 @@ test('reducer exists', () => {
 describe('getVisibleQuestions', () => {
   it('gets responseElement + element for current question, and all past questions`', () => {
     // put test here
-  })
-})
+  });
+});
 
 describe('isLastQuestion', () => {
   it('is hidden when nothing is loaded', () => {
@@ -17,7 +17,7 @@ describe('isLastQuestion', () => {
       responses: {
         items: fromJS({})
       }
-    }
+    };
     expect(fromReducer.isLastQuestion(state)).toBe(false);
   });
 });

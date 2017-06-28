@@ -21,7 +21,7 @@ class PatientHomeContainer extends Component {
         <QuestionnaireDashboard />
         <Footer />
       </div>
-      );
+    );
   }
 }
 

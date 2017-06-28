@@ -21,7 +21,7 @@ const Description = styled.span`
   padding-top: 5px;
   padding-left: 5px;
   margin-right: 15px;
-  display:inline-block;
+  display: inline-block;
   float: left;
 `;
 
@@ -158,8 +158,7 @@ function Summary({ element, number, responseElement, showlogic }) {
               showlogic === true &&
               <small className="text-muted">
                 Go to: {answer.getIn(['goTo', 'title'])}
-              </small>}
-            {' '}
+              </small>}{' '}
             {answer.get('concepts') &&
               !!answer.get('concepts').count() &&
               showlogic &&
@@ -167,18 +166,21 @@ function Summary({ element, number, responseElement, showlogic }) {
                 {answer.get('concepts') &&
                   !!answer.get('concepts').count() &&
                   <small className="text-muted text-success">
-                    ({answer
+                    (
+                    {answer
                       .get('concepts')
                       .map(concept => concept.get('label'))
-                      .join(', ')})
+                      .join(', ')}
+                    )
                   </small>}
               </span>}
             <img src={answer.get('image')} alt="" className="img-responsive" />
-
             {selected &&
               answer.get('followUp') &&
               <div style={{ marginTop: 8 }}>
-                <strong>{answer.getIn(['followUp', 'question'])}</strong>
+                <strong>
+                  {answer.getIn(['followUp', 'question'])}
+                </strong>
                 <textarea
                   className="form-control"
                   rows="3"
@@ -203,14 +205,20 @@ function Summary({ element, number, responseElement, showlogic }) {
   return (
     <div style={{ marginBottom: 15 }}>
       <div className="media">
-        <div className="pull-left"><strong>{number}.</strong></div>
+        <div className="pull-left">
+          <strong>
+            {number}.
+          </strong>
+        </div>
         <div className="media-body" style={{ paddingLeft: 10 }}>
           <p style={{ color: '#333', fontSize: 16, marginBottom: 6 }}>
             <strong>
-              {element
-                .get('question')
-                .split('\n')
-                .map((item, key) => <span key={key}>{item}<br /></span>)}
+              {element.get('question').split('\n').map((item, key) => (
+                <span key={key}>
+                  {item}
+                  <br />
+                </span>
+              ))}
             </strong>
           </p>
           {element.get('required') &&

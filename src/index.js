@@ -21,14 +21,14 @@ middleware.push(thunk);
 if (process.env.NODE_ENV === `development`) {
   const { createLogger } = require(`redux-logger`);
   const logger = createLogger({
-    stateTransformer: (state) => {
+    stateTransformer: state => {
       let newState = {};
 
       // https://github.com/evgenyrodionov/redux-logger/blob/a7fc6d71742867beb26422639b2d89e3d398a5d2/README.md#transform-immutable-without-combinereducers
       for (var i of Object.keys(state)) {
         // deal with logged immutable stuff
         newState[i] = fromJS(state[i]).toJS();
-      };
+      }
       return newState;
     }
   });
@@ -41,9 +41,9 @@ const store = createStore(
   applyMiddleware(...middleware) // add logging in as middleware
 );
 
-let currentValue
+let currentValue;
 function handleChange() {
-  let previousValue = currentValue
+  let previousValue = currentValue;
   currentValue = getCurrentResponse(store.getState());
   if (currentValue && previousValue !== currentValue) {
     api.updateResponse(currentValue.get('id'), currentValue);

@@ -19,14 +19,15 @@ const propTypes = {
   showlogic: PropTypes.bool.isRequired
 };
 
-const defaultProps = {
-};
+const defaultProps = {};
 
 function QuestionnaireForm(props) {
   const { sections, version, responseElements, showlogic } = props;
-  return( 
+  return (
     <div className="container">
-      <h1 style={{ marginBottom: 32 }}>{version.get('title')}</h1>
+      <h1 style={{ marginBottom: 32 }}>
+        {version.get('title')}
+      </h1>
       <div className="row">
         <div className="col-sm-3">
           <div style={{ backgroundColor: 'white', padding: 16 }}>
