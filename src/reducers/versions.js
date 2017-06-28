@@ -8,20 +8,22 @@ const initialState = {
   currentId: null
 };
 
-export const getCurrentVersion = (state) => {
+export const getCurrentVersion = state => {
   if (state.currentId) {
     return state.items.get(state.currentId);
   }
   // TODO: remove this, should always use current id
   return state.items.size ? state.items.first() : null;
-}
+};
 
 export const getById = (state, id) => {
   if (!getCurrentVersion(state)) {
     return null;
   }
-  return getCurrentVersion(state).get('body').find(element => element.get('id') === id);
-}
+  return getCurrentVersion(state)
+    .get('body')
+    .find(element => element.get('id') === id);
+};
 
 const versions = (state = initialState, action) => {
   switch (action.type) {
@@ -45,7 +47,7 @@ const versions = (state = initialState, action) => {
         ...state,
         currentId: version.get('id'),
         items: state.items.set(version.get('id'), version)
-      }
+      };
     }
     default:
       return state;

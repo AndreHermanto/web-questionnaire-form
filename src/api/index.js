@@ -1,9 +1,10 @@
-
 export const fetchQuestionnaire = questionnaireId =>
   fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${questionnaireId}`);
 
 export const fetchResponses = (questionnaireId, userId) =>
-  fetch(`${process.env.REACT_APP_BASE_URL}/responses?questionnaireId=${questionnaireId}&userId=${userId}`);
+  fetch(
+    `${process.env.REACT_APP_BASE_URL}/responses?questionnaireId=${questionnaireId}&userId=${userId}`
+  );
 
 export const createResponse = response =>
   fetch(`${process.env.REACT_APP_BASE_URL}/responses`, {
@@ -15,7 +16,9 @@ export const createResponse = response =>
   });
 
 export const fetchVersion = (questionnaireId, versionId) =>
-  fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${questionnaireId}/versions/${versionId}`);
+  fetch(
+    `${process.env.REACT_APP_BASE_URL}/questionnaires/${questionnaireId}/versions/${versionId}`
+  );
 
 export const updateResponse = (responseId, response) =>
   fetch(`${process.env.REACT_APP_BASE_URL}/responses/${responseId}`, {

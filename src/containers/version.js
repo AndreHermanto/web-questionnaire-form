@@ -23,21 +23,25 @@ export default {
           id: 1,
           text: 'Self',
           type: 'radio'
-        }, {
+        },
+        {
           id: 2,
           text: 'Child',
           type: 'radio'
-        }, {
+        },
+        {
           id: 3,
           text: 'Other (please specify)',
           type: 'radio+text'
         }
       ]
-    }, {
+    },
+    {
       id: 2,
       type: 'section',
       title: 'Genetic Testing'
-    }, {
+    },
+    {
       id: 3,
       type: 'radio',
       question: 'Have you had genetic testing? (2)',
@@ -47,18 +51,21 @@ export default {
           id: 4,
           text: 'Yes',
           type: 'radio'
-        }, {
+        },
+        {
           id: 5,
           text: 'No',
           type: 'radio',
           goTo: 'Health and Development'
-        }, {
+        },
+        {
           id: 6,
           text: 'No Sure',
           type: 'radio'
         }
       ]
-    }, {
+    },
+    {
       id: 4,
       type: 'checkbox',
       question: ' What type(s) of genetic testing have you had? Please select all that apply. (2b)',
@@ -68,26 +75,31 @@ export default {
           type: 'checkbox',
           text: 'Chromosomes',
           description: 'Also called chromosome analysis, karyotype, karyotype analysis, or G-band karyotype'
-        }, {
+        },
+        {
           id: 8,
           type: 'checkbox',
           text: 'Direct-to-consumer (DTC) genetic test ',
           description: '(Genetic testing that is ordered by and returned directly to the person tested rather than through a doctor, also called DTC. Please specify name of the company and/or test below, such as Counsyl, 23andMe, etc'
-        }, {
+        },
+        {
           id: 9,
           type: 'checkbox+other',
           text: 'Other (please specify)'
-        }, {
+        },
+        {
           id: 10,
           type: 'checkbox',
           text: 'I am not sure'
-        }, {
+        },
+        {
           id: 11,
           type: 'checkbox',
           text: 'Prefer not to answer'
         }
       ]
-    }, {
+    },
+    {
       id: 5,
       type: 'checkbox',
       question: 'What was the reason for your genetic testing? (2c)',
@@ -95,27 +107,34 @@ export default {
         {
           type: 'checkbox',
           text: 'I have had symptoms of a genetic condition'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'The doctor/I wanted to confirm a diagnosis that was suspected based on my symptoms.'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'I have a family history of a genetic disorder and was NOT showing symptoms of the disorder – wanted to assess my risk.'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'I am healthy and wanted to be proactive about my health.'
-        }, {
+        },
+        {
           type: 'checkbox+other',
           text: 'Other (please specify)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'I am not sure'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Prefer not to answer'
         }
       ]
-    }, {
+    },
+    {
       id: 6,
       type: 'radio',
       question: 'Do you have a copy of your genetic test result(s)? (3)',
@@ -123,15 +142,18 @@ export default {
         {
           text: 'Yes',
           type: 'radio'
-        }, {
+        },
+        {
           text: 'No',
           type: 'radio'
-        }, {
+        },
+        {
           text: 'No Sure',
           type: 'radio'
         }
       ]
-    }, {
+    },
+    {
       id: 7,
       type: 'checkbox',
       question: 'What were genetic test results? (3b)',
@@ -141,33 +163,40 @@ export default {
           text: 'Negative/normal',
           description: 'The results did not show any reasons for my symptoms, or anything else of interest. The results were considered “normal.”',
           goTo: 'Health and Development'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Positive result with a clear or certain finding',
           description: 'The results showed a genetic change or variant that explained my symptoms or was the same result found in another family member with symptoms.'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Positive result with an unclear or uncertain finding',
           description: 'The test did show something, but it was a genetic change or variant that has uncertain or unclear effects.)'
-        }, {
+        },
+        {
           type: 'checkbox+other',
           text: 'Other (please specify)',
           goTo: 'Health and Development'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'I am not sure',
           goTo: 'Health and Development'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Prefer not to answer',
           goTo: 'Health and Development'
         }
       ]
-    }, {
+    },
+    {
       id: 8,
       type: 'section',
       title: 'Positive-clear/certain or Positive-unclear/uncertain (not needed, but in document)'
-    }, {
+    },
+    {
       id: 9,
       type: 'radio',
       question: 'Have any of your family members been tested for the genetic change found on your testing? (3c)',
@@ -175,29 +204,35 @@ export default {
         {
           text: 'Yes',
           type: 'radio'
-        }, {
+        },
+        {
           text: 'No',
           type: 'radio',
           goTo: 'Health and Development'
-        }, {
+        },
+        {
           text: 'Other (please specify)',
           type: 'radio+other',
           goTo: 'Health and Development'
-        }, {
+        },
+        {
           text: 'I’m not sure',
           type: 'radio',
           goTo: 'Health and Development'
-        }, {
+        },
+        {
           text: 'Prefer not to answer',
           type: 'radio',
           goTo: 'Health and Development'
         }
       ]
-    }, {
+    },
+    {
       id: 10,
       type: 'section',
       title: 'Family Test Results'
-    }, {
+    },
+    {
       id: 11,
       type: 'checkbox',
       question: 'Which family members have been TESTED for the genetic change found on your testing? Select all that apply. (3d)',
@@ -205,51 +240,66 @@ export default {
         {
           type: 'checkbox',
           text: 'Mother'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Father '
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Child'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Sister'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Brother '
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal aunt (your mother’s sister)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal uncle (your mother’s brother)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal cousin (cousin on your mother’s side)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal grandmother (your mother’s mother)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal grandfather (your mother’s father)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal aunt (your father’s sister) '
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal uncle (your father’s brother)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal cousin (cousin on your father’s side)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal grandmother (your father’s mother)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal grandfather (your father’s father)'
         }
       ]
-    }, {
+    },
+    {
       id: 12,
       type: 'checkbox',
       question: 'Which family members were found to have the same genetic change found on your testing? Please select all that apply. (3e)',
@@ -257,51 +307,66 @@ export default {
         {
           type: 'checkbox',
           text: 'Mother'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Father '
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Child'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Sister'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Brother '
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal aunt (your mother’s sister)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal uncle (your mother’s brother)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal cousin (cousin on your mother’s side)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal grandmother (your mother’s mother)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Maternal grandfather (your mother’s father)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal aunt (your father’s sister) '
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal uncle (your father’s brother)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal cousin (cousin on your father’s side)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal grandmother (your father’s mother)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Paternal grandfather (your father’s father)'
         }
       ]
-    }, {
+    },
+    {
       id: 13,
       type: 'radio',
       question: 'Have you been diagnosed with a specific genetic condition? (4)',
@@ -309,21 +374,25 @@ export default {
         {
           text: 'Yes',
           type: 'radio'
-        }, {
+        },
+        {
           text: 'No',
           type: 'radio',
           goTo: 'Health and Development'
-        }, {
+        },
+        {
           text: 'I’m not sure',
           type: 'radio',
           goTo: 'Health and Development'
-        }, {
+        },
+        {
           text: 'Prefer not to answer',
           type: 'radio',
           goTo: 'Health and Development'
         }
       ]
-    }, {
+    },
+    {
       id: 14,
       type: 'orphanet',
       question: 'What genetic condition(s) have you been diagnosed with? Check all that apply. (4b)',
@@ -332,19 +401,22 @@ export default {
           type: 'disease'
         }
       ]
-    }, {
+    },
+    {
       id: 15,
       type: 'section',
       title: 'Health and Development',
       description: 'We\'d like to learn about your health and development. Please indicate any health or developmental concerns you currently have, or have had in the past. Include everything, even those things you don\'t think are related to your genetic diagnosis (if you have one). We will ask about each of your different body systems - if you say "yes," that you do have an issue with a particular body system, you will be taken to a set of questions where you can explain your issue in more detail.'
-    }, {
+    },
+    {
       id: 16,
       type: 'section',
       title: 'Pregnancy / Birth and Delivery'
-    }, {
+    },
+    {
       id: 17,
       type: 'radio',
-      question: 'I have been told that there were issues during my mother\'s PREGNANCY with me and/or my DELIVERY/BIRTH. (5)',
+      question: "I have been told that there were issues during my mother's PREGNANCY with me and/or my DELIVERY/BIRTH. (5)",
       description: 'Examples: Mother had to be put on bed rest, there were concerns on ultrasound, you were born early (prematurely), or you had to stay in the neonatal intensive care unit (NICU).',
       answers: [
         {
@@ -357,24 +429,28 @@ export default {
               label: 'Abnormality of prenatal development or birth'
             }
           ]
-        }, {
+        },
+        {
           text: 'No',
           type: 'radio',
           goTo: 'Growth'
-        }, {
+        },
+        {
           text: 'I’m not sure',
           type: 'radio',
           goTo: 'Growth'
-        }, {
+        },
+        {
           text: 'Prefer not to answer',
           type: 'radio',
           goTo: 'Growth'
         }
       ]
-    }, {
+    },
+    {
       id: 18,
       type: 'checkbox',
-      question: 'What issues were there during your mother\'s PREGNANCY with you and/or your DELIVERY/BIRTH? Please select all that apply.',
+      question: "What issues were there during your mother's PREGNANCY with you and/or your DELIVERY/BIRTH? Please select all that apply.",
       answers: [
         {
           type: 'checkbox',
@@ -387,7 +463,8 @@ export default {
               label: 'Abnormality of the amniotic fluid'
             }
           ]
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Decreased fetal movement',
           description: 'Baby moved less than expected during the pregnancy',
@@ -396,28 +473,34 @@ export default {
               id: 'HP:0001558',
               type: 'hpo',
               label: 'Decreased fetal movement'
-            }, {
+            },
+            {
               id: '3740weeks',
               type: 'custom',
               label: 'Early- or Near-term birth with complications; No HP term available'
             }
           ]
-        }, {
+        },
+        {
           type: 'checkbox+other',
           text: 'Other (please specify)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Im not sure'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Prefer not to answer'
         }
       ]
-    }, {
+    },
+    {
       id: 19,
       type: 'section',
       title: 'Growth'
-    }, {
+    },
+    {
       id: 20,
       type: 'radio',
       question: 'I have had issues with my GROWTH. (6)',
@@ -426,21 +509,25 @@ export default {
         {
           text: 'Yes',
           type: 'radio'
-        }, {
+        },
+        {
           text: 'No',
           type: 'radio',
           goTo: 'Hormones / Endocrine'
-        }, {
+        },
+        {
           text: 'I’m not sure',
           type: 'radio',
           goTo: 'Hormones / Endocrine'
-        }, {
+        },
+        {
           text: 'Prefer not to answer',
           type: 'radio',
           goTo: 'Hormones / Endocrine'
         }
       ]
-    }, {
+    },
+    {
       id: 21,
       type: 'checkbox',
       question: 'What specific GROWTH issues have you had? Please select all that apply. (7b)',
@@ -456,7 +543,8 @@ export default {
               label: 'Abnormality of the amniotic fluid'
             }
           ]
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Decreased fetal movement',
           description: 'Baby moved less than expected during the pregnancy',
@@ -465,28 +553,34 @@ export default {
               id: 'HP:0001558',
               type: 'hpo',
               label: 'Decreased fetal movement'
-            }, {
+            },
+            {
               id: '3740weeks',
               type: 'custom',
               label: 'Early- or Near-term birth with complications; No HP term available'
             }
           ]
-        }, {
+        },
+        {
           type: 'checkbox+other',
           text: 'Other (please specify)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Im not sure'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Prefer not to answer'
         }
       ]
-    }, {
+    },
+    {
       id: 22,
       type: 'section',
       title: 'Hormones / Endocrine'
-    }, {
+    },
+    {
       id: 23,
       type: 'radio',
       question: 'I have had issues with my HORMONES or my hormone-producing glands (my ENDOCRINE SYSTEM). (7)',
@@ -495,21 +589,25 @@ export default {
         {
           text: 'Yes',
           type: 'radio'
-        }, {
+        },
+        {
           text: 'No',
           type: 'radio',
           goTo: 'Cancer'
-        }, {
+        },
+        {
           text: 'I’m not sure',
           type: 'radio',
           goTo: 'Cancer'
-        }, {
+        },
+        {
           text: 'Prefer not to answer',
           type: 'radio',
           goTo: 'Cancer'
         }
       ]
-    }, {
+    },
+    {
       id: 24,
       type: 'checkbox',
       question: 'What specific HORMONE/ENDOCRINE issues have you had? Please select all that apply. (8b)',
@@ -525,7 +623,8 @@ export default {
               label: 'Abnormality of the amniotic fluid'
             }
           ]
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Decreased fetal movement',
           description: 'Baby moved less than expected during the pregnancy',
@@ -534,28 +633,34 @@ export default {
               id: 'HP:0001558',
               type: 'hpo',
               label: 'Decreased fetal movement'
-            }, {
+            },
+            {
               id: '3740weeks',
               type: 'custom',
               label: 'Early- or Near-term birth with complications; No HP term available'
             }
           ]
-        }, {
+        },
+        {
           type: 'checkbox+other',
           text: 'Other (please specify)'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Im not sure'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Prefer not to answer'
         }
       ]
-    }, {
+    },
+    {
       id: 25,
       type: 'section',
       title: 'Cancer'
-    }, {
+    },
+    {
       id: 26,
       type: 'radio',
       question: 'I have been diagnosed with cancer (any type, at any time). (8)',
@@ -564,21 +669,25 @@ export default {
         {
           text: 'Yes',
           type: 'radio'
-        }, {
+        },
+        {
           text: 'No',
           type: 'radio',
           goTo: 'End'
-        }, {
+        },
+        {
           text: 'I’m not sure',
           type: 'radio',
           goTo: 'End'
-        }, {
+        },
+        {
           text: 'Prefer not to answer',
           type: 'radio',
           goTo: 'End'
         }
       ]
-    }, {
+    },
+    {
       id: 27,
       type: 'checkbox',
       question: 'What type(s) of cancer have you been diagnosed with? Please select all that apply. Cancers are grouped, and some specific cancer names are asked.',
@@ -594,7 +703,8 @@ export default {
               type: 'hpo'
             }
           ]
-        }, {
+        },
+        {
           text: 'Breast cancer',
           concepts: [
             {
@@ -603,7 +713,8 @@ export default {
               type: 'hpo'
             }
           ]
-        }, {
+        },
+        {
           text: 'Colon cancer',
           concepts: [
             {
@@ -612,7 +723,8 @@ export default {
               type: 'hpo'
             }
           ]
-        }, {
+        },
+        {
           text: 'Hemangioblastoma',
           description: 'A tumor of blood vessel cells originating from the central nervous system',
           concepts: [
@@ -622,7 +734,8 @@ export default {
               type: 'hpo'
             }
           ]
-        }, {
+        },
+        {
           text: 'Intestinal tumors or polyps',
           description: 'Multiple polyps or tumors in the intestines, not just one or a few; sometimes called “polyposis”',
           concepts: [
@@ -632,7 +745,8 @@ export default {
               type: 'hpo'
             }
           ]
-        }, {
+        },
+        {
           text: 'Kidney cancer',
           concepts: [
             {
@@ -641,7 +755,8 @@ export default {
               type: 'hpo'
             }
           ]
-        }, {
+        },
+        {
           text: 'Leukemia, juvenile myelomonocytic',
           description: 'JML',
           concepts: [
@@ -651,15 +766,18 @@ export default {
               type: 'hpo'
             }
           ]
-        }, {
+        },
+        {
           type: 'checkbox+other',
           text: 'Other (please specify)',
           goTo: 'End'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Im not sure',
           goTo: 'End'
-        }, {
+        },
+        {
           type: 'checkbox',
           text: 'Prefer not to answer',
           goTo: 'End'

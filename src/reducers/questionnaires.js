@@ -33,7 +33,11 @@ const questionnaires = (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        items: questionnaires.reduce((carry, questionnaire) => carry.set(questionnaire.get('id'), questionnaire), state.items)
+        items: questionnaires.reduce(
+          (carry, questionnaire) =>
+            carry.set(questionnaire.get('id'), questionnaire),
+          state.items
+        )
       };
     }
     case types.FETCH_QUESTIONNAIRES_FAILURE:

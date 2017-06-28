@@ -1,9 +1,7 @@
 import React from 'react';
-import {
-  Link
-} from 'react-router';
+import { Link } from 'react-router';
 
-export default function ({
+export default function({
   answeredQuestions,
   pages,
   currentPageIndex,
@@ -20,28 +18,42 @@ export default function ({
   const firstQuestionOnPage = currentPage.getIn(['questions', 0]);
 
   // find the question before that question that was viewed
-  const previousQuestion = answeredQuestions.reduce((sum, answeredQuestion) => {
-    if (!answeredQuestion.viewed || answeredQuestion.id === firstQuestionOnPage.get('id') || sum.found) {
+  const previousQuestion = answeredQuestions.reduce(
+    (sum, answeredQuestion) => {
+      if (
+        !answeredQuestion.viewed ||
+        answeredQuestion.id === firstQuestionOnPage.get('id') ||
+        sum.found
+      ) {
+        return {
+          found: true,
+          previousQuestion: sum.previousQuestion
+        };
+      }
       return {
-        found: true,
-        previousQuestion: sum.previousQuestion
+        found: false,
+        previousQuestion: answeredQuestion
       };
-    }
-    return {
+    },
+    {
       found: false,
-      previousQuestion: answeredQuestion
-    };
-  }, {
-    found: false,
-    previousQuestion: null
-  }).previousQuestion;
+      previousQuestion: null
+    }
+  ).previousQuestion;
 
   if (!previousQuestion) {
     return <div>didnt answer any previous questions</div>;
   }
 
   // find the page with that question
-  const previousPage = pages.filter(page => page.get('questions').filter(question => question.get('id') === previousQuestion.id).size).get(0);
+  const previousPage = pages
+    .filter(
+      page =>
+        page
+          .get('questions')
+          .filter(question => question.get('id') === previousQuestion.id).size
+    )
+    .get(0);
   // go to it
   const previousPageIndex = pages.reduce((sum, page, index) => {
     if (page.get('id') === previousPage.get('id')) {
@@ -50,11 +62,12 @@ export default function ({
     return sum;
   }, null);
 
-  return (<Link
-    to={`/users/${userId}/questionnaires/${questionnaireId}/pages/${previousPageIndex}`}
-    className="btn btn-default btn-lg"
-  >
-    {children}
-  </Link>);
+  return (
+    <Link
+      to={`/users/${userId}/questionnaires/${questionnaireId}/pages/${previousPageIndex}`}
+      className="btn btn-default btn-lg"
+    >
+      {children}
+    </Link>
+  );
 }
-
