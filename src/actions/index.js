@@ -174,7 +174,6 @@ const createInitialResponse = (questionnaireId, userId, version) => {
         answers: [],
         type: element.type,
         logic,
-        loopBackTo: element.goTo ? element.goTo.id : null,
         visible: index === 0
       };
     })

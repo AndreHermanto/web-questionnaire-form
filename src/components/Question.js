@@ -51,7 +51,14 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
       if (target.checked) {
         return onAnswer(
           responseElement.update('answers', currentAnswers =>
-            currentAnswers.push(fromJS({ id: answer.get('id') }))
+            currentAnswers.push(
+              fromJS({
+                id: answer.get('id'),
+                loopBackTo: answer.get('goTo')
+                  ? answer.getIn(['goTo', 'id'])
+                  : null
+              })
+            )
           )
         );
       }
@@ -64,7 +71,17 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
     }
     if (element.get('type') === 'radio') {
       return onAnswer(
-        responseElement.set('answers', fromJS([{ id: answer.get('id') }]))
+        responseElement.set(
+          'answers',
+          fromJS([
+            {
+              id: answer.get('id'),
+              loopBackTo: answer.get('goTo')
+                ? answer.getIn(['goTo', 'id'])
+                : null
+            }
+          ])
+        )
       );
     }
     if (element.get('type') === 'text') {
@@ -73,7 +90,8 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
         fromJS([
           {
             id: answer.get('id'),
-            text: target.value
+            text: target.value,
+            loopBackTo: answer.get('goTo') ? answer.getIn(['goTo', 'id']) : null
           }
         ])
       );
@@ -85,7 +103,8 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
         fromJS([
           {
             id: answer.get('id'),
-            pounds: target.value !== '' ? parseInt(target.value, 10) : ''
+            pounds: target.value !== '' ? parseInt(target.value, 10) : '',
+            loopBackTo: answer.get('goTo') ? answer.getIn(['goTo', 'id']) : null
           }
         ])
       );
@@ -97,7 +116,8 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
         fromJS([
           {
             id: answer.get('id'),
-            date: target.value
+            date: target.value,
+            loopBackTo: answer.get('goTo') ? answer.getIn(['goTo', 'id']) : null
           }
         ])
       );
@@ -109,7 +129,8 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
         fromJS([
           {
             id: answer.get('id'),
-            number: target.value !== '' ? parseInt(target.value, 10) : ''
+            number: target.value !== '' ? parseInt(target.value, 10) : '',
+            loopBackTo: answer.get('goTo') ? answer.getIn(['goTo', 'id']) : null
           }
         ])
       );
@@ -127,7 +148,8 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
           {
             id: answer.get('id'),
             feet: target.value !== '' ? parseInt(target.value, 10) : '',
-            inches: responseElement.getIn(['answers', 0, 'inches'])
+            inches: responseElement.getIn(['answers', 0, 'inches']),
+            loopBackTo: answer.get('goTo') ? answer.getIn(['goTo', 'id']) : null
           }
         ])
       );
@@ -140,7 +162,8 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
           {
             id: answer.get('id'),
             inches: target.value !== '' ? parseInt(target.value, 10) : '',
-            feet: responseElement.getIn(['answers', 0, 'feet'])
+            feet: responseElement.getIn(['answers', 0, 'feet']),
+            loopBackTo: answer.get('goTo') ? answer.getIn(['goTo', 'id']) : null
           }
         ])
       );
@@ -258,7 +281,8 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
                 onChange={e => handleAnswer(e, answer)}
               />}
             {' '}
-            {answer.get('text')}{' '}
+            {answer.get('text')}
+            {' '}
             {answer.get('goTo') &&
               showlogic === true &&
               <small className="text-muted">
