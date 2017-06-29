@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 import TextInformation from '../components/TextInformation';
 import NavigationBar from '../components/NavigationBar';
+import MatrixQuestion from '../components/MatrixQuestion';
 import '../index.css';
 
 storiesOf('Welcome', module).add('to Storybook', () => (
@@ -31,3 +32,63 @@ storiesOf('TextInformation', module).add('with text', () => (
 ));
 
 storiesOf('NavigationBar', module).add('White', () => <NavigationBar />);
+
+storiesOf('MatrixQuestion', module)
+  .add('Radio', () => {
+    const questions = [
+      { id: 1, question: 'Coke' },
+      { id: 2, question: 'Wine' },
+      { id: 3, question: 'Beer' }
+    ];
+    const answers = [
+      { id: 1, text: 'Weekly' },
+      { id: 2, text: 'Monthly' },
+      { id: 3, text: 'Yearly' },
+      { id: 4, text: 'Never' }
+    ];
+    const type = 'radio';
+    const active = {
+      1: { 2: true },
+      2: { 1: true }
+    };
+    return (
+      <MatrixQuestion
+        id={1}
+        title="How often do you drink the following?"
+        type={type}
+        questions={questions}
+        answers={answers}
+        active={active}
+        onAnswerClicked={action('matrix answer clicked')}
+      />
+    );
+  })
+  .add('Checkbox', () => {
+    const questions = [
+      { id: 1, question: 'Cancer' },
+      { id: 2, question: 'Diabetes' },
+      { id: 3, question: 'Heart Disease' }
+    ];
+    const answers = [
+      { id: 1, text: 'Children' },
+      { id: 2, text: 'Siblings' },
+      { id: 3, text: 'Parents' },
+      { id: 4, text: 'Grandparents' }
+    ];
+    const type = 'checkbox';
+    const active = {
+      1: { 2: true, 3: false, 4: true },
+      2: { 1: true }
+    };
+    return (
+      <MatrixQuestion
+        id={1}
+        title="Have any of these occured in your family?"
+        type={type}
+        questions={questions}
+        answers={answers}
+        active={active}
+        onAnswerClicked={action('matrix answer clicked')}
+      />
+    );
+  });
