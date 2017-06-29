@@ -1,4 +1,15 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const HeadingThree = styled.h3`
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #fff;
+  text-align: center;
+  margin: 5px 0px 0px 0px;
+`;
 
 export default function QuestionnaireDashboard() {
   return (
@@ -19,16 +30,20 @@ export default function QuestionnaireDashboard() {
         <div className="col-xs-12 dashboard-header">
           <div className="dashboard-icon">
             <div className="icon" />
-            <h3 className="colour-dark-blue">PROFILE QUESTIONS</h3>
-            <h3 className="colour-light-grey fw-400">
+            <HeadingThree className="colour-dark-blue">
+              PROFILE QUESTIONS
+            </HeadingThree>
+            <HeadingThree className="colour-light-grey fw-400">
               3 of 7 modules complete
-            </h3>
+            </HeadingThree>
           </div>
           <hr />
         </div>
         <div className="col-xs-12 col-sm-6">
           <div className="col-questionnaires">
-            <h3 className="colour-dark-blue">IN PROGRESS</h3>
+            <HeadingThree className="colour-dark-blue">
+              IN PROGRESS
+            </HeadingThree>
             <ul>
               <li className="questionnaire-item">
                 <div className="questionnaire-info">
@@ -65,7 +80,7 @@ export default function QuestionnaireDashboard() {
                 <div className="btn-dashboard-base btn-in-progress">RESUME</div>
               </li>
             </ul>
-            <h3 className="colour-dark-blue">TO DO</h3>
+            <HeadingThree className="colour-dark-blue">TO DO</HeadingThree>
             <ul>
               <li className="questionnaire-item">
                 <div className="questionnaire-info">
@@ -106,7 +121,9 @@ export default function QuestionnaireDashboard() {
         </div>
         <div className="col-xs-12 col-sm-6">
           <div className="col-questionnaires">
-            <h3 className="colour-forrest-green">COMPLETED</h3>
+            <HeadingThree className="colour-forrest-green">
+              COMPLETED
+            </HeadingThree>
             <ul>
               <li className="questionnaire-item item-completed">
                 <div className="questionnaire-info">
