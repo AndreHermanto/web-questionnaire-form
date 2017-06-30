@@ -4,27 +4,22 @@ import PropTypes from 'prop-types';
 import Immutable from 'immutable';
 import styled from 'styled-components';
 const DisplayText = styled.div`
-  fontSize: 20px;
-  textAlign: center;
-  font-style: ${props => (props.isItalic ? 'italic' : 'normal')};
-  font-weight: ${props => (props.isBold ? 'bold' : 'normal')};
-  font-size: ${props => (props.font ? `${props.font}px` : '20px')} !important;
-  color: ${props => (props.color ? props.color : '#333')};
-  padding-top: 20px;
+  text-align: center !important;
+  padding-top: 30px;
 `;
 
 const DisplayButton = styled.div`
   margin: auto;
   text-align: center;
-  margin-bottom: 10px;
-  padding-top: 20px;
+  padding-top: 30px;
 `;
 
 const propTypes = {
-  version: PropTypes.instanceOf(Immutable.Map).isRequired
+  version: PropTypes.instanceOf(Immutable.Map).isRequired,
+  displayText: PropTypes.func.isRequired
 };
 
-function QuestionnaireFormSubmitted({ version }) {
+function QuestionnaireFormSubmitted({ version, displayText }) {
   return (
     <Grid>
       {version && version.get('endPage')
@@ -35,13 +30,14 @@ function QuestionnaireFormSubmitted({ version }) {
               alt=""
               className="img-responsive"
             />
-            <DisplayText
-              font={version.getIn(['endPage', 'fontSize'])}
-              color={version.getIn(['endPage', 'color'])}
-              isItalic={version.getIn(['endPage', 'isItalic'])}
-              isBold={version.getIn(['endPage', 'isBold'])}
-            >
-              {version.getIn(['endPage', 'text'])}
+            <DisplayText>
+              {displayText(
+                version.getIn(['endPage', 'text']).split(/\r?\n/),
+                version.getIn(['endPage', 'fontSize']),
+                version.getIn(['endPage', 'color']),
+                version.getIn(['endPage', 'isItalic']),
+                version.getIn(['endPage', 'isBold'])
+              )}
             </DisplayText>
             {version.getIn(['endPage', 'buttonText']) !== '' &&
               <DisplayButton>

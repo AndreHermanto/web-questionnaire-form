@@ -15,12 +15,7 @@ const PreviewContainer = styled(Col)`
 
 const DisplayText = styled.div`
   text-align: center;
-  font-style: ${props => (props.isItalic ? 'italic' : 'normal')};
-  font-weight: ${props => (props.isBold ? 'bold' : 'normal')};
-  color: ${props => (props.color ? props.color : '#333')};
-  font-size: ${props => (props.font ? `${props.font}px` : '20px')} !important;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  padding-top: 30px;
 `;
 const ButtonText = styled(Link)`
   color: #fff;
@@ -33,10 +28,11 @@ const ButtonText = styled(Link)`
 
 const propTypes = {
   questionnaire: PropTypes.instanceOf(Immutable.Map).isRequired,
-  resume: PropTypes.string.isRequired
+  resume: PropTypes.string.isRequired,
+  displayText: PropTypes.func.isRequired
 };
 
-function QuestionnaireStartPage({ questionnaire, resume }) {
+function QuestionnaireStartPage({ questionnaire, resume, displayText }) {
   return (
     <PreviewContainer md={12}>
       {questionnaire.get('startPage') &&
@@ -45,19 +41,20 @@ function QuestionnaireStartPage({ questionnaire, resume }) {
           style={{ margin: 'auto' }}
           alt=""
           className="img-responsive"
-        />
-      }
+        />}
       {questionnaire.get('startPage') &&
-        <DisplayText
-          font={questionnaire.get('startPage').get('fontSize')}
-          color={questionnaire.get('startPage').get('color')}
-          isItalic={questionnaire.get('startPage').get('isItalic')}
-          isBold={questionnaire.get('startPage').get('isBold')}
-        >
-          {questionnaire.get('startPage').get('text')}
+        <DisplayText>
+          {displayText(
+            questionnaire.get('startPage').get('text').split(/\r?\n/),
+            questionnaire.get('startPage').get('fontSize'),
+            questionnaire.get('startPage').get('color'),
+            questionnaire.get('startPage').get('isItalic'),
+            questionnaire.get('startPage').get('isBold')
+          )}
         </DisplayText>}
-      {questionnaire.get('startPage') && questionnaire.get('startPage').get('buttonText') !== '' &&
-        <div style={{ margin: 'auto', textAlign: 'center' }}>
+      {questionnaire.get('startPage') &&
+        questionnaire.get('startPage').get('buttonText') !== '' &&
+        <div style={{ margin: 'auto', textAlign: 'center', paddingTop: 30 }}>
           <button className="btn btn-primary btn-lg">
             <ButtonText
               to={`/users/admin/questionnaires/${questionnaire.get(
