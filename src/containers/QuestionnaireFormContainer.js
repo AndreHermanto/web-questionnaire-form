@@ -6,7 +6,8 @@ import {
   setupQuestionnaire,
   nextQuestion,
   setQuestionnaireDebug,
-  setQuestionAnswer
+  setQuestionAnswer,
+  setMatrixQuestionAnswer
 } from '../actions';
 import Question from '../components/Question';
 import TextInformation from '../components/TextInformation';
@@ -179,6 +180,7 @@ class QuestionnaireFormContainer extends Component {
                 responseElement={responseElement}
                 onAnswer={this.handleQuestionAnswered}
                 showlogic={this.props.debug}
+                onMatrixAnswerClicked={this.props.onMatrixAnswerClicked}
               />
               {index === this.props.visibleQuestions.size - 1 &&
                 !this.props.isShowingSubmit &&
@@ -230,4 +232,27 @@ function mapStateToProps(state, ownProps) {
   return props;
 }
 
-export default connect(mapStateToProps)(QuestionnaireFormContainer);
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onMatrixAnswerClicked: (
+      responseElementId,
+      questionId,
+      answerId,
+      selected
+    ) => {
+      dispatch(
+        setMatrixQuestionAnswer({
+          responseElementId,
+          questionId,
+          answerId,
+          selected
+        })
+      );
+    },
+    dispatch
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  QuestionnaireFormContainer
+);

@@ -348,6 +348,21 @@ export const setQuestionAnswer = ({ responseElement }) => (
   }
 };
 
+export const setMatrixQuestionAnswer = ({
+  responseElementId,
+  questionId,
+  answerId,
+  selected
+}) => ({
+  type: types.SET_MATRIX_QUESTION_ANSWER,
+  payload: {
+    responseElementId,
+    questionId,
+    answerId,
+    selected
+  }
+});
+
 export function setResponseSubmitted() {
   return {
     type: 'SUBMIT_RESPONSE'

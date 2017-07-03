@@ -560,8 +560,6 @@ describe('visibility', () => {
 
 describe('Submit a questionnaire', () => {
   it('submit a questionnaire will change completed to true', () => {
-    const userId = 1;
-    const versionId = 1;
     const questionnaireId = 'abcd';
     const state = responses(
       {

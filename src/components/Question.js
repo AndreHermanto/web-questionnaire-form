@@ -4,15 +4,8 @@ import { fromJS } from 'immutable';
 import { coalesce } from '../helpers/coalesce';
 import { Helpers } from 'react-scroll';
 import { isQuestion } from '../helpers/questions';
-
-const AnswerOption = styled.label`
-  width: 100%;
-  border: ${props => (props.active ? '1px solid #96C65E' : '1px solid #eee')};
-  padding: 16px 16px 16px 36px !important;
-  color: ${props => (props.active ? '#7bb13d' : '#666')};
-  background-color: ${props => (props.active ? '#F0F7E7' : 'white')};
-  margin-bottom: 8px;
-`;
+import AnswerOption from './AnswerOption';
+import MatrixQuestion from './MatrixQuestion';
 
 const Weight = styled.input`
   width: 90px;
@@ -38,7 +31,14 @@ const RequiredText = styled.div`
   color: #777;
 `;
 
-function Question({ element, number, responseElement, onAnswer, showlogic }) {
+function Question({
+  element,
+  number,
+  responseElement,
+  onAnswer,
+  showlogic,
+  onMatrixAnswerClicked
+}) {
   if (!element) {
     return <div>Loading Question...</div>;
   }
@@ -261,6 +261,8 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
             <Description> Inches</Description>
           </div>
         );
+      } else if (element.get('type') === 'matrix') {
+        return <div>matrix quesiton</div>;
       }
 
       const selected =
@@ -339,6 +341,23 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
     answers = 'Unknown type';
   }
 
+  var matrixActive = {};
+  if (element.get('type') === 'matrix') {
+    // calculate if active
+    // this should be moved to the reducer
+    matrixActive = responseElement
+      .get('answers')
+      .reduce((acc, matrixQuestionAnswer) => {
+        acc[matrixQuestionAnswer.get('questionId')] = matrixQuestionAnswer
+          .get('answers')
+          .reduce((acc2, answer) => {
+            acc2[answer.get('id')] = true;
+            return acc2;
+          }, {});
+        return acc;
+      }, {});
+  }
+
   return (
     <div
       style={{
@@ -383,11 +402,29 @@ function Question({ element, number, responseElement, onAnswer, showlogic }) {
                 className="img-responsive"
               />
             </div>}
+
           <p className="text-muted">
             {element.get('type') === 'radio' && <span>Select One</span>}
             {element.get('type') === 'checkbox' && <span>Select Any</span>}
+            {element.get('type') === 'matrix' && <span>Matrix</span>}
           </p>
-          {answers}
+          {element.get('type') === 'matrix' &&
+            <MatrixQuestion
+              id={element.get('id')}
+              title={element.get('question')}
+              questions={element.get('matrix')}
+              type={'radio'}
+              answers={element.get('answers')}
+              /* example for active
+                {
+                  3: { 2: true }
+                }
+                question 3, answer 2, is true
+            */
+              active={matrixActive}
+              onAnswerClicked={onMatrixAnswerClicked}
+            />}
+          {element.get('type') !== 'matrix' && answers}
         </div>
       </div>
     </div>

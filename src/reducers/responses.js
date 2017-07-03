@@ -337,6 +337,99 @@ const responses = (state = initialState, action) => {
           .updateIn([state.currentId, 'answeredQuestions'], updateLogic)
       };
     }
+    case types.SET_MATRIX_QUESTION_ANSWER: {
+      // find the index
+      var items = state.items;
+      const {
+        responseElementId,
+        questionId,
+        answerId,
+        selected
+      } = action.payload;
+      // responseElementIndex
+      const responseElementIndex = items
+        .getIn([state.currentId, 'answeredQuestions'])
+        .findIndex(
+          responseElement => responseElement.get('id') === responseElementId
+        );
+      let matrixQuestionAnswerIndex = items
+        .getIn([
+          state.currentId,
+          'answeredQuestions',
+          responseElementIndex,
+          'answers'
+        ])
+        .findIndex(answer => answer.get('questionId') === questionId);
+
+      if (matrixQuestionAnswerIndex === -1) {
+        items = items.updateIn(
+          [
+            state.currentId,
+            'answeredQuestions',
+            responseElementIndex,
+            'answers'
+          ],
+          matrixQuestionAnswers =>
+            matrixQuestionAnswers.push(
+              fromJS({
+                questionId,
+                answers: []
+              })
+            )
+        );
+        matrixQuestionAnswerIndex =
+          items.getIn([
+            state.currentId,
+            'answeredQuestions',
+            responseElementIndex,
+            'answers'
+          ]).size - 1;
+      }
+      const answerIndex = items
+        .getIn([
+          state.currentId,
+          'answeredQuestions',
+          responseElementIndex,
+          'answers',
+          matrixQuestionAnswerIndex,
+          'answers'
+        ])
+        .findIndex(answer => answer.get('id') === answerId);
+
+      if (selected) {
+        items = items.setIn(
+          [
+            state.currentId,
+            'answeredQuestions',
+            responseElementIndex,
+            'answers',
+            matrixQuestionAnswerIndex,
+            'answers',
+            answerIndex,
+            'id'
+          ],
+          answerId
+        );
+      } else {
+        items = items.deleteIn([
+          state.currentId,
+          'answeredQuestions',
+          responseElementIndex,
+          'answers',
+          matrixQuestionAnswerIndex,
+          'answers',
+          answerIndex,
+          'id'
+        ]);
+      }
+      return {
+        ...state,
+        items: items.updateIn(
+          [state.currentId, 'answeredQuestions'],
+          updateLogic
+        )
+      };
+    }
     case types.SET_RESPONSE: {
       const response = fromJS(action.response);
       return {
