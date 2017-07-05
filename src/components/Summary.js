@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { coalesce } from '../helpers/coalesce';
 import { isQuestion } from '../helpers/questions';
+import StartEndText from './StartEndText';
 
 const AnswerOption = styled.label`
   width: 100%;
@@ -45,6 +46,25 @@ function Summary({ element, number, responseElement, showlogic }) {
   }
 
   let answers = '';
+
+  if (element.get('type') === 'start' || element.get('type') === 'end') {
+    return (
+      <div
+        style={{
+          marginBottom: 24,
+          padding: 32
+        }}
+      >
+        <StartEndText
+          text={element.get('text')}
+          fontSize={element.get('fontSize')}
+          color={element.get('color')}
+          isItalic={element.get('isItalic')}
+          isBold={element.get('isBold')}
+        />
+      </div>
+    );
+  }
 
   if (isQuestion(element)) {
     answers = element.get('answers').map((answer, answerIndex) => {

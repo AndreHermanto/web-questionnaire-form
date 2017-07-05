@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import QuestionnaireSummary from '../components/QuestionnaireSummary';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
-import { setupQuestionnaire, setResponseSubmitted } from '../actions';
-import { getCurrentResponse, getVisibleQuestions } from '../reducers';
+import { setupQuestionnaire } from '../actions';
+import {
+  getCurrentResponse,
+  getVisibleQuestions,
+  getEndPage
+} from '../reducers';
 
 class QuestionnaireSummaryContainer extends Component {
   constructor(props) {
     super(props);
-    this.handleSubmitQuestionnaire = this.handleSubmitQuestionnaire.bind(this);
     this.handleBack = this.handleBack.bind(this);
   }
 
@@ -25,25 +28,23 @@ class QuestionnaireSummaryContainer extends Component {
     );
   }
 
-  handleSubmitQuestionnaire() {
-    this.props.dispatch(setResponseSubmitted());
-    hashHistory.push('/submitted');
-  }
-
   handleBack() {
     hashHistory.push(
-      `/users/admin/questionnaires/${this.props.params
-        .questionnaireId}?resume=true&showlogic=true`
+      `/users/admin/questionnaires/${this.props.params.questionnaireId}?resume=true&showlogic=true`
     );
   }
 
   render() {
+    const { response, questions, endPage } = this.props;
+    if (!response) {
+      return <div>Loading response...</div>;
+    }
     return (
       <QuestionnaireSummary
-        isCompleted={this.props.responses.get('completed')}
-        questions={this.props.questions}
-        onSubmit={this.handleSubmitQuestionnaire}
+        isCompleted={response.get('completed')}
+        questions={questions}
         onEdit={this.handleBack}
+        endPage={endPage}
       />
     );
   }
@@ -51,8 +52,9 @@ class QuestionnaireSummaryContainer extends Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    responses: getCurrentResponse(state),
-    questions: getVisibleQuestions(state)
+    response: getCurrentResponse(state),
+    questions: getVisibleQuestions(state),
+    endPage: getEndPage(state)
   };
 }
 

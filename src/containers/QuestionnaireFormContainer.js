@@ -7,7 +7,8 @@ import {
   nextQuestion,
   setQuestionnaireDebug,
   setQuestionAnswer,
-  setMatrixQuestionAnswer
+  setMatrixQuestionAnswer,
+  setResponseSubmitted
 } from '../actions';
 import StartEndText from '../components/StartEndText';
 import Question from '../components/Question';
@@ -29,7 +30,6 @@ class QuestionnaireFormContainer extends Component {
   constructor(props) {
     super(props);
     this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
-    this.handeSubmitQuestionnaire = this.handeSubmitQuestionnaire.bind(this);
     this.setPageMode = this.setPageMode.bind(this);
     this.renderButton = this.renderButton.bind(this);
   }
@@ -111,6 +111,7 @@ class QuestionnaireFormContainer extends Component {
     if (!this.props.version || !this.props.response) {
       return <div className="container">Loading...</div>;
     }
+    const { submitQuestionnaire } = this.props;
     return (
       <div className="container">
         {this.props.version &&
@@ -137,6 +138,8 @@ class QuestionnaireFormContainer extends Component {
                   padding: 32
                 }}
               >
+                <div><pre>{JSON.stringify(element, null, 2)}</pre></div>;
+
                 {element.get('image') &&
                   <img
                     src={element.get('image')}
@@ -244,7 +247,7 @@ class QuestionnaireFormContainer extends Component {
             />
             <button
               className="btn btn-primary btn-lg"
-              onClick={this.handeSubmitQuestionnaire}
+              onClick={submitQuestionnaire}
             >
               Submit
             </button>
@@ -272,6 +275,14 @@ function mapStateToProps(state, ownProps) {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    submitQuestionnaire: () => {
+      // set as submitted
+      dispatch(setResponseSubmitted());
+      // go to summary page, that also shows the end text
+      hashHistory.push(
+        `/users/${ownProps.params.userId}/questionnaires/${ownProps.params.questionnaireId}/summary`
+      );
+    },
     onMatrixAnswerClicked: (
       responseElementId,
       questionId,

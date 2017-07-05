@@ -3,17 +3,12 @@ import Summary from './Summary';
 import Heading from './Heading';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import StartEndText from './StartEndText';
 
 const Header = styled.h2`text-align: center;`;
 
-const ButtonContainer = styled.div`
-  margin: 0 auto;
-  width: 200px;
-`;
-
 const propTypes = {
   questions: PropTypes.object.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   isCompleted: PropTypes.bool.isRequired
 };
@@ -21,9 +16,30 @@ const propTypes = {
 const defaultProps = {};
 
 function QuestionnaireSummary(props) {
+  const { endPage } = props;
   return (
     <div className="container">
+      <div
+        style={{
+          marginBottom: 24,
+          backgroundColor: 'white',
+          border: '1px solid #eee',
+          padding: 32
+        }}
+      >
+        {endPage &&
+          <StartEndText
+            text={endPage.get('text')}
+            fontSize={endPage.get('fontSize')}
+            color={endPage.get('color')}
+            isItalic={endPage.get('isItalic')}
+            isBold={endPage.get('isBold')}
+          />}
+      </div>
       <Header>Summary</Header>
+      <p>
+        Below is a summary of your answers. You may print these for your records.
+      </p>
       {props.questions.map((question, index) => {
         const { element, responseElement } = question;
         if (!element || !responseElement) {
@@ -76,16 +92,6 @@ function QuestionnaireSummary(props) {
           </div>
         );
       })}
-      {!props.isCompleted &&
-        <ButtonContainer>
-          <button className="btn btn-primary btn-lg" onClick={props.onSubmit}>
-            Submit
-          </button>{' '}
-          <button className="btn btn-default btn-lg" onClick={props.onEdit}>
-            Edit
-          </button>
-        </ButtonContainer>}
-      <br />
     </div>
   );
 }

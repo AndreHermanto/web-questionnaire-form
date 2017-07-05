@@ -62,7 +62,8 @@ export const getVisibleResponseElements = state => {
   return getCurrentResponse(state)
     .get('answeredQuestions')
     .slice(0, state.index + 1)
-    .filter(responseElement => responseElement.get('visible'));
+    .filter(responseElement => responseElement.get('visible'))
+    .filter(responseElement => responseElement.get('type') !== 'end');
 };
 
 export const getAnsweredResponseElements = state => {
