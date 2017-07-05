@@ -9,6 +9,7 @@ import {
   setQuestionAnswer,
   setMatrixQuestionAnswer
 } from '../actions';
+import StartEndText from '../components/StartEndText';
 import Question from '../components/Question';
 import TextInformation from '../components/TextInformation';
 import {
@@ -123,6 +124,43 @@ class QuestionnaireFormContainer extends Component {
           const { element, responseElement } = visibleQuestion;
           if (!element || !responseElement) {
             return <div>Loading question and reponse...</div>;
+          }
+
+          // START PAGE
+          if (element.get('type') === 'start') {
+            return (
+              <div
+                style={{
+                  marginBottom: 24,
+                  backgroundColor: 'white',
+                  border: '1px solid #eee',
+                  padding: 32
+                }}
+              >
+                {element.get('image') &&
+                  <img
+                    src={element.get('image')}
+                    style={{ margin: 'auto' }}
+                    alt=""
+                    className="img-responsive"
+                  />}
+                <StartEndText
+                  text={element.get('text')}
+                  fontSize={element.get('fontSize')}
+                  color={element.get('color')}
+                  isItalic={element.get('isItalic')}
+                  isBold={element.get('isBold')}
+                />
+                {index === this.props.visibleQuestions.size - 1 &&
+                  !this.props.isShowingSubmit &&
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={() => this.props.dispatch(nextQuestion())}
+                  >
+                    {element.get('buttonText')}
+                  </button>}
+              </div>
+            );
           }
           if (element.get('type') === 'textinformation') {
             return (

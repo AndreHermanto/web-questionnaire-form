@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import PatientHomeContainer from '../containers/PatientHomeContainer';
-
-import QuestionnaireAdminContainer from '../containers/QuestionnaireAdminContainer';
-import QuestionnaireStartPageContainer from '../containers/QuestionnaireStartPageContainer';
+import QuestionnaireAdminContainer
+  from '../containers/QuestionnaireAdminContainer';
 import QuestionnaireForm from '../containers/QuestionnaireFormContainer';
 import QuestionnaireSummary from '../containers/QuestionnaireSummaryContainer';
 import QuestionnaireFormSubmittedContainer
@@ -17,10 +16,6 @@ class Routes extends Component {
       <Router history={hashHistory}>
         <Route path="/" component={Container}>
           <IndexRoute component={QuestionnaireAdminContainer} />
-          <Route
-            path="/start/questionnaires/:questionnaireId/versions/:versionId(?resume:resume)(?showlogic=:showlogic)"
-            component={QuestionnaireStartPageContainer}
-          />
           <Route
             path="/users/:userId/questionnaires/:questionnaireId(?resume:resume)(?showlogic=:showlogic)"
             component={QuestionnaireForm}

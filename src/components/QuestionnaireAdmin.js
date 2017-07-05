@@ -8,7 +8,7 @@ const propTypes = {
   handleChangeResume: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   isError: PropTypes.bool.isRequired,
-  items: PropTypes.instanceOf(Immutable.List).isRequired
+  items: PropTypes.instanceOf(Immutable.Map).isRequired
 };
 
 const defaultProps = {};
@@ -35,19 +35,15 @@ function QuestionnaireAdmin(props) {
           props.items.length === 0 &&
           <p className="text-muted">No questionnaires</p>}
         {props.items &&
-          props.items.map(questionnaire =>
+          props.items.toSeq().map(questionnaire => (
             <li key={questionnaire.get('id')}>
               <Link
-                to={`/start/questionnaires/${questionnaire.get(
-                  'id'
-                )}/versions/${questionnaire.get(
-                  'currentVersionId'
-                )}?resume=${props.resume}&showlogic=true`}
+                to={`/users/admin/questionnaires/${questionnaire.get('id')}?resume=${props.resume}&showlogic=true`}
               >
                 {questionnaire.get('currentTitle')}
               </Link>
             </li>
-          )}
+          ))}
       </ul>
     </div>
   );
