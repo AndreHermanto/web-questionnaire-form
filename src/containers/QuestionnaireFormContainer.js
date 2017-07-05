@@ -138,15 +138,6 @@ class QuestionnaireFormContainer extends Component {
                   padding: 32
                 }}
               >
-                <div><pre>{JSON.stringify(element, null, 2)}</pre></div>;
-
-                {element.get('image') &&
-                  <img
-                    src={element.get('image')}
-                    style={{ margin: 'auto' }}
-                    alt=""
-                    className="img-responsive"
-                  />}
                 <StartEndText
                   text={element.get('text')}
                   fontSize={element.get('fontSize')}
@@ -154,6 +145,13 @@ class QuestionnaireFormContainer extends Component {
                   isItalic={element.get('isItalic')}
                   isBold={element.get('isBold')}
                 />
+                {element.get('image') &&
+                  <img
+                    src={element.get('image')}
+                    style={{ margin: 'auto' }}
+                    alt=""
+                    className="img-responsive"
+                  />}
                 {index === this.props.visibleQuestions.size - 1 &&
                   !this.props.isShowingSubmit &&
                   <button
