@@ -28,13 +28,22 @@ function QuestionnaireSummary(props) {
         }}
       >
         {endPage &&
-          <StartEndText
-            text={endPage.get('text')}
-            fontSize={endPage.get('fontSize')}
-            color={endPage.get('color')}
-            isItalic={endPage.get('isItalic')}
-            isBold={endPage.get('isBold')}
-          />}
+          <div>
+            <StartEndText
+              text={endPage.get('text')}
+              fontSize={endPage.get('fontSize')}
+              color={endPage.get('color')}
+              isItalic={endPage.get('isItalic')}
+              isBold={endPage.get('isBold')}
+            />
+            {endPage.get('image') &&
+              <img
+                src={endPage.get('image')}
+                style={{ margin: 'auto' }}
+                alt=""
+                className="img-responsive"
+              />}
+          </div>}
       </div>
       <Header>Summary</Header>
       <p>
