@@ -21,7 +21,7 @@ class Routes extends Component {
             component={QuestionnaireForm}
           />
           <Route
-            path="/users/:userId/questionnaires/:questionnaireId/summary"
+            path="/users/:userId/questionnaires/:questionnaireId/summary(?resume:resume)(?showlogic=:showlogic)"
             component={QuestionnaireSummary}
           />
           <Route

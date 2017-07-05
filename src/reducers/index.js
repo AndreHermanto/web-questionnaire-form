@@ -47,6 +47,8 @@ export const getVisibleQuestions = state =>
       };
     });
 
+export const getEndPage = state => fromVersions.getEndPage(state.versions);
+
 export const getAnsweredQuestions = state =>
   fromResponses.getAnsweredResponseElements(state.responses);
 

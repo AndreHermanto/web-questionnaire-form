@@ -25,6 +25,14 @@ export const getById = (state, id) => {
     .find(element => element.get('id') === id);
 };
 
+export const getEndPage = state => {
+  const version = getCurrentVersion(state);
+  if (!version) {
+    return null;
+  }
+  return version.get('body').find(element => element.get('type') === 'end');
+};
+
 const versions = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_VERSION': {
