@@ -410,7 +410,7 @@ function Question({
           </p>
           {element.get('type') === 'matrix' &&
             <MatrixQuestion
-              id={element.get('id')}
+              id={responseElement.get('id')}
               title={element.get('question')}
               questions={element.get('matrix')}
               type={'radio'}

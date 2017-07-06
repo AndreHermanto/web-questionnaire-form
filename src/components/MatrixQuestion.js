@@ -23,7 +23,6 @@ const defaultProps = {};
 function MatrixQuestion(props) {
   return (
     <div>
-
       {props.questions.map((question, questionIndex) => (
         <div key={question.id}>
           <div>
@@ -40,7 +39,7 @@ function MatrixQuestion(props) {
                 <div className={props.type} key={answer.id}>
                   <AnswerOption active={active}>
                     <input
-                      name={`${question.id}-${answer.id}`}
+                      name={`${props.id}-${question.id}-${answer.id}`}
                       type={props.type}
                       checked={active}
                       onChange={e =>
