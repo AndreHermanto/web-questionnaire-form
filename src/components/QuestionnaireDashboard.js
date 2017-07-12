@@ -1,7 +1,178 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-const HeadingThree = styled.h3`
+const ButtonBackgroundColor = {
+  review: '#fff',
+  start: '#fff',
+  resume: '#00437E'
+};
+const ButtonColor = { review: '#AAAAAA', start: '#00437E', resume: '#fff' };
+const ButtonBorder = {
+  review: '1px solid #AAAAAA',
+  start: '1px solid #00437E',
+  resume: '1px solid #00437E'
+};
+
+const ButtonBackgroundColorHover = {
+  review: '#2CC36B',
+  start: '#00437E',
+  resume: '#fff'
+};
+const ButtonColorHover = { review: '#fff', start: '#fff', resume: '#00437E' };
+
+const DashboardContainer = styled.div`
+  background-color: #fff;
+  padding: 0px 30px 60px 30px;
+  @media screen and (max-width: 480px) {
+    padding: 0px 0px 60px 0px;
+  }
+  margin: 80px 0px 80px 0px;
+  border: 1px solid #C9C9C9;
+`;
+
+const DashboardHeader = styled.div`
+  height: 200px;
+  margin-bottom: 30px;
+`;
+
+const HeaderIconContainer = styled.div`
+  position: relative;
+  top: 35px;
+  margin: 0 auto;
+  width: 300px;
+  height: 100px;
+`;
+
+const PaperIcon = styled.div`
+  position: relative;
+  margin: 0 auto;
+  width: 50px;
+  height: 50px;
+  left: -5px;
+  margin-bottom: 12px;
+  background-image: url(static/media/paper-stack.f5ce4eac.svg);
+`;
+
+const Line = styled.hr`
+  position: relative;
+  top: 50px;
+  border-top: 1px solid #C9C9C9;
+  opacity: 0.5;
+`;
+
+const QuestionnairesContainer = styled.div`
+  position: relative;
+  min-height: 200px;
+  margin-bottom: 20px;
+`;
+
+const QuestionnaireList = styled.ul`
+  padding: 0;
+  list-style-type: none;
+`;
+
+const QuestionnairesList = styled.li`
+  position: relative;
+  min-height: 70px;
+  width: 100%;
+  background-color: #F8F8FB;
+  border: 1px solid #C9C9C9;
+  margin: 15px 0px 15px 0px;
+`;
+
+const QuestionnairesListCompleted = styled.li`
+  position: relative;
+  min-height: 70px;
+  width: 100%;
+  background-color: #F8F8FB;
+  border: 1px solid #C9C9C9;
+  margin: 15px 0px 15px 0px;
+  background-color: #fff;
+  border: 1px solid #2CC36B;
+`;
+
+const QuestionnaireInfo = styled.div`
+  position: relative;
+  display: block;
+  overflow: auto;
+  width: 70%;
+  padding: 12px;
+  float: left;
+`;
+
+const QuestionnaireInfoCompleted = styled.div`
+  position: relative;
+  display: block;
+  overflow: auto;
+  width: 70%;
+  padding: 12px;
+  float: left;
+  padding-left: 50px;
+  padding-top: 21px;
+`;
+
+const PercentageCompleteContainer = styled.div`
+  width: 100%;
+  height: 6px;
+  background-color: #fff;
+  border-radius: 12px;
+  margin-top: 7px;
+  border: 1px solid #C9C9C9;
+`;
+
+const PercentageCompleteFill = styled.div`
+  height: 5px;
+  border-radius: 12px;
+  background-color: #00437E;
+`;
+
+const TickIcon = styled.div`
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 17px;
+  top: 26px;
+  background-image: url(static/media/checked.43039e78.svg);
+  background-size: contain;
+`;
+
+const Percentage = styled.span`
+  color: #AAAAAA;
+  font-weight: 400;
+  display: block;
+  font-size: 12px;
+  font-family: 'Nunito Sans', sans-serif;
+  line-height: 12px;
+  margin-bottom: 3px;
+  letter-spacing: 1px;
+`;
+
+const ModuleHeader = styled.span`
+  color: ${props => (props.completed ? '#2CC36B' : '#00437E')};
+  font-weight: 800;
+  display: block;
+  font-size: 12px;
+  font-family: 'Nunito Sans', sans-serif;
+  line-height: 12px;
+  margin-bottom: 3px;
+  letter-spacing: 1px;
+`;
+
+const DashboardIntro = styled.div`
+  margin: 60px 0px 0px 0px;
+`;
+
+const Header = styled.h2`
+  font-size: 24px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 5px 0px 0px 0px;
+  color: ${props => props.color};
+`;
+
+const SubHeader = styled.h3`
   font-family: 'Nunito Sans', sans-serif;
   font-weight: 800;
   font-size: 13px;
@@ -9,162 +180,183 @@ const HeadingThree = styled.h3`
   color: #fff;
   text-align: center;
   margin: 5px 0px 0px 0px;
+  color: ${props => props.color};
+  font-weight: ${props => props.fw};
+`;
+
+const Description = styled.p`
+  font-size: 12px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 400;
+  color: #767676;
+  margin-top: 25px;
+  max-width: 500px;
+  letter-spacing: 1px;
+`;
+
+const DashboardButton = styled.div`
+  position: relative;
+  float: right;
+  top: 14px;
+  right: 12px;
+  width: 75px;
+  height: 40px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 1px;
+  line-height: 40px;
+  cursor: pointer;
+
+  background-color: ${props => ButtonBackgroundColor[props.type]};
+  color: ${props => ButtonColor[props.type]};
+  border: ${props => ButtonBorder[props.type]};
+
+  &:hover {
+    background-color: ${props => ButtonBackgroundColorHover[props.type]};
+    color: ${props => ButtonColorHover[props.type]};
+    border: ${props => (props.type === 'review' ? '1px solid #2CC36B' : null)}
+  }
 `;
 
 export default function QuestionnaireDashboard() {
   return (
     <div className="container">
-      <div className="dashboard-intro-copy">
-        <h2 className="colour-dark-blue">Welcome back</h2>
-        <h2 className="colour-light-blue">Its time to complete your profile</h2>
-        <p>
+      <DashboardIntro>
+        <Header color="#00437E">Welcome back</Header>
+        <Header color="#62A5DB">Its time to complete your profile</Header>
+        <Description>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
           vitae purus eleifend, faucibus velit at, feugiat risus. Donec mauris
           magna, rhoncus quis tristique a, facilisis eget metus. In et dolor
           arcu. Fusce at diam dui. Vestibulum sed lacinia mauris, sit amet
           vestibulum lorem. Class aptent taciti sociosqu ad litora torquent per
           conubia nostra, per inceptos himenaeos.
-        </p>
-      </div>
-      <div className="row dashboard-container">
-        <div className="col-xs-12 dashboard-header">
-          <div className="dashboard-icon">
-            <div className="icon" />
-            <HeadingThree className="colour-dark-blue">
-              PROFILE QUESTIONS
-            </HeadingThree>
-            <HeadingThree className="colour-light-grey fw-400">
+        </Description>
+      </DashboardIntro>
+      <DashboardContainer className="row">
+        <DashboardHeader className="col-xs-12">
+          <HeaderIconContainer>
+            <PaperIcon />
+            <SubHeader color="#00437E">PROFILE QUESTIONS</SubHeader>
+            <SubHeader color="#AAAAAA" fw="400">
               3 of 7 modules complete
-            </HeadingThree>
-          </div>
-          <hr />
-        </div>
+            </SubHeader>
+          </HeaderIconContainer>
+          <Line />
+        </DashboardHeader>
         <div className="col-xs-12 col-sm-6">
-          <div className="col-questionnaires">
-            <HeadingThree className="colour-dark-blue">
-              IN PROGRESS
-            </HeadingThree>
-            <ul>
-              <li className="questionnaire-item">
-                <div className="questionnaire-info">
-                  <span className="colour-dark-blue fw-800">
+          <QuestionnairesContainer>
+            <SubHeader color="#00437E">IN PROGRESS</SubHeader>
+            <QuestionnaireList>
+              <QuestionnairesList>
+                <QuestionnaireInfo>
+                  <ModuleHeader>
                     Family History
-                  </span>
-                  <span className="colour-light-grey fw-400">15% complete</span>
-                  <div className="percentage-complete-container">
-                    <div
-                      className="percentage-complete-fill"
-                      style={{ width: '15%' }}
-                    >
+                  </ModuleHeader>
+                  <Percentage>15% complete</Percentage>
+                  <PercentageCompleteContainer>
+                    <PercentageCompleteFill style={{ width: '15%' }}>
                       {' '}
-                    </div>
-                  </div>
-                </div>
-                <div className="btn-dashboard-base btn-in-progress">RESUME</div>
-              </li>
-              <li className="questionnaire-item">
-                <div className="questionnaire-info">
-                  <span className="colour-dark-blue fw-800">
+                    </PercentageCompleteFill>
+                  </PercentageCompleteContainer>
+                </QuestionnaireInfo>
+                <DashboardButton type="resume">RESUME</DashboardButton>
+              </QuestionnairesList>
+              <QuestionnairesList>
+                <QuestionnaireInfo>
+                  <ModuleHeader>
                     Cultural/Social
-                  </span>
-                  <span className="colour-light-grey fw-400">45% complete</span>
-                  <div className="percentage-complete-container">
-                    <div
-                      className="percentage-complete-fill"
-                      style={{ width: '45%' }}
-                    >
+                  </ModuleHeader>
+                  <Percentage>45% complete</Percentage>
+                  <PercentageCompleteContainer>
+                    <PercentageCompleteFill style={{ width: '45%' }}>
                       {' '}
-                    </div>
-                  </div>
-                </div>
-                <div className="btn-dashboard-base btn-in-progress">RESUME</div>
-              </li>
-            </ul>
-            <HeadingThree className="colour-dark-blue">TO DO</HeadingThree>
-            <ul>
-              <li className="questionnaire-item">
-                <div className="questionnaire-info">
-                  <span className="colour-dark-blue fw-800">
+                    </PercentageCompleteFill>
+                  </PercentageCompleteContainer>
+                </QuestionnaireInfo>
+                <DashboardButton type="resume">RESUME</DashboardButton>
+              </QuestionnairesList>
+            </QuestionnaireList>
+            <SubHeader color="#00437E">TO DO</SubHeader>
+            <QuestionnaireList>
+              <QuestionnairesList>
+                <QuestionnaireInfo>
+                  <ModuleHeader>
                     Self-Phenotyping
-                  </span>
-                  <span className="colour-light-grey fw-400">0% complete</span>
-                  <div className="percentage-complete-container">
-                    <div
-                      className="percentage-complete-fill"
-                      style={{ width: '2%' }}
-                    >
+                  </ModuleHeader>
+                  <Percentage>0% complete</Percentage>
+                  <PercentageCompleteContainer>
+                    <PercentageCompleteFill style={{ width: '2%' }}>
                       {' '}
-                    </div>
-                  </div>
-                </div>
-                <div className="btn-dashboard-base btn-to-do">START</div>
-              </li>
-              <li className="questionnaire-item">
-                <div className="questionnaire-info">
-                  <span className="colour-dark-blue fw-800">
+                    </PercentageCompleteFill>
+                  </PercentageCompleteContainer>
+                </QuestionnaireInfo>
+                <DashboardButton type="start">START</DashboardButton>
+              </QuestionnairesList>
+              <QuestionnairesList>
+                <QuestionnaireInfo>
+                  <ModuleHeader>
                     Screening questionnaire
-                  </span>
-                  <span className="colour-light-grey fw-400">0% complete</span>
-                  <div className="percentage-complete-container">
-                    <div
-                      className="percentage-complete-fill"
-                      style={{ width: '2%' }}
-                    >
+                  </ModuleHeader>
+                  <Percentage>0% complete</Percentage>
+                  <PercentageCompleteContainer>
+                    <PercentageCompleteFill style={{ width: '2%' }}>
                       {' '}
-                    </div>
-                  </div>
-                </div>
-                <div className="btn-dashboard-base btn-to-do">START</div>
-              </li>
-            </ul>
-          </div>
+                    </PercentageCompleteFill>
+                  </PercentageCompleteContainer>
+                </QuestionnaireInfo>
+                <DashboardButton type="start">START</DashboardButton>
+              </QuestionnairesList>
+            </QuestionnaireList>
+          </QuestionnairesContainer>
         </div>
         <div className="col-xs-12 col-sm-6">
-          <div className="col-questionnaires">
-            <HeadingThree className="colour-forrest-green">
-              COMPLETED
-            </HeadingThree>
-            <ul>
-              <li className="questionnaire-item item-completed">
-                <div className="questionnaire-info">
-                  <div className="tick-icon" />
-                  <span className="colour-forrest-green fw-800">
+          <QuestionnairesContainer>
+            <SubHeader color="#2CC36B">COMPLETED</SubHeader>
+            <QuestionnaireList>
+              <QuestionnairesListCompleted>
+                <QuestionnaireInfoCompleted>
+                  <TickIcon />
+                  <ModuleHeader completed>
                     Exposure A
-                  </span>
-                  <span className="colour-light-grey fw-400">
+                  </ModuleHeader>
+                  <Percentage>
                     100% complete
-                  </span>
-                </div>
-                <div className="btn-dashboard-base btn-completed">REVIEW</div>
-              </li>
-              <li className="questionnaire-item item-completed">
-                <div className="questionnaire-info">
-                  <div className="tick-icon" />
-                  <span className="colour-forrest-green fw-800">
+                  </Percentage>
+                </QuestionnaireInfoCompleted>
+                <DashboardButton type="review">REVIEW</DashboardButton>
+              </QuestionnairesListCompleted>
+              <QuestionnairesListCompleted>
+                <QuestionnaireInfoCompleted>
+                  <TickIcon />
+                  <ModuleHeader completed>
                     Exposure B
-                  </span>
-                  <span className="colour-light-grey fw-400">
+                  </ModuleHeader>
+                  <Percentage>
                     100% complete
-                  </span>
-                </div>
-                <div className="btn-dashboard-base btn-completed">REVIEW</div>
-              </li>
-              <li className="questionnaire-item item-completed">
-                <div className="questionnaire-info">
-                  <div className="tick-icon" />
-                  <span className="colour-forrest-green fw-800">
+                  </Percentage>
+                </QuestionnaireInfoCompleted>
+                <DashboardButton type="review">REVIEW</DashboardButton>
+              </QuestionnairesListCompleted>
+              <QuestionnairesListCompleted>
+                <QuestionnaireInfoCompleted>
+                  <TickIcon />
+                  <ModuleHeader completed>
                     Exposure C
-                  </span>
-                  <span className="colour-light-grey fw-400">
+                  </ModuleHeader>
+                  <Percentage>
                     100% complete
-                  </span>
-                </div>
-                <div className="btn-dashboard-base btn-completed">REVIEW</div>
-              </li>
-            </ul>
-          </div>
+                  </Percentage>
+                </QuestionnaireInfoCompleted>
+                <DashboardButton type="review">REVIEW</DashboardButton>
+              </QuestionnairesListCompleted>
+            </QuestionnaireList>
+          </QuestionnairesContainer>
         </div>
-      </div>
+      </DashboardContainer>
     </div>
   );
 }
