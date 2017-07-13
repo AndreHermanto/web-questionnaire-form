@@ -1,12 +1,16 @@
 import { combineReducers } from 'redux';
+import { List } from 'immutable';
 import questionnaires, * as fromQuestionnaires from './questionnaires';
 import versions, * as fromVersions from './versions';
 import responses, * as fromResponses from './responses';
+import consentTypeMappings, * as fromConsentTypeMappings
+  from './consentTypeMappings';
 
 export default combineReducers({
   questionnaires,
   versions,
   responses,
+  consentTypeMappings,
   debug: (state = { value: true }, action) => {
     switch (action.type) {
       case 'SET_QUESTIONNAIRE_DEBUG':
@@ -62,4 +66,49 @@ export const getCurrentResponse = state =>
 
 export const getDebug = state => {
   return state.debug.value;
+};
+
+export const getStuff = (state, consentTypeId, userId) => {
+  const consentTypeMapping = fromConsentTypeMappings.getByConsentTypeId(
+    state.consentTypeMappings,
+    consentTypeId
+  );
+  if (!consentTypeMapping) {
+    return List();
+  }
+
+  return consentTypeMapping.get('questionnaires').map(mappedQuestionnaire => {
+    // get the version for that questionnaire
+    const responses = fromResponses.getForQuestionnaireAndUser(
+      state.responses,
+      mappedQuestionnaire.get('questionnaireId'),
+      userId
+    );
+    if (responses.size) {
+      // there are responses...do something with that
+      const firstResponse = responses.first();
+      console.log('firstResponse', firstResponse);
+      const version = fromVersions.getVersionById(
+        state.versions,
+        firstResponse.get('versionId')
+      );
+      if (!version) {
+        return undefined;
+      }
+      return version.set('response', firstResponse);
+    } else {
+      // there are no responses, use the version id from the mapping
+      const version = fromVersions.getVersionById(
+        state.versions,
+        mappedQuestionnaire.get('versionPublished')
+      );
+      console.log(
+        'version is',
+        version,
+        state.versions,
+        mappedQuestionnaire.get('versionPublished')
+      );
+      return version;
+    }
+  });
 };

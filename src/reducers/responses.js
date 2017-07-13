@@ -10,127 +10,6 @@ const initialState = {
   currentId: null
 };
 
-/**
-currentIndex is needed, because when we have looping questions we look for the
-answers closest to the current question (because they might have appeared 5 times cause of the looping)
-we only look for the closest one
-*/
-export const getLogicStatement = (logic, responseElements, currentIndex) => {
-  if (!logic) {
-    return true;
-  }
-  return logic.replace(/{(.*?)}/g, bits => {
-    const parts = bits.split('/');
-    const ids = parts[1]
-      .trim()
-      .split(' ')
-      .map(id => id.trim())
-      .reduce((acc, id, index) => {
-        if (index === 0) {
-          return Object.assign({}, acc, { elementId: id });
-        }
-        return Object.assign({}, acc, { answerId: id.slice(0, id.length - 1) });
-      }, {});
-    const matchingResponseElement = responseElements.findLast(
-      (responseElement, index) =>
-        responseElement.get('elementId') === ids.elementId &&
-        index < currentIndex
-    );
-    if (!matchingResponseElement) {
-      return false;
-    }
-    return matchingResponseElement
-      .get('answers')
-      .find(answer => answer.get('id') === ids.answerId)
-      ? 'true'
-      : 'false';
-  });
-};
-
-export const getCurrentResponse = state => {
-  if (state.currentId) {
-    return state.items.get(state.currentId);
-  }
-  // TODO: remove this, should always use current id
-  return state.items.size ? state.items.first() : null;
-};
-
-export const getVisibleResponseElements = state => {
-  if (!state.items.size) {
-    return List();
-  }
-  return getCurrentResponse(state)
-    .get('answeredQuestions')
-    .slice(0, state.index + 1)
-    .filter(responseElement => responseElement.get('visible'))
-    .filter(responseElement => responseElement.get('type') !== 'end');
-};
-
-export const getAnsweredResponseElements = state => {
-  if (!state.items.size) {
-    return List();
-  }
-  return getCurrentResponse(state)
-    .get('answeredQuestions')
-    .filter(responseElement => responseElement.get('answers').size > 0);
-};
-
-export const getQuestionsElements = state => {
-  if (!state.items.size) {
-    return List();
-  }
-  return getCurrentResponse(state)
-    .get('answeredQuestions')
-    .filter(responseElement => isQuestion(responseElement));
-};
-
-export const getCurrentResponseIndex = state => {
-  return state.items.first().get('id');
-};
-export const getCurrentElementId = state => {
-  return getCurrentResponse(state).getIn([
-    'answeredQuestions',
-    state.index,
-    'elementId'
-  ]);
-};
-export const isLastQuestion = (state, currentElement) => {
-  const response = getCurrentResponse(state);
-  if (state.index === response.get('answeredQuestions').size - 1) {
-    return true;
-  }
-  if (
-    response
-      .get('answeredQuestions')
-      .slice(state.index + 1)
-      .reduce(
-        (acc, responseElement) => acc & !responseElement.get('visible'),
-        true
-      )
-  ) {
-    return true;
-  }
-  return false;
-};
-
-export const isFirstQuestion = state => state.index !== 0;
-
-const markQuestionAsViewed = (state, responseId, responseElementIndex) => {
-  return state.items.setIn(
-    [responseId, 'answeredQuestions', responseElementIndex, 'viewed'],
-    true
-  );
-};
-const updateLogic = responseElements =>
-  responseElements.map((responseElement, index) =>
-    responseElement.set(
-      'visible',
-      eval(
-        getLogicStatement(responseElement.get('logic'), responseElements, index)
-      )
-    )
-  );
-
 const responses = (state = initialState, action) => {
   switch (action.type) {
     case types.RESUME_QUESTIONNAIRE: {
@@ -480,3 +359,132 @@ const responses = (state = initialState, action) => {
 };
 
 export default responses;
+
+/**
+currentIndex is needed, because when we have looping questions we look for the
+answers closest to the current question (because they might have appeared 5 times cause of the looping)
+we only look for the closest one
+*/
+export const getLogicStatement = (logic, responseElements, currentIndex) => {
+  if (!logic) {
+    return true;
+  }
+  return logic.replace(/{(.*?)}/g, bits => {
+    const parts = bits.split('/');
+    const ids = parts[1]
+      .trim()
+      .split(' ')
+      .map(id => id.trim())
+      .reduce((acc, id, index) => {
+        if (index === 0) {
+          return Object.assign({}, acc, { elementId: id });
+        }
+        return Object.assign({}, acc, { answerId: id.slice(0, id.length - 1) });
+      }, {});
+    const matchingResponseElement = responseElements.findLast(
+      (responseElement, index) =>
+        responseElement.get('elementId') === ids.elementId &&
+        index < currentIndex
+    );
+    if (!matchingResponseElement) {
+      return false;
+    }
+    return matchingResponseElement
+      .get('answers')
+      .find(answer => answer.get('id') === ids.answerId)
+      ? 'true'
+      : 'false';
+  });
+};
+
+export const getCurrentResponse = state => {
+  if (state.currentId) {
+    return state.items.get(state.currentId);
+  }
+  // TODO: remove this, should always use current id
+  return state.items.size ? state.items.first() : null;
+};
+
+export const getVisibleResponseElements = state => {
+  if (!state.items.size) {
+    return List();
+  }
+  return getCurrentResponse(state)
+    .get('answeredQuestions')
+    .slice(0, state.index + 1)
+    .filter(responseElement => responseElement.get('visible'))
+    .filter(responseElement => responseElement.get('type') !== 'end');
+};
+
+export const getAnsweredResponseElements = state => {
+  if (!state.items.size) {
+    return List();
+  }
+  return getCurrentResponse(state)
+    .get('answeredQuestions')
+    .filter(responseElement => responseElement.get('answers').size > 0);
+};
+
+export const getQuestionsElements = state => {
+  if (!state.items.size) {
+    return List();
+  }
+  return getCurrentResponse(state)
+    .get('answeredQuestions')
+    .filter(responseElement => isQuestion(responseElement));
+};
+
+export const getCurrentResponseIndex = state => {
+  return state.items.first().get('id');
+};
+export const getCurrentElementId = state => {
+  return getCurrentResponse(state).getIn([
+    'answeredQuestions',
+    state.index,
+    'elementId'
+  ]);
+};
+export const isLastQuestion = (state, currentElement) => {
+  const response = getCurrentResponse(state);
+  if (state.index === response.get('answeredQuestions').size - 1) {
+    return true;
+  }
+  if (
+    response
+      .get('answeredQuestions')
+      .slice(state.index + 1)
+      .reduce(
+        (acc, responseElement) => acc & !responseElement.get('visible'),
+        true
+      )
+  ) {
+    return true;
+  }
+  return false;
+};
+
+export const isFirstQuestion = state => state.index !== 0;
+
+const markQuestionAsViewed = (state, responseId, responseElementIndex) => {
+  return state.items.setIn(
+    [responseId, 'answeredQuestions', responseElementIndex, 'viewed'],
+    true
+  );
+};
+const updateLogic = responseElements =>
+  responseElements.map((responseElement, index) =>
+    responseElement.set(
+      'visible',
+      eval(
+        getLogicStatement(responseElement.get('logic'), responseElements, index)
+      )
+    )
+  );
+
+export const getForQuestionnaireAndUser = (state, questionnaireId, userId) => {
+  return state.items.filter(
+    response =>
+      response.get('userId') === userId &&
+      response.get('questionnaireId') === questionnaireId
+  );
+};

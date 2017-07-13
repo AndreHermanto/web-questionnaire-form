@@ -63,3 +63,7 @@ const versions = (state = initialState, action) => {
 };
 
 export default versions;
+
+export const getVersionById = (state, id) => {
+  return state.items.get(id);
+};

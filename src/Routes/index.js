@@ -28,7 +28,10 @@ class Routes extends Component {
             path="/submitted"
             component={QuestionnaireFormSubmittedContainer}
           />
-          <Route path="/home" component={PatientHomeContainer} />
+          <Route
+            path="/home/:userId/:consentTypeId"
+            component={PatientHomeContainer}
+          />
         </Route>
       </Router>
     );
