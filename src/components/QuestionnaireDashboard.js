@@ -1,6 +1,8 @@
 import React from 'react';
+import get from 'lodash.get';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import toJS from './toJS';
 
 const ButtonBackgroundColor = {
   review: '#fff',
@@ -194,7 +196,8 @@ const Description = styled.p`
   letter-spacing: 1px;
 `;
 
-const DashboardButton = styled.div`
+const DashboardButton = styled.a`
+  display: block;
   position: relative;
   float: right;
   top: 14px;
@@ -221,7 +224,14 @@ const DashboardButton = styled.div`
   }
 `;
 
-export default function QuestionnaireDashboard() {
+function QuestionnaireDashboard(props) {
+  const { items } = props;
+  console.log('props', props);
+  // let items;
+  if (!items) {
+    return <div>Loading...</div>;
+  }
+  const userId = 'admin';
   return (
     <div className="container">
       <DashboardIntro>
@@ -242,45 +252,47 @@ export default function QuestionnaireDashboard() {
             <PaperIcon />
             <SubHeader color="#00437E">PROFILE QUESTIONS</SubHeader>
             <SubHeader color="#AAAAAA" fw="400">
-              3 of 7 modules complete
+              {/* 3 of  */}
+              {items.length} questionnaires
             </SubHeader>
           </HeaderIconContainer>
           <Line />
         </DashboardHeader>
-        <div className="col-xs-12 col-sm-6">
+        <div className="col-xs-12 col-sm-12">
           <QuestionnairesContainer>
-            <SubHeader color="#00437E">IN PROGRESS</SubHeader>
+            <SubHeader color="#00437E">Questionnaires</SubHeader>
             <QuestionnaireList>
-              <QuestionnairesList>
-                <QuestionnaireInfo>
-                  <ModuleHeader>
-                    Family History
-                  </ModuleHeader>
-                  <Percentage>15% complete</Percentage>
-                  <PercentageCompleteContainer>
-                    <PercentageCompleteFill style={{ width: '15%' }}>
-                      {' '}
-                    </PercentageCompleteFill>
-                  </PercentageCompleteContainer>
-                </QuestionnaireInfo>
-                <DashboardButton type="resume">RESUME</DashboardButton>
-              </QuestionnairesList>
-              <QuestionnairesList>
-                <QuestionnaireInfo>
-                  <ModuleHeader>
-                    Cultural/Social
-                  </ModuleHeader>
-                  <Percentage>45% complete</Percentage>
-                  <PercentageCompleteContainer>
-                    <PercentageCompleteFill style={{ width: '45%' }}>
-                      {' '}
-                    </PercentageCompleteFill>
-                  </PercentageCompleteContainer>
-                </QuestionnaireInfo>
-                <DashboardButton type="resume">RESUME</DashboardButton>
-              </QuestionnairesList>
+              {items.map(version => {
+                if (!version) {
+                  return <div>loading</div>;
+                }
+                return (
+                  <QuestionnairesList>
+                    <QuestionnaireInfo>
+                      <ModuleHeader>
+                        {version.title}
+                      </ModuleHeader>
+                      <Percentage />
+                      <PercentageCompleteContainer>
+                        <PercentageCompleteFill style={{ width: '0%' }}>
+                          {' '}
+                        </PercentageCompleteFill>
+                      </PercentageCompleteContainer>
+                    </QuestionnaireInfo>
+                    {get(version, 'response.completed', false) &&
+                      <DashboardButton type="review">Done</DashboardButton>}
+                    {!get(version, 'response.completed', false) &&
+                      <DashboardButton
+                        type="resume"
+                        href={`#/users/${userId}/questionnaires/${version.questionnaireId}?resume=true`}
+                      >
+                        {version.response ? 'RESUME' : 'START'}
+                      </DashboardButton>}
+                  </QuestionnairesList>
+                );
+              })}
             </QuestionnaireList>
-            <SubHeader color="#00437E">TO DO</SubHeader>
+            {/* <SubHeader color="#00437E">TO DO</SubHeader>
             <QuestionnaireList>
               <QuestionnairesList>
                 <QuestionnaireInfo>
@@ -310,12 +322,12 @@ export default function QuestionnaireDashboard() {
                 </QuestionnaireInfo>
                 <DashboardButton type="start">START</DashboardButton>
               </QuestionnairesList>
-            </QuestionnaireList>
+            </QuestionnaireList> */}
           </QuestionnairesContainer>
         </div>
-        <div className="col-xs-12 col-sm-6">
-          <QuestionnairesContainer>
-            <SubHeader color="#2CC36B">COMPLETED</SubHeader>
+        {/* <div className="col-xs-12 col-sm-6">
+          <QuestionnairesContainer> */}
+        {/* <SubHeader color="#2CC36B">COMPLETED</SubHeader>
             <QuestionnaireList>
               <QuestionnairesListCompleted>
                 <QuestionnaireInfoCompleted>
@@ -353,10 +365,12 @@ export default function QuestionnaireDashboard() {
                 </QuestionnaireInfoCompleted>
                 <DashboardButton type="review">REVIEW</DashboardButton>
               </QuestionnairesListCompleted>
-            </QuestionnaireList>
-          </QuestionnairesContainer>
-        </div>
+            </QuestionnaireList> */}
+        {/* </QuestionnairesContainer>
+        </div> */}
       </DashboardContainer>
     </div>
   );
 }
+
+export default toJS(QuestionnaireDashboard);

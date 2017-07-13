@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { fromJS, List } from 'immutable';
 import * as types from '../constants/ActionTypes';
 
 const initialState = {
@@ -8,7 +8,7 @@ const initialState = {
   resume: false
 };
 
-export const getQuestionnaires = state => state.items;
+export const getQuestionnaires = state => List(state.items.valueSeq());
 
 const questionnaires = (state = initialState, action) => {
   switch (action.type) {
@@ -74,3 +74,7 @@ const questionnaires = (state = initialState, action) => {
 };
 
 export default questionnaires;
+
+export const getById = (state, id) => {
+  return state.items.get(id);
+};

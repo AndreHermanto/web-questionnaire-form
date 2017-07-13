@@ -2,6 +2,8 @@ import cuid from 'cuid';
 import * as types from '../constants/ActionTypes';
 import * as api from '../api';
 
+export * from './consents';
+
 /*
 *action: addQuestionnaires to the form builder
 */

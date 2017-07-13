@@ -1,3 +1,5 @@
+export * from './consents';
+
 export const fetchQuestionnaire = questionnaireId =>
   fetch(`${process.env.REACT_APP_BASE_URL}/questionnaires/${questionnaireId}`);
 
