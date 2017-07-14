@@ -361,10 +361,7 @@ function Question({
   return (
     <div
       style={{
-        marginBottom: 24,
-        backgroundColor: 'white',
-        border: '1px solid #eee',
-        padding: 32
+        marginBottom: 24
       }}
     >
       <div className="media">
