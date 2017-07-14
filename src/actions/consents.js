@@ -42,16 +42,11 @@ export const fetchDataForHomepage = (consentTypeId, userId) => (
     const mappedQuestionnaires = state.consentTypeMappings
       .get('byId')
       .toSeq()
-      .filter(
-        consentTypeMapping =>
-          consentTypeMapping.get('consentTypeId') === consentTypeId
-      )
       .reduce(
         (acc, consentTypeMapping) =>
           acc.concat(consentTypeMapping.get('questionnaires')),
         List()
       );
-
     // now, with the questionnaire ids, load the responses
     mappedQuestionnaires.forEach(mappedQuestionnaires => {
       dispatch(

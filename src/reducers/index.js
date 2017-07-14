@@ -68,7 +68,7 @@ export const getDebug = state => {
   return state.debug.value;
 };
 
-export const getStuff = (state, consentTypeId, userId) => {
+export const getHomepageQuestionnaires = (state, consentTypeId, userId) => {
   const consentTypeMapping = fromConsentTypeMappings.getByConsentTypeId(
     state.consentTypeMappings,
     consentTypeId
@@ -87,7 +87,6 @@ export const getStuff = (state, consentTypeId, userId) => {
     if (responses.size) {
       // there are responses...do something with that
       const firstResponse = responses.first();
-      console.log('firstResponse', firstResponse);
       const version = fromVersions.getVersionById(
         state.versions,
         firstResponse.get('versionId')
@@ -99,12 +98,6 @@ export const getStuff = (state, consentTypeId, userId) => {
     } else {
       // there are no responses, use the version id from the mapping
       const version = fromVersions.getVersionById(
-        state.versions,
-        mappedQuestionnaire.get('versionPublished')
-      );
-      console.log(
-        'version is',
-        version,
         state.versions,
         mappedQuestionnaire.get('versionPublished')
       );

@@ -9,7 +9,7 @@ import {
 
 import QuestionnaireDashboard from '../components/QuestionnaireDashboard';
 import Footer from '../components/Footer';
-import { getQuestionnaires, getStuff } from '../reducers';
+import { getQuestionnaires, getHomepageQuestionnaires } from '../reducers';
 
 class PatientHomeContainer extends Component {
   constructor(props) {
@@ -36,7 +36,6 @@ class PatientHomeContainer extends Component {
     const { questionnaires } = this.props;
     return (
       <div>
-        {/* <div><pre>{JSON.stringify(questionnaires, null, 2) }</pre></div> */}
         <QuestionnaireDashboard items={questionnaires} />
         <Footer />
       </div>
@@ -46,11 +45,11 @@ class PatientHomeContainer extends Component {
 
 function mapStateToProps(state, ownProps) {
   const { userId, consentTypeId } = ownProps.params;
-  // const consentTypeId = '83ffdd60-5098-49f6-8f77-635293df18e4';
-  // const userId = 'admin';
-  // get the questionnaires
-  const questionnaires = getStuff(state, consentTypeId, userId);
-  console.log('stuff', questionnaires);
+  const questionnaires = getHomepageQuestionnaires(
+    state,
+    consentTypeId,
+    userId
+  );
   return {
     questionnaires
   };
