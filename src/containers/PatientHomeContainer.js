@@ -34,9 +34,10 @@ class PatientHomeContainer extends Component {
   }
   render() {
     const { questionnaires } = this.props;
+    const { userId } = this.props.params;
     return (
       <div>
-        <QuestionnaireDashboard items={questionnaires} />
+        <QuestionnaireDashboard items={questionnaires} userId={userId} />
         <Footer />
       </div>
     );

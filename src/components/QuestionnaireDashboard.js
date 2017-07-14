@@ -225,13 +225,12 @@ const DashboardButton = styled.a`
 `;
 
 function QuestionnaireDashboard(props) {
-  const { items } = props;
+  const { items, userId } = props;
   console.log('props', props);
   // let items;
   if (!items) {
     return <div>Loading...</div>;
   }
-  const userId = 'admin';
   return (
     <div className="container">
       <DashboardIntro>
