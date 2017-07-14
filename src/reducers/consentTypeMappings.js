@@ -32,10 +32,11 @@ export const getAllConsentTypeMappings = state => {
 };
 
 export const getByConsentTypeId = (state, consentTypeId) => {
+  console.log(state, consentTypeId);
   return state
     .get('byId')
     .find(
       consentTypeMapping =>
-        consentTypeMapping.get('consentTypeId') === consentTypeId
+        consentTypeMapping.get('consentTypeId') === parseInt(consentTypeId, 10)
     );
 };
