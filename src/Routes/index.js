@@ -29,7 +29,7 @@ class Routes extends Component {
             component={QuestionnaireFormSubmittedContainer}
           />
           <Route
-            path="/home/:userId/:consentTypeId"
+            path="/home/:userId/:consentTypeId(?timestamp=:timestamp)"
             component={PatientHomeContainer}
           />
         </Route>
