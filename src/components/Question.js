@@ -6,6 +6,7 @@ import { Helpers } from 'react-scroll';
 import { isQuestion } from '../helpers/questions';
 import AnswerOption from './AnswerOption';
 import MatrixQuestion from './MatrixQuestion';
+import DatePicker from './DatePicker';
 
 const Weight = styled.input`
   width: 90px;
@@ -45,6 +46,19 @@ function Question({
   if (!responseElement) {
     return <div>Loading Response...</div>;
   }
+  const handleDateAnswer = answer => {
+    const newResponseElement = responseElement.set(
+      'answers',
+      fromJS([
+        {
+          id: answer.get('id'),
+          date: answer.get('date'),
+          loopBackTo: answer.get('goTo') ? answer.getIn(['goTo', 'id']) : null
+        }
+      ])
+    );
+    return onAnswer(newResponseElement);
+  };
   const handleAnswer = (e, answer) => {
     const target = e.target;
     if (element.get('type') === 'checkbox') {
@@ -211,14 +225,12 @@ function Question({
       } else if (element.get('type') === 'date') {
         return (
           <div key={answer.get('id')}>
-            <input
-              type="date"
-              className="form-control"
-              value={coalesce(
-                responseElement.getIn(['answers', answerIndex, 'date']),
-                ''
-              )}
-              onChange={e => handleAnswer(e, answer)}
+            <DatePicker
+              date={responseElement.getIn(['answers', answerIndex, 'date'])}
+              dateSelected={date => {
+                console.log(date);
+                handleDateAnswer(answer.set('date', date));
+              }}
             />
           </div>
         );
