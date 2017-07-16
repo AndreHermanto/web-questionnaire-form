@@ -8,8 +8,10 @@ import { Button, Welcome } from '@storybook/react/demo';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import TextInformation from '../components/TextInformation';
+
 import NavigationBar from '../components/NavigationBar';
 import MatrixQuestion from '../components/MatrixQuestion';
+import DatePicker from '../components/DatePicker';
 import '../index.css';
 
 storiesOf('Welcome', module).add('to Storybook', () => (
@@ -92,3 +94,11 @@ storiesOf('MatrixQuestion', module)
       />
     );
   });
+
+storiesOf('DatePicker', module)
+  .add('without a full date', () => (
+    <DatePicker dateSelected={action('date selected')} />
+  ))
+  .add('with a full date', () => (
+    <DatePicker date={'1987-11-18'} dateSelected={action('date selected')} />
+  ));
