@@ -370,8 +370,8 @@ export const getLogicStatement = (logic, responseElements, currentIndex) => {
     return true;
   }
   return logic.replace(/{(.*?)}/g, bits => {
-    const parts = bits.split('/');
-    const ids = parts[1]
+    const ids = bits
+      .slice(bits.lastIndexOf('/') + 1)
       .trim()
       .split(' ')
       .map(id => id.trim())
@@ -471,15 +471,16 @@ const markQuestionAsViewed = (state, responseId, responseElementIndex) => {
     true
   );
 };
-const updateLogic = responseElements =>
-  responseElements.map((responseElement, index) =>
-    responseElement.set(
+const updateLogic = responseElements => {
+  return responseElements.map((responseElement, index) => {
+    return responseElement.set(
       'visible',
       eval(
         getLogicStatement(responseElement.get('logic'), responseElements, index)
       )
-    )
-  );
+    );
+  });
+};
 
 export const getForQuestionnaireAndUser = (state, questionnaireId, userId) => {
   return state.items.filter(
