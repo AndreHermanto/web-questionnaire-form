@@ -18,8 +18,8 @@ export default class NavigationBar extends React.Component {
       <WhiteNavbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to="/">
-              <img src={logo} alt="logo" width="120px" height="29px" />
+            <Link to="/" style={{ padding: 0 }}>
+              <img src={logo} alt="logo" width="120px" />
             </Link>
           </Navbar.Brand>
           <Navbar.Toggle />
