@@ -19,27 +19,40 @@ export const fetchConsentTypeMappingsFailure = ({ payload }) => ({
   payload
 });
 
-export const fetchConsentTypeMappings = consentTypeId => async dispatch => {
+export const fetchConsentTypeMappings = consentTypeId => (
+  dispatch,
+  getState
+) => {
   dispatch(fetchConsentTypeMappingRequest());
-  const response = await api.getConsentTypeMappings(consentTypeId);
-  const json = await response.json();
-  dispatch(
-    fetchConsentTypeMappingsSuccess({
-      payload: normalize(json.data, schema.arrayOfConsentTypeMappings)
-    })
-  );
-  return json.data;
+  return api
+    .getConsentTypeMappings(consentTypeId)
+    .then(response => response.json())
+    .then(json => json.data)
+    .then(consentTypeMappings => {
+      dispatch(
+        fetchConsentTypeMappingsSuccess({
+          payload: normalize(
+            consentTypeMappings,
+            schema.arrayOfConsentTypeMappings
+          )
+        })
+      );
+      return consentTypeMappings;
+    });
 };
 
 export const fetchDataForHomepage = (consentTypeId, userId) => (
   dispatch,
   getState
 ) => {
-  dispatch(fetchConsentTypeMappings(consentTypeId)).then(() => {
+  return dispatch(fetchConsentTypeMappings(consentTypeId)).then(() => {
     const state = getState();
+
     // get out all the questionnaires for the consent types
     // TODO: change to a selector
-    const mappedQuestionnaires = state.consentTypeMappings
+    const mappedQuestionnaires = state
+      .get('entities')
+      .get('consentTypeMappings')
       .get('byId')
       .toSeq()
       .reduce(

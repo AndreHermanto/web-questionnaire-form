@@ -1,61 +1,42 @@
 import React, { Component } from 'react';
-import QuestionnaireSummary from '../components/QuestionnaireSummary';
+// import QuestionnaireSummary from '../components/QuestionnaireSummary';
 import { connect } from 'react-redux';
-import { hashHistory } from 'react-router';
-import { setupQuestionnaire } from '../actions';
-import {
-  getCurrentResponse,
-  getVisibleQuestions,
-  getEndPage
-} from '../reducers';
+import * as selectors from '../reducers';
+import * as actions from '../actions';
+import toJS from '../components/toJS';
 
 class QuestionnaireSummaryContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.handleBack = this.handleBack.bind(this);
-  }
-
   componentDidMount() {
-    window.scrollTo(0, 0);
-    const { questionnaireId, userId } = this.props.params;
-    const resume = true;
-    this.props.dispatch(
-      setupQuestionnaire({
-        questionnaireId,
-        userId,
-        resume
-      })
-    );
-  }
-
-  handleBack() {
-    hashHistory.push(
-      `/users/admin/questionnaires/${this.props.params.questionnaireId}?resume=true&showlogic=true`
-    );
+    this.props
+      .dispatch(actions.fetchResponse(this.props.params.responseId))
+      .then(response => {
+        this.props.dispatch(
+          actions.fetchVersion(response.questionnaireId, response.versionId)
+        );
+      });
   }
 
   render() {
-    const { response, questions, endPage } = this.props;
-    if (!response) {
-      return <div>Loading response...</div>;
-    }
     return (
-      <QuestionnaireSummary
-        isCompleted={response.get('completed')}
-        questions={questions}
-        onEdit={this.handleBack}
-        endPage={endPage}
-      />
+      <div className="container">
+        {this.props.endPage &&
+          <div>
+            {this.props.endPage.text}
+          </div>}
+      </div>
     );
   }
 }
 
 function mapStateToProps(state, ownProps) {
+  const endPage = selectors.getEndPageMessage(
+    state,
+    ownProps.params.responseId
+  );
+  console.log('got end page', endPage);
   return {
-    response: getCurrentResponse(state),
-    questions: getVisibleQuestions(state),
-    endPage: getEndPage(state)
+    endPage
   };
 }
 
-export default connect(mapStateToProps)(QuestionnaireSummaryContainer);
+export default connect(mapStateToProps)(toJS(QuestionnaireSummaryContainer));

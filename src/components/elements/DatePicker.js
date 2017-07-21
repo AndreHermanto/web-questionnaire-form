@@ -5,7 +5,8 @@ import moment from 'moment';
 class DatePicker extends Component {
   static propTypes: {
     date: PropTypes.string.isRequired,
-    dateSelected: PropTypes.func.isRequired
+    dateSelected: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired
   };
   constructor(props) {
     super(props);
@@ -102,13 +103,12 @@ class DatePicker extends Component {
         <div className="row">
           <div className="col-sm-4">
             <div className="form-group">
-              <label>
-                Month
-              </label>
+              <label>Month</label>
               <select
                 className="form-control"
                 value={month}
                 onChange={this.handleMonthChanged}
+                disabled={this.props.disabled}
               >
                 <option />
                 <option>January</option>
@@ -128,10 +128,9 @@ class DatePicker extends Component {
           </div>
           <div className="col-sm-4">
             <div className="form-group">
-              <label>
-                Day e.g. 01
-              </label>
+              <label>Day e.g. 01</label>
               <input
+                disabled={this.props.disabled}
                 type="number"
                 className="form-control"
                 placeholder="DD"
@@ -142,10 +141,9 @@ class DatePicker extends Component {
           </div>
           <div className="col-sm-4">
             <div className="form-group">
-              <label>
-                Year e.g. 1984
-              </label>
+              <label>Year e.g. 1984</label>
               <input
+                disabled={this.props.disabled}
                 type="number"
                 className="form-control"
                 placeholder="YYYY"

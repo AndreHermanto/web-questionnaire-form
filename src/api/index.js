@@ -7,6 +7,8 @@ export const fetchResponses = (questionnaireId, userId) =>
   fetch(
     `${process.env.REACT_APP_BASE_URL}/responses?questionnaireId=${questionnaireId}&userId=${userId}`
   );
+export const fetchResponse = responseId =>
+  fetch(`${process.env.REACT_APP_BASE_URL}/responses/${responseId}`);
 
 export const createResponse = response =>
   fetch(`${process.env.REACT_APP_BASE_URL}/responses`, {
