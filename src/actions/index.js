@@ -1,18 +1,225 @@
+import { normalize } from 'normalizr';
+import Immutable from 'immutable';
+import { hashHistory } from 'react-router';
 import cuid from 'cuid';
 import * as types from '../constants/ActionTypes';
 import * as api from '../api';
+import * as schema from './schema';
+import * as selectors from '../reducers';
 
 export * from './consents';
-
 /*
 *action: addQuestionnaires to the form builder
 */
 export function fetchQuestionnairesSuccess(questionnaires) {
   return {
     type: 'FETCH_QUESTIONNAIRES_SUCCESS',
-    payload: { questionnaires }
+    payload: normalize(questionnaires, schema.arrayOfQuestionnaires)
   };
 }
+
+export const updateResponseOnServer = () => (dispatch, getState) => {
+  const state = getState();
+  const responseId = selectors.getResponseId(state);
+  const fullResponse = selectors.getFullResponse(state);
+  dispatch({
+    type: types.UPDATE_RESPONSE_REQUEST
+  });
+  return api
+    .updateResponse(responseId, fullResponse)
+    .then(response => response.json())
+    .then(json => json.data)
+    .then(response => {
+      dispatch({
+        type: types.UPDATE_RESPONSE_SUCCESS,
+        payload: normalize(response, schema.response)
+      });
+    });
+};
+
+export const setFollowUpResponse = (
+  responseElementId,
+  answerId,
+  followUpText
+) => (dispatch, getState) => {
+  dispatch(updateFollowUpResponse(responseElementId, answerId, followUpText));
+  dispatch(updateResponseOnServer());
+};
+
+export const updateFollowUpResponse = (
+  responseElementId,
+  answerId,
+  followUpText
+) => (dispatch, getState) => {
+  const state = getState();
+  const responseElementAnswer = selectors
+    .getResponseElementAnswersById(state, answerId)
+    .set('followUp', Immutable.fromJS({ text: followUpText }));
+  dispatch({
+    type: types.SET_FOLLOW_UP_RESPONSE,
+    payload: normalize(
+      responseElementAnswer.toJS(),
+      schema.responseElementAnswer
+    )
+  });
+};
+
+export const markAsPreferNotToAnswer = responseElementId => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const responseElement = selectors.getResponseElementById(
+    state,
+    responseElementId
+  );
+  dispatch({
+    type: types.MARK_AS_PREFER_NOT_TO_ANSWER,
+    payload: normalize(
+      responseElement
+        .set('preferNotToAnswer', !responseElement.get('preferNotToAnswer'))
+        .set(
+          'answers',
+          !responseElement.get('preferNotToAnswer')
+            ? Immutable.List()
+            : responseElement.get('answers')
+        )
+        .toJS(),
+      schema.responseElement
+    )
+  });
+  dispatch(updateResponseOnServer());
+};
+
+export const checkForRepeats = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
+  // responseId is in UI
+  const state = getState();
+  const answer = selectors.getAnswerById(state, answerId);
+  // does the answer have a goTo
+  if (!answer.get('goTo')) {
+    return;
+  }
+
+  const responseId = selectors.getResponseId(state);
+  const response = selectors.getResponseById(state, responseId);
+  // get respone elements for response
+  const responseElementIds = response.get('answeredQuestions');
+  const responseElements = responseElementIds.map(id => {
+    return selectors.getResponseElementById(state, id);
+  });
+  // find the index of the response element id
+  const repeatTo = responseElementIds.indexOf(responseElementId);
+  const insertAfter = repeatTo;
+  // okay, work out, what we needt to duplicate
+  const repeatFrom = responseElements.findLastIndex(
+    responseElement =>
+      responseElement.get('elementId') === answer.get('goTo').get('id')
+  );
+
+  if (repeatFrom > repeatTo) {
+    // its already been repeated
+    // just dispatching so its easy to look at the logs
+    // basically, if the last instance of the thing we are finding,
+    // is after this question, it means, we have already repeated it
+    dispatch({
+      type: 'ALREADY_REPEATED'
+    });
+    return;
+  }
+  const responseElementsToAdd = responseElements
+    .slice(repeatFrom, repeatTo + 1)
+    .map(responseElement =>
+      responseElement.set('id', cuid()).set('answers', Immutable.List())
+    );
+
+  const newResponse = response.update(
+    'answeredQuestions',
+    answeredQuestions => {
+      return answeredQuestions
+        .slice(0, insertAfter + 1)
+        .concat(responseElementsToAdd)
+        .concat(answeredQuestions.slice(insertAfter + 1));
+    }
+  );
+
+  dispatch({
+    type: types.REPEAT_SECTION,
+    payload: normalize(newResponse.toJS(), schema.response)
+  });
+};
+
+export const showSubmissionConfirmation = () => ({
+  type: types.SHOW_SUBMISSION_CONFIRMATION
+});
+export const hideSubmissionConfirmation = () => ({
+  type: types.HIDE_SUBMISSION_CONFIRMATION
+});
+export const submitResponse = () => (dispatch, getState) => {
+  const state = getState();
+  const responseId = selectors.getResponseId(state);
+  const userId = selectors.getUserId(state);
+  const response = selectors
+    .getResponseById(state, responseId)
+    .set('completed', true);
+  dispatch({
+    type: types.SUBMIT_RESPONSE,
+    payload: normalize(response.toJS(), schema.response)
+  });
+  // go to the thank you message page
+  hashHistory.push(`users/${userId}/responses/${responseId}/end`);
+};
+
+export const selectAnswer = (responseElementId, answerId) => dispatch => {
+  dispatch({
+    type: 'SELECT_ANSWER',
+    payload: normalize(
+      {
+        id: answerId
+      },
+      schema.responseElementAnswer
+    ),
+    responseElementId
+  });
+  dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(updateResponseOnServer());
+};
+export const toggleAnswer = (responseElementId, answerId) => dispatch => {
+  dispatch({
+    type: 'TOGGLE_ANSWER',
+    payload: normalize(
+      {
+        id: answerId
+      },
+      schema.responseElementAnswer
+    ),
+    responseElementId
+  });
+  dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(updateResponseOnServer());
+};
+export const setAnswerValue = (
+  responseElementId,
+  answerId,
+  valuePropertyName,
+  value
+) => dispatch => {
+  dispatch({
+    type: 'SET_ANSWER_VALUE',
+    payload: normalize(
+      {
+        id: answerId,
+        [valuePropertyName]: value
+      },
+      schema.responseElementAnswer
+    ),
+    responseElementId
+  });
+  dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(updateResponseOnServer());
+};
 
 /*
 *async action: fetch all questionnaires
@@ -80,7 +287,7 @@ export const fetchQuestionnaireRequest = () => ({
 });
 export const fetchQuestionnaireSuccess = questionnaire => ({
   type: types.FETCH_QUESTIONNAIRE_SUCCESS,
-  payload: questionnaire
+  payload: normalize(questionnaire, schema.questionnaire)
 });
 export const fetchQuestionnaireFailure = error => ({
   type: types.FETCH_QUESTIONNAIRE_FAILURE,
@@ -106,7 +313,7 @@ export const fetchResponsesRequest = () => ({
 });
 export const fetchResponsesSuccess = responses => ({
   type: types.FETCH_RESPONSES_SUCCESS,
-  payload: { responses }
+  payload: normalize(responses, schema.arrayOfResponses)
 });
 export const fetchResponsesFailure = error => ({
   type: types.FETCH_RESPONSES_FAILURE,
@@ -125,6 +332,20 @@ export const fetchResponses = (questionnaireId, userId) => dispatch => {
     })
     .catch(e => dispatch(fetchResponsesFailure(e)));
 };
+// response
+export const fetchResponse = responseId => (dispatch, getState) => {
+  return api
+    .fetchResponse(responseId)
+    .then(response => response.json())
+    .then(json => json.data)
+    .then(response => {
+      dispatch({
+        type: types.FETCH_RESPONSE_SUCCESS,
+        payload: normalize(response, schema.response)
+      });
+      return response;
+    });
+};
 
 // create response
 export const createResponseRequest = () => ({
@@ -132,7 +353,7 @@ export const createResponseRequest = () => ({
 });
 export const createResponseSuccess = response => ({
   type: types.CREATE_RESPONSE_SUCCESS,
-  payload: response
+  payload: normalize(response, schema.response)
 });
 export const createResponseFailure = error => ({
   type: types.CREATE_RESPONSE_FAILURE,
@@ -210,7 +431,7 @@ export const fetchVersionRequest = () => ({
 });
 export const fetchVersionSuccess = version => ({
   type: types.FETCH_VERSION_SUCCESS,
-  payload: { version }
+  payload: normalize(version, schema.version)
 });
 export const fetchVersionFailure = error => ({
   type: types.FETCH_VERSION_FAILURE,
@@ -282,15 +503,23 @@ export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (
   // get the responses
   dispatch(fetchResponses(questionnaireId, userId))
     .then(responses => {
-      if (
-        responses.length &&
-        (userId !== 'admin' || (userId === 'admin' && resume === true))
-      ) {
+      if (responses.length) {
         const response = responses[responses.length - 1];
         // there are responses
-        return dispatch(fetchVersion(questionnaireId, response.versionId)).then(
-          () => response
-        );
+        return dispatch(
+          fetchVersion(questionnaireId, response.versionId)
+        ).then(() => {
+          dispatch({
+            type: 'SET_CURRENT_QUESTIONNAIRE',
+            payload: {
+              responseId: response.id,
+              versionId: response.versionId,
+              userId: response.userId,
+              questionnaireId
+            }
+          });
+          return response;
+        });
       }
       // no responses
       // find out what the current version is
@@ -301,16 +530,19 @@ export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (
           )
         )
         .then(version => {
-          if (responses.length && (userId === 'admin' && resume === false)) {
-            // overwrite the existing
-            const overwritingResponse = Object.assign(
-              responses[responses.length - 1],
-              createInitialResponse(questionnaireId, userId, version)
-            );
-            return dispatch(setResponse(overwritingResponse));
-          } else {
-            return dispatch(createResponse(questionnaireId, userId, version));
-          }
+          return dispatch(
+            createResponse(questionnaireId, userId, version)
+          ).then(response => {
+            dispatch({
+              type: 'SET_CURRENT_QUESTIONNAIRE',
+              payload: {
+                responseId: response.id,
+                versionId: response.versionId,
+                questionnaireId
+              }
+            });
+            return response;
+          });
         });
     })
     .then(() => {

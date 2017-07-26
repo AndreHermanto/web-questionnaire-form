@@ -1,5 +1,4 @@
-module.exports = function (wallaby) {
-
+module.exports = function(wallaby) {
   // Babel, jest-cli and some other modules are located under
   // react-scripts/node_modules, so need to let node.js know about it
   var path = require('path');
@@ -12,12 +11,10 @@ module.exports = function (wallaby) {
 
   // Babel needs this
   process.env.NODE_ENV = 'development';
+  // process.env.BABEL_ENV = process.env.NODE_ENV = 'development';
 
   return {
-    files: [
-      'src/**/*.js',
-      '!src/**/*.test.js'
-    ],
+    files: ['src/**/*.js', '!src/**/*.test.js'],
 
     tests: ['src/**/*.test.js'],
 
@@ -33,14 +30,23 @@ module.exports = function (wallaby) {
       })
     },
 
-    setup: (wallaby) => {
+    setup: wallaby => {
       wallaby.testFramework.configure({
         // as in node_modules/react-scripts/utils/createJestConfig.js
         testURL: 'http://localhost',
-        setupFiles: [require('path').join(wallaby.localProjectDir, 'node_modules/react-scripts/config/polyfills.js')],
+        setupFiles: [
+          require('path').join(
+            wallaby.localProjectDir,
+            'node_modules/react-scripts/config/polyfills.js'
+          )
+        ],
         moduleNameMapper: {
-          '^.+\\.(jpg|jpeg|png|gif|svg)$': require.resolve('react-scripts/config/jest/fileTransform.js'),
-          '^.+\\.css$': require.resolve('react-scripts/config/jest/cssTransform.js'),
+          '^.+\\.(jpg|jpeg|png|gif|svg)$': require.resolve(
+            'react-scripts/config/jest/fileTransform.js'
+          ),
+          '^.+\\.css$': require.resolve(
+            'react-scripts/config/jest/cssTransform.js'
+          ),
           '^react-native$': 'react-native-web'
         }
       });
