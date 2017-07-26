@@ -168,8 +168,9 @@ export const submitResponse = () => (dispatch, getState) => {
     type: types.SUBMIT_RESPONSE,
     payload: normalize(response.toJS(), schema.response)
   });
-  // go to the thank you message page
-  hashHistory.push(`users/${userId}/responses/${responseId}/end`);
+  dispatch(updateResponseOnServer()).then(() => {
+    hashHistory.push(`users/${userId}/responses/${responseId}/end`);
+  });
 };
 
 export const selectAnswer = (responseElementId, answerId) => dispatch => {

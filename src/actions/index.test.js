@@ -136,6 +136,10 @@ describe('submit response', () => {
     });
     const getState = () => state;
     const dispatch = action => {
+      if (typeof action === 'function') {
+        // ignore any of the async actions (like saving to the server)
+        return Promise.resolve();
+      }
       expect(action.payload.entities.responses[responseId].completed).toBe(
         true
       );
