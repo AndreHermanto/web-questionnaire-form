@@ -176,11 +176,12 @@ describe('setFollowUpResponse', () => {
                 followUp: { text: 'my text' }
               }
             }
-          }
+          },
+          result: answerId
         }
       }
     ];
-    return store.dispatch(
+    store.dispatch(
       actions.updateFollowUpResponse(responseElementId, answerId, 'my text')
     );
     expect(store.getActions()).toEqual(expectedActions);

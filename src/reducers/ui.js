@@ -1,8 +1,13 @@
 import { fromJS, Map } from 'immutable';
 import * as types from '../constants/ActionTypes';
+import * as securityTypes from '../constants/SecurityTypes';
 
 const ui = (state = Map(), action) => {
   switch (action.type) {
+    case securityTypes.DECRYPT_TOKENS_FAILURE:
+      return state.set('failedToDecrypt', true);
+    case securityTypes.DECRYPT_TOKENS_SUCCESS:
+      return state.set('failedToDecrypt', false).merge(fromJS(action.payload));
     case 'SET_CURRENT_QUESTIONNAIRE':
       return state.merge(fromJS(action.payload));
     case types.SHOW_SUBMISSION_CONFIRMATION:

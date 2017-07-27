@@ -32,3 +32,14 @@ export const updateResponse = (responseId, response) =>
     },
     body: JSON.stringify(response)
   });
+
+export const decryptTokens = (userId, consentTypeId, timestamp) => {
+  console.log('t', timestamp);
+  return fetch(`${process.env.REACT_APP_BASE_URL}/secure`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ userId, consentTypeId, timestamp })
+  });
+};

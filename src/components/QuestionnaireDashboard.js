@@ -2,6 +2,7 @@ import React from 'react';
 import get from 'lodash.get';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { Alert, Grid } from 'react-bootstrap';
 import toJS from './toJS';
 
 const ButtonBackgroundColor = {
@@ -226,10 +227,21 @@ const DashboardButton = styled.a`
 
 function QuestionnaireDashboard(props) {
   const { items, userId } = props;
-  console.log('props', props);
   // let items;
   if (!items) {
     return <div>Loading...</div>;
+  }
+  if (props.failedToDecrypt) {
+    return (
+      <Grid>
+        <Alert bsStyle="danger">
+          <h4>Unable to Verify User</h4>
+          <p>
+            We are unable to verify who you are. Please return to MyChart and try again.
+          </p>
+        </Alert>
+      </Grid>
+    );
   }
   return (
     <div className="container">
