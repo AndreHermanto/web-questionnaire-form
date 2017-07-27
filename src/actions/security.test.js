@@ -24,7 +24,7 @@ describe('decryptTokens', () => {
 
     process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
     fetchMock
-      .post(`http://localhost:5000/secure`, {
+      .post(`http://localhost:5000/secure/`, {
         status: 200,
         body: {
           userId,
@@ -56,7 +56,7 @@ describe('decryptTokens', () => {
   it('handles an invalid timestamp', () => {
     process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
     fetchMock
-      .post(`http://localhost:5000/secure`, {
+      .post(`http://localhost:5000/secure/`, {
         status: 403
       })
       .catch(unmatchedUrl => {
