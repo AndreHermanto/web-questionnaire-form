@@ -79,7 +79,9 @@ export const getDebug = state => {
   return state.debug.value;
 };
 
-export const getHomepageQuestionnaires = (state, consentTypeId, userId) => {
+export const getHomepageQuestionnaires = state => {
+  const consentTypeId = state.get('ui').get('consentTypeId');
+  const userId = state.get('ui').get('userId');
   const consentTypeMapping = fromConsentTypeMappings.getByConsentTypeId(
     state.getIn(['entities', 'consentTypeMappings']),
     consentTypeId

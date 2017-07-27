@@ -41,10 +41,10 @@ export const fetchConsentTypeMappings = consentTypeId => (
     });
 };
 
-export const fetchDataForHomepage = (consentTypeId, userId) => (
-  dispatch,
-  getState
-) => {
+export const fetchDataForHomepage = () => (dispatch, getState) => {
+  const state = getState();
+  const consentTypeId = state.get('ui').get('consentTypeId');
+  const userId = state.get('ui').get('userId');
   return dispatch(fetchConsentTypeMappings(consentTypeId)).then(() => {
     const state = getState();
 
