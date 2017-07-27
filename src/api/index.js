@@ -35,7 +35,7 @@ export const updateResponse = (responseId, response) =>
 
 export const decryptTokens = (userId, consentTypeId, timestamp) => {
   console.log('t', timestamp);
-  return fetch(`${process.env.REACT_APP_BASE_URL}/secure`, {
+  return fetch(`${process.env.REACT_APP_BASE_URL}/secure/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
