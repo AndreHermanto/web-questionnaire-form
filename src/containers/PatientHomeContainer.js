@@ -9,12 +9,10 @@ import { getHomepageQuestionnaires } from '../reducers';
 
 class PatientHomeContainer extends Component {
   componentDidMount() {
-    const { encryptedUserId, encryptedConsentTypeId } = this.props.params;
+    const { userId, consentTypeId } = this.props.params;
     const { timestamp } = this.props.location.query;
     this.props
-      .dispatch(
-        decryptTokens(encryptedUserId, encryptedConsentTypeId, timestamp)
-      )
+      .dispatch(decryptTokens(userId, consentTypeId, timestamp))
       .then(() => {
         this.props.dispatch(fetchDataForHomepage());
       });
