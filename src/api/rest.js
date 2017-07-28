@@ -1,6 +1,4 @@
-import Cookies from 'js-cookie';
-
-export const getAccessToken = () => Cookies.get('accessToken');
+import { getAccessToken } from '../cookies';
 
 /**
  * This is short form of performing a Fetch GET including a authorisation cookie.

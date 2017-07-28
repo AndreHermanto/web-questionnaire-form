@@ -21,6 +21,7 @@ describe('decryptTokens', () => {
     const userId = '1';
     const consentTypeId = '1';
     const timestamp = '1';
+    const jwt = '1000';
 
     process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
     fetchMock
@@ -29,7 +30,8 @@ describe('decryptTokens', () => {
         body: {
           userId,
           consentTypeId,
-          timestamp
+          timestamp,
+          jwt
         }
       })
       .catch(unmatchedUrl => {
@@ -47,7 +49,8 @@ describe('decryptTokens', () => {
             failedToDecrypt: false,
             userId,
             consentTypeId,
-            timestamp
+            timestamp,
+            jwt
           })
         );
       });
@@ -67,8 +70,7 @@ describe('decryptTokens', () => {
 
     return store
       .dispatch(securityActions.decryptTokens('asdf', 'sdfg', '1000'))
-      .then(() => {
-        // return of async actions
+      .catch(e => {
         expect(store.getState().get('ui')).toEqual(
           fromJS({
             failedToDecrypt: true

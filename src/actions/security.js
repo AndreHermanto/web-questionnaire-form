@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+import { setAccessToken, removeAccessToken } from '../cookies';
 import * as api from '../api';
 import * as securityTypes from '../constants/SecurityTypes';
 
@@ -9,6 +9,10 @@ export const decryptTokens = (userId, consentTypeId, timestamp) => (
   dispatch({
     type: securityTypes.DECRYPT_TOKENS_REQUEST
   });
+  if (userId && consentTypeId && timestamp) {
+    // we dont need the JWT, so kill it
+    removeAccessToken();
+  }
   return api
     .decryptTokens(userId, consentTypeId, timestamp)
     .then(response => {
@@ -21,7 +25,7 @@ export const decryptTokens = (userId, consentTypeId, timestamp) => (
     })
     .then(tokens => {
       // set jwt
-      Cookies.set('accessToken', tokens.jwt);
+      setAccessToken(tokens.jwt);
       dispatch({
         type: securityTypes.DECRYPT_TOKENS_SUCCESS,
         payload: tokens
