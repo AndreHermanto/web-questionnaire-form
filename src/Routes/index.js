@@ -17,7 +17,7 @@ class Routes extends Component {
         <Route path="/" component={Container}>
           <IndexRoute component={QuestionnaireAdminContainer} />
           <Route
-            path="/users/:userId/questionnaires/:questionnaireId(?resume:resume)(?showlogic=:showlogic)"
+            path="/users/:userId/:consentTypeId/:questionnaireId(?resume:resume)(?showlogic=:showlogic)(?timestamp=:timestamp)"
             component={QuestionnaireForm}
           />
           <Route

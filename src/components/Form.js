@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { Modal, ProgressBar, Grid, Col, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ElementContainer from '../containers/ElementContainer';
+import FailedToDecryptMessage from './FailedToDecryptMessage';
 
 class Form extends Component {
   static propTypes: {
+    failedToDecrypt: PropTypes.bool.isRequired,
     responseElementIds: PropTypes.array.isRequired,
     showModal: PropTypes.bool.isRequired,
     progress: PropTypes.number.isRequired,
@@ -15,6 +17,13 @@ class Form extends Component {
     onSubmit: PropTypes.func.isRequired
   };
   render() {
+    if (this.props.failedToDecrypt) {
+      return (
+        <Grid>
+          <FailedToDecryptMessage />
+        </Grid>
+      );
+    }
     if (!this.props.responseElementIds) {
       return <div className="container">Loading...</div>;
     }

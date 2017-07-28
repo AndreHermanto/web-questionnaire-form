@@ -7,7 +7,7 @@ import * as fromElements from './elements';
 import * as fromResponseElements from '././responseElements';
 import * as fromResponseElementAnswers from './responseElementAnswers';
 import * as fromAnswers from './answers';
-import ui from './ui';
+import ui, * as fromUI from './ui';
 import * as fromConsentTypeMappings from './consentTypeMappings';
 import entities from './entities';
 
@@ -338,3 +338,6 @@ export const getFullResponse = state => {
       })
   );
 };
+
+export const getFailedToDecrypt = state =>
+  fromUI.getFailedToDecrypt(state.get('ui'));

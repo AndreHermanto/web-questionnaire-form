@@ -34,13 +34,17 @@ class QuestionnaireFormContainer extends Component {
   // }
 
   componentDidMount() {
-    const { questionnaireId, userId } = this.props.params;
-    this.props.dispatch(
-      actions.setupQuestionnaire({
-        questionnaireId,
-        userId
-      })
-    );
+    const { userId, consentTypeId, questionnaireId } = this.props.params;
+    const { timestamp } = this.props.location.query;
+    this.props
+      .dispatch(actions.decryptTokens(userId, consentTypeId, timestamp))
+      .then(() => {
+        this.props.dispatch(
+          actions.setupQuestionnaire({
+            questionnaireId
+          })
+        );
+      });
   }
 
   // componentDidUpdate(prevProps, prevState) {
@@ -62,20 +66,18 @@ class QuestionnaireFormContainer extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  // const showSubmit = isLastQuestion(state);
   const progress = selectors.getProgress(state);
-  const props = {
+  return {
+    failedToDecrypt: selectors.getFailedToDecrypt(state),
     responseElementIds: selectors.getVisibleResponseElementIds(state),
     showModal: selectors.getIsShowingSubmitModal(state),
     progress,
     showSubmit: progress === 100
   };
-  return props;
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    // nextQuestion: () => dispatch(nextQuestion()),
     onShowSubmissionConfirmation: () =>
       dispatch(actions.showSubmissionConfirmation()),
     onCancelSubmit: () => dispatch(actions.hideSubmissionConfirmation()),

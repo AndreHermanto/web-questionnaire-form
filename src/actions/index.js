@@ -8,6 +8,7 @@ import * as schema from './schema';
 import * as selectors from '../reducers';
 
 export * from './consents';
+export * from './security';
 /*
 *action: addQuestionnaires to the form builder
 */
@@ -309,8 +310,9 @@ export const fetchQuestionnaire = questionnaireId => dispatch => {
 };
 
 // responses
-export const fetchResponsesRequest = () => ({
-  type: types.FETCH_RESPONSES_REQUEST
+export const fetchResponsesRequest = (questionnaireId, userId) => ({
+  type: types.FETCH_RESPONSES_REQUEST,
+  payload: { questionnaireId, userId }
 });
 export const fetchResponsesSuccess = responses => ({
   type: types.FETCH_RESPONSES_SUCCESS,
@@ -322,7 +324,7 @@ export const fetchResponsesFailure = error => ({
   playload: error
 });
 export const fetchResponses = (questionnaireId, userId) => dispatch => {
-  dispatch(fetchResponsesRequest());
+  dispatch(fetchResponsesRequest(questionnaireId, userId));
   return api
     .fetchResponses(questionnaireId, userId)
     .then(response => response.json())
@@ -497,10 +499,12 @@ export const updateResponse = (responseId, response) => dispatch => {
     .catch(e => dispatch(updateResponseFailure(e)));
 };
 
-export const setupQuestionnaire = ({ questionnaireId, userId, resume }) => (
+export const setupQuestionnaire = ({ questionnaireId, resume }) => (
   dispatch,
   getState
 ) => {
+  const state = getState();
+  const userId = selectors.getUserId(state);
   // get the responses
   dispatch(fetchResponses(questionnaireId, userId))
     .then(responses => {

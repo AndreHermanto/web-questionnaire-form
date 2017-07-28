@@ -1,9 +1,8 @@
 import React from 'react';
 import get from 'lodash.get';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { Alert, Grid } from 'react-bootstrap';
-import toJS from './toJS';
+import { Grid } from 'react-bootstrap';
+import FailedToDecryptMessage from './FailedToDecryptMessage';
 
 const ButtonBackgroundColor = {
   review: '#fff',
@@ -226,20 +225,14 @@ const DashboardButton = styled.a`
 `;
 
 function QuestionnaireDashboard(props) {
-  const { items, userId } = props;
-  // let items;
-  if (!items) {
+  // let props.questionnaires;
+  if (!props.questionnaires) {
     return <div>Loading...</div>;
   }
   if (props.failedToDecrypt) {
     return (
       <Grid>
-        <Alert bsStyle="danger">
-          <h4>Unable to Verify User</h4>
-          <p>
-            We are unable to verify who you are. Please return to MyChart and try again.
-          </p>
-        </Alert>
+        <FailedToDecryptMessage />
       </Grid>
     );
   }
@@ -264,7 +257,7 @@ function QuestionnaireDashboard(props) {
             <SubHeader color="#00437E">PROFILE QUESTIONS</SubHeader>
             <SubHeader color="#AAAAAA" fw="400">
               {/* 3 of  */}
-              {items.length} questionnaires
+              {props.questionnaires.length} questionnaires
             </SubHeader>
           </HeaderIconContainer>
           <Line />
@@ -273,7 +266,7 @@ function QuestionnaireDashboard(props) {
           <QuestionnairesContainer>
             <SubHeader color="#00437E">Questionnaires</SubHeader>
             <QuestionnaireList>
-              {items.map(version => {
+              {props.questionnaires.map(version => {
                 if (!version) {
                   return <div>loading</div>;
                 }
@@ -295,7 +288,7 @@ function QuestionnaireDashboard(props) {
                     {!get(version, 'response.completed', false) &&
                       <DashboardButton
                         type="resume"
-                        href={`#/users/${userId}/questionnaires/${version.questionnaireId}?resume=true`}
+                        href={`#/users/${props.encryptedUserId}/${props.encryptedConsentTypeId}/${version.questionnaireId}`}
                       >
                         {version.response ? 'RESUME' : 'START'}
                       </DashboardButton>}
@@ -384,4 +377,4 @@ function QuestionnaireDashboard(props) {
   );
 }
 
-export default toJS(QuestionnaireDashboard);
+export default QuestionnaireDashboard;

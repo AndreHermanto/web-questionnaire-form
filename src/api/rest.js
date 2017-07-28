@@ -1,13 +1,12 @@
-// import cookie from 'react-cookie';
+import Cookies from 'js-cookie';
 
-export const getAccessToken = () => null;
-//cookie.load('accessToken') ? cookie.load('accessToken') : null;
+export const getAccessToken = () => Cookies.get('accessToken');
 
 /**
  * This is short form of performing a Fetch GET including a authorisation cookie.
  * @param {String} url URL of the api call.
  */
-export function _get(url) {
+export function get(url) {
   const headers = {};
   if (getAccessToken()) {
     headers.jwt = getAccessToken();
@@ -24,7 +23,7 @@ export function _get(url) {
  * @param {String} url URL of the api call.
  * @param {JSONString} Data in JSON string to be stringify.
  */
-export function _put(url, body) {
+export function put(url, body) {
   return fetch(url, {
     method: 'Put',
     headers: {
@@ -41,7 +40,7 @@ export function _put(url, body) {
  * @param {String} url URL of the api call.
  * @param {JSONString} Data in JSON string to be stringify.
  */
-export function _post(url, body) {
+export function post(url, body) {
   const headers = {
     'Content-Type': 'application/json'
   };
@@ -55,7 +54,7 @@ export function _post(url, body) {
   });
 }
 
-export function _delete(url) {
+export function del(url) {
   const headers = {
     'Content-Type': 'application/json'
   };
