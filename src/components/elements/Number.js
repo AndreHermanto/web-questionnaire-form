@@ -10,7 +10,7 @@ class Number extends Component {
     } = this.props;
     return (
       <div>
-        <textarea
+        <input
           disabled={responseElement.preferNotToAnswer}
           type="number"
           className="form-control"

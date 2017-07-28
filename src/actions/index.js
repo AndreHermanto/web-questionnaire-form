@@ -207,16 +207,26 @@ export const setAnswerValue = (
   answerId,
   valuePropertyName,
   value
-) => dispatch => {
+) => (dispatch, getState) => {
+  const state = getState();
+  let responseElementAnswer;
+  const existingResponseElementAnswer = selectors.getResponseElementAnswersById(
+    state,
+    answerId
+  );
+  if (existingResponseElementAnswer) {
+    responseElementAnswer = existingResponseElementAnswer
+      .set(valuePropertyName, value)
+      .toJS();
+  } else {
+    responseElementAnswer = {
+      id: answerId,
+      [valuePropertyName]: value
+    };
+  }
   dispatch({
     type: 'SET_ANSWER_VALUE',
-    payload: normalize(
-      {
-        id: answerId,
-        [valuePropertyName]: value
-      },
-      schema.responseElementAnswer
-    ),
+    payload: normalize(responseElementAnswer, schema.responseElementAnswer),
     responseElementId
   });
   dispatch(checkForRepeats(responseElementId, answerId));
