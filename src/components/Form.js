@@ -19,10 +19,10 @@ class Form extends Component {
       return <div className="container">Loading...</div>;
     }
     return (
-      <div className="container">
-        {this.props.responseElementIds.map(id => (
+      <div className="container" style={{ paddingBottom: '75px' }}>
+        {this.props.responseElementIds.map(id =>
           <ElementContainer key={id} responseElementId={id} />
-        ))}
+        )}
         <div
           style={{
             position: 'fixed',
@@ -52,7 +52,6 @@ class Form extends Component {
               </button>
             </Col>
           </Row>
-
         </div>
 
         <Modal show={this.props.showModal} onHide={this.props.onCancelSubmit}>
@@ -61,9 +60,7 @@ class Form extends Component {
           </Modal.Header>
           <Modal.Body>
             <h4>Are you sure you are ready to submit?</h4>
-            <p>
-              Make sure all your answers are correct, then you can submit.
-            </p>
+            <p>Make sure all your answers are correct, then you can submit.</p>
           </Modal.Body>
           <Modal.Footer>
             <button className="btn btn-primary" onClick={this.props.onSubmit}>
