@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchDataForHomepage } from '../actions';
 import { decryptTokens } from '../actions/security';
-
+import toJS from '../components/toJS';
 import QuestionnaireDashboard from '../components/QuestionnaireDashboard';
 import Footer from '../components/Footer';
-import { getHomepageQuestionnaires } from '../reducers';
+import * as selectors from '../reducers';
 
 class PatientHomeContainer extends Component {
   componentDidMount() {
@@ -18,15 +18,9 @@ class PatientHomeContainer extends Component {
       });
   }
   render() {
-    const { questionnaires } = this.props;
-    const { userId } = this.props.params;
     return (
       <div>
-        <QuestionnaireDashboard
-          failedToDecrypt={this.props.failedToDecrypt}
-          items={questionnaires}
-          userId={userId}
-        />
+        <QuestionnaireDashboard {...this.props} />
         <Footer />
       </div>
     );
@@ -34,11 +28,13 @@ class PatientHomeContainer extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const questionnaires = getHomepageQuestionnaires(state);
+  const questionnaires = selectors.getHomepageQuestionnaires(state);
   return {
-    failedToDecrypt: state.get('ui').get('failedToDecrypt'),
+    encryptedConsentTypeId: ownProps.params.consentTypeId,
+    encryptedUserId: ownProps.params.userId,
+    failedToDecrypt: selectors.getFailedToDecrypt(state),
     questionnaires
   };
 }
 
-export default connect(mapStateToProps)(PatientHomeContainer);
+export default connect(mapStateToProps)(toJS(PatientHomeContainer));

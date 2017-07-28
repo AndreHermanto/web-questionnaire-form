@@ -21,3 +21,7 @@ const ui = (state = Map(), action) => {
 };
 
 export default ui;
+
+export const getFailedToDecrypt = state => {
+  return state.get('failedToDecrypt');
+};
