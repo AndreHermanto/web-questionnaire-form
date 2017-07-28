@@ -7,6 +7,7 @@ import Text from './Text';
 import Date from './Date';
 import Height from './Height';
 import Weight from './Weight';
+import Number from './Number';
 
 class Question extends Component {
   static propTypes: {
@@ -39,35 +40,17 @@ class Question extends Component {
         return <Height {...this.props} />;
       case 'weight':
         return <Weight {...this.props} />;
+      case 'number':
+        return <Number {...this.props} />;
+
       default:
         return (
           <div>
-            {this.props.responseElementId} hell owrld!
-            <h3>response element</h3>
-            {this.props.responseElement &&
-              <div>
-                <pre>
-                  {JSON.stringify(this.props.responseElement, null, 2)}
-                </pre>
-              </div>}
-            <h3>element</h3>
-            <div>
-              <pre>
-                {JSON.stringify(this.props.element, null, 2)}
-              </pre>
-            </div>
-            <h3>answers</h3>
-            <div>
-              <pre>
-                {JSON.stringify(this.props.answers, null, 2)}
-              </pre>
-            </div>}
-            <h3>response element answers</h3>
-            <div>
-              <pre>
-                {JSON.stringify(this.props.responseElementAnswers, null, 2)}
-              </pre>
-            </div>
+            Sorry, the question type
+            {' '}
+            {this.props.element.type}
+            {' '}
+            is not currently supported.
           </div>
         );
     }

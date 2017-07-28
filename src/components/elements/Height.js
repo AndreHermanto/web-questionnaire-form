@@ -15,7 +15,7 @@ class Height extends Component {
           type="text"
           placeholder="feet"
           className="form-control"
-          value={get(responseElementAnswers, `${answers[0].id}.text`, '')}
+          value={get(responseElementAnswers, `${answers[0].id}.feet`, '')}
           onChange={e => setAnswerValue(answers[0].id, 'feet', e.target.value)}
         />
         <input
@@ -23,7 +23,7 @@ class Height extends Component {
           type="text"
           placeholder="inches"
           className="form-control"
-          value={responseElementAnswers[answers[0].id].inches}
+          value={get(responseElementAnswers, `${answers[0].id}.inches`, '')}
           onChange={e =>
             setAnswerValue(answers[0].id, 'inches', e.target.value)}
         />
