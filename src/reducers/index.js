@@ -298,7 +298,8 @@ export const getProgress = state => {
       return (
         element.get('type') !== 'section' &&
         element.get('type') !== 'end' &&
-        element.get('type') !== 'start'
+        element.get('type') !== 'start' &&
+        element.get('type') !== 'textinformation'
       );
     });
   if (!questionResponseElements.size) {
