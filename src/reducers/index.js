@@ -10,6 +10,7 @@ import * as fromAnswers from './answers';
 import ui, * as fromUI from './ui';
 import * as fromConsentTypeMappings from './consentTypeMappings';
 import entities from './entities';
+import questionTypes from '../constants/QuestionTypes';
 
 export default combineReducers({
   debug: (state = { value: true }, action) => {
@@ -295,12 +296,7 @@ export const getProgress = state => {
     })
     .filter(responseElement => {
       const element = getElementById(state, responseElement.get('elementId'));
-      return (
-        element.get('type') !== 'section' &&
-        element.get('type') !== 'end' &&
-        element.get('type') !== 'start' &&
-        element.get('type') !== 'textinformation'
-      );
+      return questionTypes.indexOf(element.get('type')) >= 0;
     });
   if (!questionResponseElements.size) {
     // no valid elements, so...its done
@@ -340,5 +336,29 @@ export const getFullResponse = state => {
   );
 };
 
+export const getQuestionNumber = (state, responseElementId) => {
+  const responseElement = getResponseElementById(state, responseElementId);
+  const element = getElementById(state, responseElement.get('elementId'));
+  if (questionTypes.indexOf(element.get('type')) < 0) {
+    return null;
+  }
+  const response = getResponseById(state, getResponseId(state));
+  const responseElementIndex = response
+    .get('answeredQuestions')
+    .indexOf(responseElement.get('id'));
+  return response
+    .get('answeredQuestions')
+    .filter((responseElementId, index) => {
+      if (index > responseElementIndex) {
+        return false;
+      }
+      const responseElement = getResponseElementById(state, responseElementId);
+      const element = getElementById(state, responseElement.get('elementId'));
+      if (questionTypes.indexOf(element.get('type')) < 0) {
+        return null;
+      }
+      return true;
+    }).size;
+};
 export const getFailedToDecrypt = state =>
   fromUI.getFailedToDecrypt(state.get('ui'));

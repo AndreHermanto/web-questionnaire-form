@@ -70,7 +70,9 @@ class Question extends Component {
         }}
       >
         <div style={{ whiteSpace: 'pre-wrap' }}>
-          <strong>{this.props.element.question}</strong>
+          <strong>
+            {this.props.questionNumber}. {this.props.element.question}
+          </strong>
         </div>
         {this.renderElement()}
         <Button

@@ -275,3 +275,58 @@ describe('getFullResponse', () => {
     );
   });
 });
+
+describe('get question number', () => {
+  const responseElementId = '2';
+  const state = fromJS({
+    ui: {
+      responseId: '1'
+    },
+    entities: {
+      responses: {
+        byId: {
+          '1': { id: '1', answeredQuestions: ['1', '2', '3'] }
+        }
+      },
+      responseElements: {
+        byId: {
+          '1': {
+            id: '1',
+            elementId: '1'
+          },
+          '2': {
+            id: '2',
+            elementId: '2'
+          },
+          '3': {
+            id: '3',
+            elementId: '3'
+          }
+        }
+      },
+      elements: {
+        byId: {
+          '1': {
+            id: '1',
+            type: 'start'
+          },
+          '2': {
+            id: '2',
+            type: 'radio'
+          },
+          '3': {
+            id: '3',
+            elementId: 'checkbox'
+          }
+        }
+      }
+    }
+  });
+
+  it('returns the correct question number for the question', () => {
+    expect(selectors.getQuestionNumber(state, responseElementId)).toBe(1);
+  });
+  it('returns null for non-questions', () => {
+    expect(selectors.getQuestionNumber(state, '3')).toBe(null);
+  });
+});
