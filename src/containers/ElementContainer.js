@@ -57,7 +57,11 @@ function mapStateToProps(state, ownProps) {
     element,
     responseElement,
     answers,
-    responseElementAnswers
+    responseElementAnswers,
+    questionNumber: selectors.getQuestionNumber(
+      state,
+      ownProps.responseElementId
+    )
   };
 }
 
