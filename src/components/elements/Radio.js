@@ -12,7 +12,7 @@ class Radio extends Component {
     } = this.props;
     return (
       <div>
-        <ul>
+        <ul className="list-unstyled">
           {answers.map(answer => (
             <li key={answer.id}>
               <RadioBootstrap

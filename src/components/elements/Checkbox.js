@@ -12,7 +12,7 @@ class Checkbox extends Component {
     } = this.props;
     return (
       <div>
-        <ul>
+        <ul className="list-unstyled">
           {answers.map(answer => (
             <li key={answer.id}>
               <CheckboxBootstrap
