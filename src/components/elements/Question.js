@@ -75,13 +75,19 @@ class Question extends Component {
           </strong>
         </div>
         {this.renderElement()}
-        <Button
-          bsSize="small"
-          onClick={this.props.onPreferNotToAnswer}
-          active={this.props.responseElement.preferNotToAnswer}
-        >
-          Prefer not to answer
-        </Button>
+
+        {!this.props.element.required &&
+          <Button
+            bsSize="small"
+            onClick={this.props.onPreferNotToAnswer}
+            active={this.props.responseElement.preferNotToAnswer}
+          >
+            Prefer not to answer
+          </Button>}
+        {this.props.element.required &&
+          <div className="text-muted text-uppercase" style={{ fontSize: 10 }}>
+            This question is required.
+          </div>}
       </div>
     );
   }
