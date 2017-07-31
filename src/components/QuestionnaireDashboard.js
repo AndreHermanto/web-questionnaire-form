@@ -288,7 +288,7 @@ function QuestionnaireDashboard(props) {
                     {!get(version, 'response.completed', false) &&
                       <DashboardButton
                         type="resume"
-                        href={`#/users/${props.encryptedUserId}/${props.encryptedConsentTypeId}/${version.questionnaireId}`}
+                        href={`#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.questionnaireId)}`}
                       >
                         {version.response ? 'RESUME' : 'START'}
                       </DashboardButton>}
