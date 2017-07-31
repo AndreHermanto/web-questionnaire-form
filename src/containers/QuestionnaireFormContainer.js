@@ -81,27 +81,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onShowSubmissionConfirmation: () =>
       dispatch(actions.showSubmissionConfirmation()),
     onCancelSubmit: () => dispatch(actions.hideSubmissionConfirmation()),
-    onSubmit: () => {
-      dispatch(actions.submitResponse());
-    },
-    // onQuestionAnswered: responseElement => {
-    //   dispatch(setQuestionAnswer({ responseElement }));
-    // },
-    // onMatrixAnswerClicked: (
-    //   responseElementId,
-    //   questionId,
-    //   answerId,
-    //   selected
-    // ) => {
-    //   dispatch(
-    //     setMatrixQuestionAnswer({
-    //       responseElementId,
-    //       questionId,
-    //       answerId,
-    //       selected
-    //     })
-    //   );
-    // },
+    onSubmit: () =>
+      dispatch(
+        actions.submitResponse(
+          ownProps.params.userId,
+          ownProps.params.consentTypeId
+        )
+      ),
     dispatch
   };
 };

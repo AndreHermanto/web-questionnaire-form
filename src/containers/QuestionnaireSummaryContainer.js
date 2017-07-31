@@ -20,9 +20,19 @@ class QuestionnaireSummaryContainer extends Component {
     return (
       <div className="container">
         {this.props.endPage &&
-          <div>
+          <div style={{ whiteSpace: 'pre-wrap' }}>
             {this.props.endPage.text}
           </div>}
+        {!this.props.endPage &&
+          <div style={{ whiteSpace: 'pre-wrap' }}>
+            Thank you for submitting.
+          </div>}
+        <a
+          className="btn btn-primary btn-lg"
+          href={`#/home/${encodeURIComponent(this.props.encryptedUserId)}/${encodeURIComponent(this.props.encryptedConsentTypeId)}`}
+        >
+          Return Home
+        </a>
       </div>
     );
   }
@@ -33,9 +43,10 @@ function mapStateToProps(state, ownProps) {
     state,
     ownProps.params.responseId
   );
-  console.log('got end page', endPage);
   return {
-    endPage
+    endPage,
+    encryptedUserId: ownProps.params.encryptedUserId,
+    encryptedConsentTypeId: ownProps.params.encryptedConsentTypeId
   };
 }
 

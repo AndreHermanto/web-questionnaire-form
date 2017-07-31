@@ -158,7 +158,10 @@ export const showSubmissionConfirmation = () => ({
 export const hideSubmissionConfirmation = () => ({
   type: types.HIDE_SUBMISSION_CONFIRMATION
 });
-export const submitResponse = () => (dispatch, getState) => {
+export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
+  dispatch,
+  getState
+) => {
   const state = getState();
   const responseId = selectors.getResponseId(state);
   const userId = selectors.getUserId(state);
@@ -169,8 +172,10 @@ export const submitResponse = () => (dispatch, getState) => {
     type: types.SUBMIT_RESPONSE,
     payload: normalize(response.toJS(), schema.response)
   });
-  dispatch(updateResponseOnServer()).then(() => {
-    hashHistory.push(`users/${userId}/responses/${responseId}/end`);
+  return dispatch(updateResponseOnServer()).then(() => {
+    hashHistory.push(
+      `users/${encryptedUserId}/${encryptedConsentTypeId}/${responseId}/end`
+    );
   });
 };
 
