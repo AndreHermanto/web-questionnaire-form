@@ -174,7 +174,7 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
   });
   return dispatch(updateResponseOnServer()).then(() => {
     hashHistory.push(
-      `users/${encryptedUserId}/${encryptedConsentTypeId}/${responseId}/end`
+      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
     );
   });
 };
