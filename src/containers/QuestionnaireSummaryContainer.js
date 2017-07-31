@@ -27,6 +27,11 @@ class QuestionnaireSummaryContainer extends Component {
           <div style={{ whiteSpace: 'pre-wrap' }}>
             Thank you for submitting.
           </div>}
+        <img
+          src={this.props.endPage.image}
+          alt="introduction"
+          className="img-responsive"
+        />
         <a
           className="btn btn-primary btn-lg"
           href={`#/home/${encodeURIComponent(this.props.encryptedUserId)}/${encodeURIComponent(this.props.encryptedConsentTypeId)}`}

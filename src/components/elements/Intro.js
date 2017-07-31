@@ -5,6 +5,11 @@ class Intro extends Component {
     return (
       <div>
         {element.text}
+        <img
+          src={element.image}
+          alt="introduction"
+          className="img-responsive"
+        />
       </div>
     );
   }
