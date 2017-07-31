@@ -27,7 +27,8 @@ class QuestionnaireSummaryContainer extends Component {
           <div style={{ whiteSpace: 'pre-wrap' }}>
             Thank you for submitting.
           </div>}
-        {this.props.endPage.image &&
+        {this.props.endPage &&
+          this.props.endPage.image &&
           <img
             src={this.props.endPage.image}
             alt="introduction"
