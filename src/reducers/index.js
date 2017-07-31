@@ -164,32 +164,40 @@ export const getVisibleResponseElementIds = state => {
       }
       // we want to replace the logic string,
       // with real logic we can eval!
-      const newLogic = logic.replace(/{(.*?)}/g, bits => {
-        const ids = bits
-          .slice(bits.lastIndexOf('/') + 1)
-          .trim()
-          .split(' ')
-          .map(id => id.trim())
-          .reduce((acc, id, index) => {
-            if (index === 0) {
-              return Object.assign({}, acc, { elementId: id });
-            }
-            return Object.assign({}, acc, {
-              answerId: id.slice(0, id.length - 1)
-            });
-          }, {});
-        const matchingResponseElement = responseElements.findLast(
-          (responseElement, searchIndex) =>
-            searchIndex < index &&
-            responseElement.get('elementId') === ids.elementId &&
-            responseElement.get('answers').contains(ids.answerId)
-        );
-        if (matchingResponseElement) {
-          return JSON.stringify(matchingResponseElement);
-        }
-        return false;
-      });
-      return eval(`true && ${newLogic}`);
+      const newLogic = logic
+        .replace(/(\r\n|\n|\r)/gm, '')
+        .replace(/{(.*?)}/g, bits => {
+          const ids = bits
+            .slice(bits.lastIndexOf('/') + 1)
+            .trim()
+            .split(' ')
+            .map(id => id.trim())
+            .reduce((acc, id, index) => {
+              if (index === 0) {
+                return Object.assign({}, acc, { elementId: id });
+              }
+              return Object.assign({}, acc, {
+                answerId: id.slice(0, id.length - 1)
+              });
+            }, {});
+          const matchingResponseElement = responseElements.findLast(
+            (responseElement, searchIndex) =>
+              searchIndex < index &&
+              responseElement.get('elementId') === ids.elementId &&
+              responseElement.get('answers').contains(ids.answerId)
+          );
+          if (matchingResponseElement) {
+            return JSON.stringify(matchingResponseElement);
+          }
+          return false;
+        });
+      let result = true;
+      try {
+        result = eval(`true && ${newLogic}`);
+      } catch (e) {
+        window.alert('There are an error parsing the branching logic');
+      }
+      return result;
     }
   );
   return visibleResponseElements.map(responseElement => {
