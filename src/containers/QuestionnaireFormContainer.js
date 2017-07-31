@@ -67,12 +67,21 @@ class QuestionnaireFormContainer extends Component {
 
 function mapStateToProps(state, ownProps) {
   const progress = selectors.getProgress(state);
+  let alreadySubmitted = false;
+  const responseId = selectors.getResponseId(state);
+  if (responseId) {
+    alreadySubmitted = selectors
+      .getResponseById(state, responseId)
+      .get('completed');
+  }
+
   return {
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     responseElementIds: selectors.getVisibleResponseElementIds(state),
     showModal: selectors.getIsShowingSubmitModal(state),
     progress,
-    showSubmit: progress === 100
+    showSubmit: progress === 100,
+    alreadySubmitted
   };
 }
 

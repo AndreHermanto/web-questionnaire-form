@@ -11,6 +11,7 @@ class Form extends Component {
     showModal: PropTypes.bool.isRequired,
     progress: PropTypes.number.isRequired,
     showSubmit: PropTypes.bool.isRequired,
+    alreadySubmitted: PropTypes.bool.isRequired,
 
     onShowSubmissionConfirmation: PropTypes.func.isRequired,
     onCancelSubmit: PropTypes.func.isRequired,
@@ -21,6 +22,13 @@ class Form extends Component {
       return (
         <Grid>
           <FailedToDecryptMessage />
+        </Grid>
+      );
+    }
+    if (this.props.alreadySubmitted) {
+      return (
+        <Grid>
+          You have already submitted a response to this questionnaire.
         </Grid>
       );
     }
