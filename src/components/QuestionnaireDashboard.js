@@ -240,7 +240,9 @@ function QuestionnaireDashboard(props) {
     <div className="container">
       <DashboardIntro>
         <Header color="#00437E">Welcome back</Header>
-        <Header color="#62A5DB">Its time to complete your profile</Header>
+        <Header color="#62A5DB">
+          Its time to complete your profile v1.0.0
+        </Header>
         <Description>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
           vitae purus eleifend, faucibus velit at, feugiat risus. Donec mauris
