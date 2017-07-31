@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Radio from './Radio';
 import Checkbox from './Checkbox';
@@ -77,13 +76,17 @@ class Question extends Component {
         {this.renderElement()}
 
         {!this.props.element.required &&
-          <Button
-            bsSize="small"
-            onClick={this.props.onPreferNotToAnswer}
-            active={this.props.responseElement.preferNotToAnswer}
-          >
-            Prefer not to answer
-          </Button>}
+          <div className="checkbox">
+            <label style={{ color: 'black' }}>
+              <input
+                type="checkbox"
+                checked={this.props.responseElement.preferNotToAnswer}
+                onChange={this.props.onPreferNotToAnswer}
+              />
+              {' '}
+              Prefer not to answer
+            </label>
+          </div>}
         {this.props.element.required &&
           <div className="text-muted text-uppercase" style={{ fontSize: 10 }}>
             This question is required.
