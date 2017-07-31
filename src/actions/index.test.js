@@ -4,7 +4,6 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as actions from '../actions';
 import * as types from '../constants/ActionTypes';
-
 // setup a fake store - https://github.com/reactjs/redux/blob/master/docs/recipes/WritingTests.md#async-action-creators
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -144,7 +143,12 @@ describe('submit response', () => {
         true
       );
     };
-    actions.submitResponse()(dispatch, getState);
+    const encryptedUserId = 'aaa';
+    const encryptedConsentTypeId = 'bbb';
+    actions.submitResponse(encryptedUserId, encryptedConsentTypeId)(
+      dispatch,
+      getState
+    );
   });
 });
 
