@@ -6,26 +6,34 @@ class Height extends Component {
       responseElement,
       answers,
       setAnswerValue,
-      responseElementAnswers
+      responseElementAnswers,
+      onPreferNotToAnswer
     } = this.props;
     return (
       <div>
         <input
-          disabled={responseElement.preferNotToAnswer}
           type="text"
           placeholder="feet"
           className="form-control"
           value={get(responseElementAnswers, `${answers[0].id}.feet`, '')}
-          onChange={e => setAnswerValue(answers[0].id, 'feet', e.target.value)}
+          onChange={e => {
+            setAnswerValue(answers[0].id, 'feet', e.target.value);
+            if (responseElement.preferNotToAnswer) {
+              onPreferNotToAnswer();
+            }
+          }}
         />
         <input
-          disabled={responseElement.preferNotToAnswer}
           type="text"
           placeholder="inches"
           className="form-control"
           value={get(responseElementAnswers, `${answers[0].id}.inches`, '')}
-          onChange={e =>
-            setAnswerValue(answers[0].id, 'inches', e.target.value)}
+          onChange={e => {
+            setAnswerValue(answers[0].id, 'inches', e.target.value);
+            if (responseElement.preferNotToAnswer) {
+              onPreferNotToAnswer();
+            }
+          }}
         />
       </div>
     );

@@ -6,17 +6,21 @@ class Number extends Component {
       responseElement,
       answers,
       setAnswerValue,
-      responseElementAnswers
+      responseElementAnswers,
+      onPreferNotToAnswer
     } = this.props;
     return (
       <div>
         <input
-          disabled={responseElement.preferNotToAnswer}
           type="number"
           className="form-control"
           value={get(responseElementAnswers, `${answers[0].id}.number`, '')}
-          onChange={e =>
-            setAnswerValue(answers[0].id, 'number', e.target.value)}
+          onChange={e => {
+            setAnswerValue(answers[0].id, 'number', e.target.value);
+            if (responseElement.preferNotToAnswer) {
+              onPreferNotToAnswer();
+            }
+          }}
         />
       </div>
     );

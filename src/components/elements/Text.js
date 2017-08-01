@@ -6,16 +6,21 @@ class Text extends Component {
       responseElement,
       answers,
       setAnswerValue,
-      responseElementAnswers
+      responseElementAnswers,
+      onPreferNotToAnswer
     } = this.props;
     return (
       <div>
         <textarea
-          disabled={responseElement.preferNotToAnswer}
           type="text"
           className="form-control"
           value={get(responseElementAnswers, `${answers[0].id}.text`, '')}
-          onChange={e => setAnswerValue(answers[0].id, 'text', e.target.value)}
+          onChange={e => {
+            setAnswerValue(answers[0].id, 'text', e.target.value);
+            if (responseElement.preferNotToAnswer) {
+              onPreferNotToAnswer();
+            }
+          }}
         />
       </div>
     );

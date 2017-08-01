@@ -7,14 +7,19 @@ class Date extends Component {
       responseElement,
       answers,
       setAnswerValue,
-      responseElementAnswers
+      responseElementAnswers,
+      onPreferNotToAnswer
     } = this.props;
     return (
       <div>
         <DatePicker
-          disabled={responseElement.preferNotToAnswer}
           date={get(responseElementAnswers, `${answers[0].id}.date`, null)}
-          dateSelected={date => setAnswerValue(answers[0].id, 'date', date)}
+          dateSelected={date => {
+            setAnswerValue(answers[0].id, 'date', date);
+            if (responseElement.preferNotToAnswer) {
+              onPreferNotToAnswer();
+            }
+          }}
         />
       </div>
     );

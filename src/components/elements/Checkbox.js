@@ -8,17 +8,22 @@ class Checkbox extends Component {
       answers,
       responseElementAnswers,
       toggleAnswer,
-      onFollowUpChanged
+      onFollowUpChanged,
+      onPreferNotToAnswer
     } = this.props;
     return (
       <div>
         <ul className="list-unstyled">
-          {answers.map(answer => (
+          {answers.map(answer =>
             <li key={answer.id}>
               <CheckboxBootstrap
-                onChange={() => toggleAnswer(answer.id)}
+                onChange={() => {
+                  toggleAnswer(answer.id);
+                  if (responseElement.preferNotToAnswer) {
+                    onPreferNotToAnswer();
+                  }
+                }}
                 checked={get(responseElementAnswers, answer.id, false)}
-                disabled={responseElement.preferNotToAnswer}
                 style={{ whiteSpace: 'pre-wrap' }}
               >
                 {answer.text}
@@ -38,7 +43,7 @@ class Checkbox extends Component {
                   />
                 </div>}
             </li>
-          ))}
+          )}
         </ul>
       </div>
     );
