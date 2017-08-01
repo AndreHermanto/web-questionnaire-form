@@ -13,12 +13,11 @@ class Checkbox extends Component {
     return (
       <div>
         <ul className="list-unstyled">
-          {answers.map(answer => (
+          {answers.map(answer =>
             <li key={answer.id}>
               <CheckboxBootstrap
                 onChange={() => toggleAnswer(answer.id)}
                 checked={get(responseElementAnswers, answer.id, false)}
-                disabled={responseElement.preferNotToAnswer}
                 style={{ whiteSpace: 'pre-wrap' }}
               >
                 {answer.text}
@@ -38,7 +37,7 @@ class Checkbox extends Component {
                   />
                 </div>}
             </li>
-          ))}
+          )}
         </ul>
       </div>
     );

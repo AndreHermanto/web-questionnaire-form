@@ -11,7 +11,6 @@ class Number extends Component {
     return (
       <div>
         <input
-          disabled={responseElement.preferNotToAnswer}
           type="number"
           className="form-control"
           value={get(responseElementAnswers, `${answers[0].id}.number`, '')}

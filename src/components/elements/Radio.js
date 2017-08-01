@@ -13,11 +13,10 @@ class Radio extends Component {
     return (
       <div>
         <ul className="list-unstyled">
-          {answers.map(answer => (
+          {answers.map(answer =>
             <li key={answer.id}>
               <RadioBootstrap
                 checked={get(responseElementAnswers, answer.id, false)}
-                disabled={responseElement.preferNotToAnswer}
                 onChange={() => selectAnswer(answer.id)}
                 style={{ whiteSpace: 'pre-wrap' }}
               >
@@ -38,7 +37,7 @@ class Radio extends Component {
                   />
                 </div>}
             </li>
-          ))}
+          )}
         </ul>
       </div>
     );

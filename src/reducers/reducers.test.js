@@ -21,3 +21,21 @@ describe('isLastQuestion', () => {
     expect(fromReducer.isLastQuestion(state)).toBe(false);
   });
 });
+
+describe('getPreferNotToAnswerById', () => {
+  it('get PreferNotToAnswer', () => {
+    const id = '123asd';
+    const state = fromJS({
+      entities: {
+        responseElements: {
+          byId: {
+            [id]: {
+              preferNotToAnswer: false
+            }
+          }
+        }
+      }
+    });
+    expect(fromReducer.getPreferNotToAnswerById(state, id)).toBe(false);
+  });
+});

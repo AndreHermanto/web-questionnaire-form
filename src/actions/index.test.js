@@ -266,3 +266,49 @@ describe('persisting a response on the server', () => {
     });
   });
 });
+
+/*describe('selectAnswer', () => {
+  it('works', () => {
+    const responseElementId = '1';
+    const answerId = '1';
+    const store = mockStore(
+      fromJS({
+        entities: {
+          answers: {
+            byId: [{[answerId]: {
+              id: answerId
+            }}]
+          },
+          responseElement: {
+            byId: {
+              id: responseElementId,
+              [responseElementId]: {
+                answers: [answerId]
+              }
+            }
+          }
+        }
+      })
+    );
+    const expectedActions = [
+      {
+        type: "TOGGLE_ANSWER",
+        payload: {
+          entities: {
+            responseElementAnswers: {
+              [answerId]: {
+                id: answerId
+              }
+            }
+          },
+          result: "1"
+        },
+        responseElementId: responseElementId
+      }
+    ];
+    store.dispatch(
+      actions.toggleAnswer(responseElementId, answerId)
+    );
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+});*/

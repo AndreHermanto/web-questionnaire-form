@@ -174,12 +174,18 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
   });
   return dispatch(updateResponseOnServer()).then(() => {
     hashHistory.push(
-      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
+      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(
+        encryptedConsentTypeId
+      )}/${responseId}/end`
     );
   });
 };
 
-export const selectAnswer = (responseElementId, answerId) => dispatch => {
+export const selectAnswer = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
   dispatch({
     type: 'SELECT_ANSWER',
     payload: normalize(
@@ -192,8 +198,16 @@ export const selectAnswer = (responseElementId, answerId) => dispatch => {
   });
   dispatch(checkForRepeats(responseElementId, answerId));
   dispatch(updateResponseOnServer());
+
+  if (selectors.getPreferNotToAnswerById(state, responseElementId)) {
+    dispatch(markAsPreferNotToAnswer(responseElementId));
+  }
 };
-export const toggleAnswer = (responseElementId, answerId) => dispatch => {
+export const toggleAnswer = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
   dispatch({
     type: 'TOGGLE_ANSWER',
     payload: normalize(
@@ -205,7 +219,10 @@ export const toggleAnswer = (responseElementId, answerId) => dispatch => {
     responseElementId
   });
   dispatch(checkForRepeats(responseElementId, answerId));
-  dispatch(updateResponseOnServer());
+  //dispatch(updateResponseOnServer());
+  if (selectors.getPreferNotToAnswerById(state, responseElementId)) {
+    dispatch(markAsPreferNotToAnswer(responseElementId));
+  }
 };
 export const setAnswerValue = (
   responseElementId,
@@ -236,6 +253,9 @@ export const setAnswerValue = (
   });
   dispatch(checkForRepeats(responseElementId, answerId));
   dispatch(updateResponseOnServer());
+  if (selectors.getPreferNotToAnswerById(state, responseElementId)) {
+    dispatch(markAsPreferNotToAnswer(responseElementId));
+  }
 };
 
 /*

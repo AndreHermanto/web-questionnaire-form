@@ -137,6 +137,17 @@ export const getResponseElementIds = state => {
   }
   return null;
 };
+
+export const getPreferNotToAnswerById = (state, responseElementId) => {
+  return state.getIn([
+    'entities',
+    'responseElements',
+    'byId',
+    responseElementId,
+    'preferNotToAnswer'
+  ]);
+};
+
 export const getVisibleResponseElementIds = state => {
   const response = fromResponses.getById(
     state.getIn(['entities', 'responses']),
