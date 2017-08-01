@@ -219,7 +219,7 @@ export const toggleAnswer = (responseElementId, answerId) => (
     responseElementId
   });
   dispatch(checkForRepeats(responseElementId, answerId));
-  //dispatch(updateResponseOnServer());
+  dispatch(updateResponseOnServer());
   if (selectors.getPreferNotToAnswerById(state, responseElementId)) {
     dispatch(markAsPreferNotToAnswer(responseElementId));
   }
