@@ -268,27 +268,11 @@ describe('persisting a response on the server', () => {
 });
 
 describe('toggleAnswer', () => {
-  afterEach(() => {
-    fetchMock.reset();
-  });
   it('works', () => {
     const responseElementId = '1';
     const answerId = '1';
     const responseId = '1';
     const responseElementAnswerId = '1';
-    process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
-    fetchMock
-      .put(`http://localhost:5000/responses/${responseId}`, {
-        body: {
-          status: 200,
-          data: { id: responseId }
-        }
-      })
-      .catch(unmatchedUrl => {
-        // fallover call original fetch, because fetch-mock treats
-        // any unmatched call as an error - its target is testing
-        expect(unmatchedUrl).toBe(undefined);
-      });
     const store = mockStore(
       fromJS({
         entities: {
@@ -353,27 +337,11 @@ describe('toggleAnswer', () => {
 });
 
 describe('selectAnswer', () => {
-  afterEach(() => {
-    fetchMock.reset();
-  });
   it('works', () => {
     const responseElementId = '1';
     const answerId = '1';
     const responseId = '1';
     const responseElementAnswerId = '1';
-    process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
-    fetchMock
-      .put(`http://localhost:5000/responses/${responseId}`, {
-        body: {
-          status: 200,
-          data: { id: responseId }
-        }
-      })
-      .catch(unmatchedUrl => {
-        // fallover call original fetch, because fetch-mock treats
-        // any unmatched call as an error - its target is testing
-        expect(unmatchedUrl).toBe(undefined);
-      });
     const store = mockStore(
       fromJS({
         entities: {
@@ -433,6 +401,78 @@ describe('selectAnswer', () => {
       { type: 'UPDATE_RESPONSE_REQUEST' }
     ];
     store.dispatch(actions.selectAnswer(responseElementId, answerId));
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+});
+
+describe('setAnswerValue', () => {
+  it('works', () => {
+    const responseElementId = '1';
+    const answerId = '1';
+    const responseId = '1';
+    const responseElementAnswerId = '1';
+    const store = mockStore(
+      fromJS({
+        entities: {
+          answers: {
+            allIds: [answerId],
+            byId: {
+              [answerId]: {
+                id: answerId
+              }
+            }
+          },
+          responseElements: {
+            byId: {
+              id: responseElementId,
+              [responseElementId]: {
+                answers: [answerId]
+              }
+            }
+          },
+          responseElementAnswers: {
+            allIds: [responseElementAnswerId],
+            byId: {
+              [responseElementAnswerId]: {
+                id: responseElementAnswerId
+              }
+            }
+          },
+          responses: {
+            byId: {
+              [responseId]: {
+                id: responseId,
+                answeredQuestions: [responseElementId]
+              }
+            }
+          }
+        },
+        ui: {
+          responseId: responseId
+        }
+      })
+    );
+    const expectedActions = [
+      {
+        type: 'SET_ANSWER_VALUE',
+        payload: {
+          entities: {
+            responseElementAnswers: {
+              [answerId]: {
+                id: answerId,
+                text: 'test'
+              }
+            }
+          },
+          result: '1'
+        },
+        responseElementId: responseElementId
+      },
+      { type: 'UPDATE_RESPONSE_REQUEST' }
+    ];
+    store.dispatch(
+      actions.setAnswerValue(responseElementId, answerId, 'text', 'test')
+    );
     expect(store.getActions()).toEqual(expectedActions);
   });
 });
