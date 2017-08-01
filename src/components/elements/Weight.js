@@ -6,22 +6,17 @@ class Weight extends Component {
       responseElement,
       answers,
       setAnswerValue,
-      responseElementAnswers,
-      onPreferNotToAnswer
+      responseElementAnswers
     } = this.props;
     return (
       <div>
         <input
+          disabled={responseElement.preferNotToAnswer}
           type="number"
           placeholder="pounds"
           className="form-control"
           value={get(responseElementAnswers, `${answers[0].id}.weight`, '')}
-          onChange={e => {
-            setAnswerValue(answers[0].id, 'feet', e.target.value);
-            if (responseElement.preferNotToAnswer) {
-              onPreferNotToAnswer();
-            }
-          }}
+          onChange={e => setAnswerValue(answers[0].id, 'feet', e.target.value)}
         />
       </div>
     );
