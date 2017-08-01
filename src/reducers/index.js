@@ -43,7 +43,6 @@ export const getIsShowingSubmitModal = state => {
 };
 
 export const getAllQuestionnaires = state => {
-  console.log(state);
   return fromQuestionnaires.getAllQuestionnaires(
     state.getIn(['entities', 'questionnaires'])
   );
