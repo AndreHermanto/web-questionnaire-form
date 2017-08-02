@@ -1,3 +1,7 @@
+/* eslint-disable import/first */
+// add polyfills
+require('core-js/fn/object/entries');
+// end of polyfills
 import React from 'react';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
