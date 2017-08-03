@@ -471,13 +471,13 @@ export const getSkippedQuestionNumbers = state => {
       return (
         fromResponseElements
           .getById(
-            state.get('entities').get('responseElements'),
+            state.getIn(['entities', 'responseElements']),
             responseElement
           )
           .get('answers').size === 0 &&
         !fromResponseElements
           .getById(
-            state.get('entities').get('responseElements'),
+            state.getIn(['entities', 'responseElements']),
             responseElement
           )
           .get('preferNotToAnswer')
