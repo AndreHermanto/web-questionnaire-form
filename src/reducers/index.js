@@ -462,82 +462,23 @@ export const getQuestionNumber = (state, responseElementId) => {
 };
 
 export const getSkippedQuestionNumbers = state => {
-  const response = fromResponses.getById(
-    state.getIn(['entities', 'responses']),
-    getResponseId(state)
-  );
-  if (!response) {
+  const visibleResponseElementIds = getVisibleResponseElementIds(state);
+  if (!visibleResponseElementIds) {
     return null;
   }
-  const responseElementIds = response.get('answeredQuestions');
-  // work out which ones are visibile
-  const responseElements = responseElementIds.map(id =>
-    getResponseElementById(state, id)
-  );
-  const visibleResponseElements = responseElements.filter(
-    (responseElement, index) => {
-      const element = getElementById(state, responseElement.get('elementId'));
-      if (element.get('type') === 'end') {
-        // never show the end element, it is shown on a seprate page
-        return false;
-      }
-      // evaluate the logic
-      const logic = responseElement.get('logic');
-      if (!logic) {
-        return true;
-      }
-      // we want to replace the logic string,
-      // with real logic we can eval!
-      const newLogic = logic
-        .replace(/(\r\n|\n|\r)/gm, '')
-        .replace(/{(.*?)}/g, bits => {
-          const ids = bits
-            .slice(bits.lastIndexOf('/') + 1)
-            .trim()
-            .split(' ')
-            .map(id => id.trim())
-            .reduce((acc, id, index) => {
-              if (index === 0) {
-                return Object.assign({}, acc, { elementId: id });
-              }
-              return Object.assign({}, acc, {
-                answerId: id.slice(0, id.length - 1)
-              });
-            }, {});
-          const matchingResponseElement = responseElements.findLast(
-            (responseElement, searchIndex) =>
-              searchIndex < index &&
-              responseElement.get('elementId') === ids.elementId &&
-              responseElement.get('answers').contains(ids.answerId)
-          );
-          if (matchingResponseElement) {
-            return JSON.stringify(matchingResponseElement);
-          }
-          return false;
-        });
-      let result = true;
-      try {
-        result = eval(`true && ${newLogic}`);
-      } catch (e) {
-        window.alert('There are an error parsing the branching logic');
-      }
-      return result;
-    }
-  );
-
-  const skippedResponseElements = visibleResponseElements.filter(
+  const skippedResponseElements = visibleResponseElementIds.filter(
     responseElement => {
       return (
         fromResponseElements
           .getById(
             state.get('entities').get('responseElements'),
-            responseElement.get('id')
+            responseElement
           )
           .get('answers').size === 0 &&
         !fromResponseElements
           .getById(
             state.get('entities').get('responseElements'),
-            responseElement.get('id')
+            responseElement
           )
           .get('preferNotToAnswer')
       );
@@ -545,7 +486,7 @@ export const getSkippedQuestionNumbers = state => {
   );
 
   return skippedResponseElements.map(responseElement => {
-    return getQuestionNumber(state, responseElement.get('id'));
+    return getQuestionNumber(state, responseElement);
   });
 };
 
