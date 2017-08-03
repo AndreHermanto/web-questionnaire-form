@@ -83,6 +83,7 @@ function mapStateToProps(state, ownProps) {
     responseElementIds: selectors.getVisibleResponseElementIds(state),
     showModal: selectors.getIsShowingSubmitModal(state),
     largeText: UIselectors.getLargeText(state.get('ui')),
+    skippedQuestionNumbers: selectors.getSkippedQuestionNumbers(state),
     progress,
     showSubmit: progress === 100,
     alreadySubmitted,

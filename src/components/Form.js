@@ -15,7 +15,7 @@ class Form extends Component {
     showSubmit: PropTypes.bool.isRequired,
     alreadySubmitted: PropTypes.bool.isRequired,
     responseElementsWithInvalidAnswers: PropTypes.object.isRequired,
-
+    skippedQuestionNumbers: PropTypes.array.isRequired,
     onShowSubmissionConfirmation: PropTypes.func.isRequired,
     onCancelSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
@@ -79,6 +79,14 @@ class Form extends Component {
         <div className="text-muted">
           Built at: {process.env.REACT_APP_BUILD_TIME}
         </div>
+        {!this.props.showSubmit
+          ? <div>
+              <strong>Skipped Questions:</strong>
+              <p>
+                {this.props.skippedQuestionNumbers.join(', ')}
+              </p>
+            </div>
+          : null}
 
         <div
           style={{
