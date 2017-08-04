@@ -2,7 +2,27 @@ import React, { Component } from 'react';
 import { Modal, ProgressBar, Grid, Col, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ElementContainer from '../containers/ElementContainer';
+import TableOfContentsContainer from '../containers/TableOfContentsContainer';
 import FailedToDecryptMessage from './FailedToDecryptMessage';
+import styled from 'styled-components';
+
+const ToCContainer = styled.div`
+  h1 {
+    font-size: 30px;
+  }
+  h2 {
+    font-size: 20px;
+    margin-left: 10px;
+  }
+  h3 {
+    font-size: 15px;
+    margin-left: 20px;
+  }
+  position: fixed;
+  left: 17%;
+  top: 13%;
+  transform: translateX(-50%);
+`;
 
 class Form extends Component {
   static propTypes: {
@@ -37,9 +57,21 @@ class Form extends Component {
     }
     return (
       <div className="container" style={{ paddingBottom: '75px' }}>
-        {this.props.responseElementIds.map(id => (
-          <ElementContainer key={id} responseElementId={id} />
-        ))}
+        <Row>
+          <Col sm="2">
+            <ToCContainer>
+              {this.props.responseElementIds.map(id =>
+                <TableOfContentsContainer key={id} responseElementId={id} />
+              )}
+            </ToCContainer>
+          </Col>
+          <Col sm="10">
+            {this.props.responseElementIds.map(id =>
+              <ElementContainer key={id} responseElementId={id} />
+            )}
+          </Col>
+        </Row>
+
         <div
           style={{
             position: 'fixed',
