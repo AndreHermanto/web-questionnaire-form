@@ -16,7 +16,8 @@ class Weight extends Component {
           placeholder="pounds"
           className="form-control"
           value={get(responseElementAnswers, `${answers[0].id}.weight`, '')}
-          onChange={e => setAnswerValue(answers[0].id, 'feet', e.target.value)}
+          onChange={e =>
+            setAnswerValue(answers[0].id, 'weight', e.target.value)}
         />
       </div>
     );
