@@ -11,7 +11,6 @@ class Weight extends Component {
     return (
       <div>
         <input
-          disabled={responseElement.preferNotToAnswer}
           type="number"
           placeholder="pounds"
           className="form-control"

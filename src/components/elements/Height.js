@@ -11,7 +11,6 @@ class Height extends Component {
     return (
       <div>
         <input
-          disabled={responseElement.preferNotToAnswer}
           type="text"
           placeholder="feet"
           className="form-control"
@@ -19,7 +18,6 @@ class Height extends Component {
           onChange={e => setAnswerValue(answers[0].id, 'feet', e.target.value)}
         />
         <input
-          disabled={responseElement.preferNotToAnswer}
           type="text"
           placeholder="inches"
           className="form-control"

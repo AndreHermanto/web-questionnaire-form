@@ -11,7 +11,6 @@ class Text extends Component {
     return (
       <div>
         <textarea
-          disabled={responseElement.preferNotToAnswer}
           type="text"
           className="form-control"
           value={get(responseElementAnswers, `${answers[0].id}.text`, '')}

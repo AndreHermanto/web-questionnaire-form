@@ -266,3 +266,213 @@ describe('persisting a response on the server', () => {
     });
   });
 });
+
+describe('toggleAnswer', () => {
+  it('works', () => {
+    const responseElementId = '1';
+    const answerId = '1';
+    const responseId = '1';
+    const responseElementAnswerId = '1';
+    const store = mockStore(
+      fromJS({
+        entities: {
+          answers: {
+            allIds: [answerId],
+            byId: {
+              [answerId]: {
+                id: answerId
+              }
+            }
+          },
+          responseElements: {
+            byId: {
+              id: responseElementId,
+              [responseElementId]: {
+                answers: [answerId]
+              }
+            }
+          },
+          responseElementAnswers: {
+            allIds: [responseElementAnswerId],
+            byId: {
+              [responseElementAnswerId]: {
+                id: responseElementAnswerId
+              }
+            }
+          },
+          responses: {
+            byId: {
+              [responseId]: {
+                id: responseId,
+                answeredQuestions: [responseElementId]
+              }
+            }
+          }
+        },
+        ui: {
+          responseId: responseId
+        }
+      })
+    );
+    const expectedActions = [
+      {
+        type: 'TOGGLE_ANSWER',
+        payload: {
+          entities: {
+            responseElementAnswers: {
+              [answerId]: {
+                id: answerId
+              }
+            }
+          },
+          result: '1'
+        },
+        responseElementId: responseElementId
+      },
+      { type: 'UPDATE_RESPONSE_REQUEST' }
+    ];
+    store.dispatch(actions.toggleAnswer(responseElementId, answerId));
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+});
+
+describe('selectAnswer', () => {
+  it('works', () => {
+    const responseElementId = '1';
+    const answerId = '1';
+    const responseId = '1';
+    const responseElementAnswerId = '1';
+    const store = mockStore(
+      fromJS({
+        entities: {
+          answers: {
+            allIds: [answerId],
+            byId: {
+              [answerId]: {
+                id: answerId
+              }
+            }
+          },
+          responseElements: {
+            byId: {
+              id: responseElementId,
+              [responseElementId]: {
+                answers: [answerId]
+              }
+            }
+          },
+          responseElementAnswers: {
+            allIds: [responseElementAnswerId],
+            byId: {
+              [responseElementAnswerId]: {
+                id: responseElementAnswerId
+              }
+            }
+          },
+          responses: {
+            byId: {
+              [responseId]: {
+                id: responseId,
+                answeredQuestions: [responseElementId]
+              }
+            }
+          }
+        },
+        ui: {
+          responseId: responseId
+        }
+      })
+    );
+    const expectedActions = [
+      {
+        type: 'SELECT_ANSWER',
+        payload: {
+          entities: {
+            responseElementAnswers: {
+              [answerId]: {
+                id: answerId
+              }
+            }
+          },
+          result: '1'
+        },
+        responseElementId: responseElementId
+      },
+      { type: 'UPDATE_RESPONSE_REQUEST' }
+    ];
+    store.dispatch(actions.selectAnswer(responseElementId, answerId));
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+});
+
+describe('setAnswerValue', () => {
+  it('works', () => {
+    const responseElementId = '1';
+    const answerId = '1';
+    const responseId = '1';
+    const responseElementAnswerId = '1';
+    const store = mockStore(
+      fromJS({
+        entities: {
+          answers: {
+            allIds: [answerId],
+            byId: {
+              [answerId]: {
+                id: answerId
+              }
+            }
+          },
+          responseElements: {
+            byId: {
+              id: responseElementId,
+              [responseElementId]: {
+                answers: [answerId]
+              }
+            }
+          },
+          responseElementAnswers: {
+            allIds: [responseElementAnswerId],
+            byId: {
+              [responseElementAnswerId]: {
+                id: responseElementAnswerId
+              }
+            }
+          },
+          responses: {
+            byId: {
+              [responseId]: {
+                id: responseId,
+                answeredQuestions: [responseElementId]
+              }
+            }
+          }
+        },
+        ui: {
+          responseId: responseId
+        }
+      })
+    );
+    const expectedActions = [
+      {
+        type: 'SET_ANSWER_VALUE',
+        payload: {
+          entities: {
+            responseElementAnswers: {
+              [answerId]: {
+                id: answerId,
+                text: 'test'
+              }
+            }
+          },
+          result: '1'
+        },
+        responseElementId: responseElementId
+      },
+      { type: 'UPDATE_RESPONSE_REQUEST' }
+    ];
+    store.dispatch(
+      actions.setAnswerValue(responseElementId, answerId, 'text', 'test')
+    );
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+});
