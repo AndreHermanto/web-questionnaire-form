@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import * as actions from '../actions';
 import * as selectors from '../reducers';
 import Form from '../components/Form';
-
+import { fetchResponsesIsLoading } from '../reducers';
 const propTypes = {
   routeParams: PropTypes.shape({
     userId: PropTypes.string.isRequired,
@@ -81,7 +81,8 @@ function mapStateToProps(state, ownProps) {
     showModal: selectors.getIsShowingSubmitModal(state),
     progress,
     showSubmit: progress === 100,
-    alreadySubmitted
+    alreadySubmitted,
+    isLoading: fetchResponsesIsLoading(state)
   };
 }
 

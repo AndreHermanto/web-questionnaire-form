@@ -3,6 +3,7 @@ import { Modal, ProgressBar, Grid, Col, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ElementContainer from '../containers/ElementContainer';
 import FailedToDecryptMessage from './FailedToDecryptMessage';
+import loading from '../loading.css';
 
 class Form extends Component {
   static propTypes: {
@@ -15,9 +16,13 @@ class Form extends Component {
 
     onShowSubmissionConfirmation: PropTypes.func.isRequired,
     onCancelSubmit: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired
   };
   render() {
+    if (this.props.isLoading) {
+      return <span className="loading" />;
+    }
     if (this.props.failedToDecrypt) {
       return (
         <Grid>
@@ -33,13 +38,13 @@ class Form extends Component {
       );
     }
     if (!this.props.responseElementIds) {
-      return <div className="container">Loading...</div>;
+      return <span className="loading" />;
     }
     return (
       <div className="container" style={{ paddingBottom: '75px' }}>
-        {this.props.responseElementIds.map(id => (
+        {this.props.responseElementIds.map(id =>
           <ElementContainer key={id} responseElementId={id} />
-        ))}
+        )}
         <div
           style={{
             position: 'fixed',
@@ -52,14 +57,14 @@ class Form extends Component {
           }}
         >
           <Row>
-            <Col sm="10">
+            <Col sm={10}>
               <ProgressBar
                 style={{ marginTop: 15 }}
                 now={this.props.progress}
                 label={parseInt(this.props.progress, 10) + '%'}
               />
             </Col>
-            <Col sm="2">
+            <Col sm={2}>
               <button
                 onClick={this.props.onShowSubmissionConfirmation}
                 className="btn btn-lg btn-primary btn-block"

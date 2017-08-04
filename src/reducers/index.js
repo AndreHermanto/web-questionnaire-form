@@ -8,6 +8,9 @@ import * as fromResponseElements from '././responseElements';
 import * as fromResponseElementAnswers from './responseElementAnswers';
 import * as fromAnswers from './answers';
 import ui, * as fromUI from './ui';
+import uiQuestionnaires from './uiQuestionnaires';
+import uiResponses from './uiResponses';
+import * as fromUIQuestionnaires from './uiQuestionnaires';
 import * as fromConsentTypeMappings from './consentTypeMappings';
 import entities from './entities';
 import questionTypes from '../constants/QuestionTypes';
@@ -22,6 +25,8 @@ export default combineReducers({
     }
   },
   ui,
+  uiQuestionnaires,
+  uiResponses,
   entities
 });
 
@@ -370,3 +375,11 @@ export const getQuestionNumber = (state, responseElementId) => {
 };
 export const getFailedToDecrypt = state =>
   fromUI.getFailedToDecrypt(state.get('ui'));
+
+export const fetchQuestionnairesIsLoading = state => {
+  return state.get('uiQuestionnaires').get('isLoading');
+};
+
+export const fetchResponsesIsLoading = state => {
+  return state.get('uiResponses').get('isLoading');
+};
