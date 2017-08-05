@@ -64,8 +64,7 @@ class Question extends Component {
           borderColor: this.props.responseElement.answers.length ||
             this.props.responseElement.preferNotToAnswer
             ? 'green'
-            : '#eee',
-          color: this.props.responseElement.preferNotToAnswer ? '#aaa' : '#333'
+            : '#eee'
         }}
       >
         <div style={{ whiteSpace: 'pre-wrap' }}>

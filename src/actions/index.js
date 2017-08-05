@@ -164,7 +164,6 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
 ) => {
   const state = getState();
   const responseId = selectors.getResponseId(state);
-  const userId = selectors.getUserId(state);
   const response = selectors
     .getResponseById(state, responseId)
     .set('completed', true);
@@ -174,18 +173,28 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
   });
   return dispatch(updateResponseOnServer()).then(() => {
     hashHistory.push(
-      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(
-        encryptedConsentTypeId
-      )}/${responseId}/end`
+      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
     );
   });
 };
 
-export const selectAnswer = (responseElementId, answerId) => (
+export const clearPreferNotToAnswer = responseElementId => (
   dispatch,
   getState
 ) => {
   const state = getState();
+  const responseElement = selectors
+    .getResponseElementById(state, responseElementId)
+    .set('preferNotToAnswer', false);
+  dispatch({
+    type: 'CLEAR_PREFER_NOT_TO_ANSWER',
+    payload: normalize(responseElement.toJS(), schema.responseElement)
+  });
+};
+export const selectAnswer = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
   dispatch({
     type: 'SELECT_ANSWER',
     payload: normalize(
@@ -197,17 +206,13 @@ export const selectAnswer = (responseElementId, answerId) => (
     responseElementId
   });
   dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(clearPreferNotToAnswer(responseElementId));
   dispatch(updateResponseOnServer());
-
-  if (selectors.getPreferNotToAnswerById(state, responseElementId)) {
-    dispatch(markAsPreferNotToAnswer(responseElementId));
-  }
 };
 export const toggleAnswer = (responseElementId, answerId) => (
   dispatch,
   getState
 ) => {
-  const state = getState();
   dispatch({
     type: 'TOGGLE_ANSWER',
     payload: normalize(
@@ -219,10 +224,8 @@ export const toggleAnswer = (responseElementId, answerId) => (
     responseElementId
   });
   dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(clearPreferNotToAnswer(responseElementId));
   dispatch(updateResponseOnServer());
-  if (selectors.getPreferNotToAnswerById(state, responseElementId)) {
-    dispatch(markAsPreferNotToAnswer(responseElementId));
-  }
 };
 export const setAnswerValue = (
   responseElementId,
@@ -252,10 +255,8 @@ export const setAnswerValue = (
     responseElementId
   });
   dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(clearPreferNotToAnswer(responseElementId));
   dispatch(updateResponseOnServer());
-  if (selectors.getPreferNotToAnswerById(state, responseElementId)) {
-    dispatch(markAsPreferNotToAnswer(responseElementId));
-  }
 };
 
 /*
