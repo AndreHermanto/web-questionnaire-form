@@ -1,4 +1,5 @@
 import { normalize } from 'normalizr';
+import debounce from 'lodash.debounce';
 import Immutable from 'immutable';
 import { hashHistory } from 'react-router';
 import cuid from 'cuid';
@@ -19,7 +20,9 @@ export function fetchQuestionnairesSuccess(questionnaires) {
   };
 }
 
-export const updateResponseOnServer = () => (dispatch, getState) => {
+export const updateResponseOnServer = () => debounceUpdateResponseOnServer;
+
+const debounceUpdateResponseOnServer = debounce((dispatch, getState) => {
   const state = getState();
   const responseId = selectors.getResponseId(state);
   const fullResponse = selectors.getFullResponse(state);
@@ -36,7 +39,7 @@ export const updateResponseOnServer = () => (dispatch, getState) => {
         payload: normalize(response, schema.response)
       });
     });
-};
+}, 2000);
 
 export const setFollowUpResponse = (
   responseElementId,
