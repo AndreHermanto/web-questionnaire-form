@@ -19,13 +19,16 @@ export function fetchQuestionnairesSuccess(questionnaires) {
     payload: normalize(questionnaires, schema.arrayOfQuestionnaires)
   };
 }
-
-export const updateResponseOnServer = () => debounceUpdateResponseOnServer;
-
-const debounceUpdateResponseOnServer = debounce((dispatch, getState) => {
+// this is the non-debounced code
+const updateResponseClean = (dispatch, getState) => {
   const state = getState();
   const responseId = selectors.getResponseId(state);
   const fullResponse = selectors.getFullResponse(state);
+  if (fullResponse.get('completed')) {
+    dispatch({
+      type: 'FAILED_TO_UPDATE_RESPONSE_ALREADY_COMPLETED'
+    });
+  }
   dispatch({
     type: types.UPDATE_RESPONSE_REQUEST
   });
@@ -39,7 +42,11 @@ const debounceUpdateResponseOnServer = debounce((dispatch, getState) => {
         payload: normalize(response, schema.response)
       });
     });
-}, 2000);
+};
+export const updateResponseOnServer = () => updateResponseClean;
+const debouncedUpdateResponse = debounce(updateResponseClean, 500);
+// uses the debounced actions
+const slowUpdateResponseOnServer = () => debouncedUpdateResponse;
 
 export const setFollowUpResponse = (
   responseElementId,
@@ -47,7 +54,7 @@ export const setFollowUpResponse = (
   followUpText
 ) => (dispatch, getState) => {
   dispatch(updateFollowUpResponse(responseElementId, answerId, followUpText));
-  dispatch(updateResponseOnServer());
+  dispatch(slowUpdateResponseOnServer());
 };
 
 export const updateFollowUpResponse = (
@@ -230,6 +237,7 @@ export const toggleAnswer = (responseElementId, answerId) => (
   dispatch(clearPreferNotToAnswer(responseElementId));
   dispatch(updateResponseOnServer());
 };
+
 export const setAnswerValue = (
   responseElementId,
   answerId,
@@ -259,7 +267,7 @@ export const setAnswerValue = (
   });
   dispatch(checkForRepeats(responseElementId, answerId));
   dispatch(clearPreferNotToAnswer(responseElementId));
-  dispatch(updateResponseOnServer());
+  dispatch(slowUpdateResponseOnServer());
 };
 
 /*
@@ -512,31 +520,31 @@ export const resumeQuestionnaire = (
   }
 });
 
-// update a response
-export const updateResponseRequest = () => ({
-  type: types.UPDATE_RESPONSE_REQUEST
-});
-export const updateResponseSuccess = response => ({
-  type: types.UPDATE_RESPONSE_SUCCESS,
-  payload: response
-});
-export const updateResponseFailure = error => ({
-  type: types.UPDATE_RESPONSE_FAILURE,
-  error: true,
-  playload: error
-});
-export const updateResponse = (responseId, response) => dispatch => {
-  dispatch(updateResponseRequest());
-  return api
-    .updateResponse(responseId, response)
-    .then(httpResponse => httpResponse.json())
-    .then(json => json.data)
-    .then(newResponse => {
-      dispatch(updateResponseSuccess(newResponse));
-      return newResponse;
-    })
-    .catch(e => dispatch(updateResponseFailure(e)));
-};
+// // update a response
+// export const updateResponseRequest = () => ({
+//   type: types.UPDATE_RESPONSE_REQUEST
+// });
+// export const updateResponseSuccess = response => ({
+//   type: types.UPDATE_RESPONSE_SUCCESS,
+//   payload: response
+// });
+// export const updateResponseFailure = error => ({
+//   type: types.UPDATE_RESPONSE_FAILURE,
+//   error: true,
+//   playload: error
+// });
+// export const updateResponse = (responseId, response) => dispatch => {
+//   dispatch(updateResponseRequest());
+//   return api
+//     .updateResponse(responseId, response)
+//     .then(httpResponse => httpResponse.json())
+//     .then(json => json.data)
+//     .then(newResponse => {
+//       dispatch(updateResponseSuccess(newResponse));
+//       return newResponse;
+//     })
+//     .catch(e => dispatch(updateResponseFailure(e)));
+// };
 
 export const setupQuestionnaire = ({ questionnaireId, resume }) => (
   dispatch,
