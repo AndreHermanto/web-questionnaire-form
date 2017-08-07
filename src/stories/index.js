@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Grid, Row, Col } from 'react-bootstrap';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
@@ -11,12 +11,63 @@ import TextInformation from '../components/TextInformation';
 
 import NavigationBar from '../components/NavigationBar';
 import MatrixQuestion from '../components/MatrixQuestion';
-import DatePicker from '../components/DatePicker';
+import DatePicker from '../components/elements/DatePicker';
+import Questionnaire from '../components/Questionnaire';
 import '../index.css';
 
 storiesOf('Welcome', module).add('to Storybook', () => (
   <Welcome showApp={linkTo('Button')} />
 ));
+
+storiesOf('Questionnaire', module)
+  .add('In Progress', () => (
+    <Grid>
+      <Row>
+        <Col sm={'4'}>
+          <Questionnaire
+            completed={false}
+            title={'Self-Phenotyping Questionnaire'}
+            buttonText={'Resume'}
+            link={''}
+            percentComplete={25}
+            questionCount={30}
+          />
+        </Col>
+      </Row>
+    </Grid>
+  ))
+  .add('Not Started', () => (
+    <Grid>
+      <Row>
+        <Col sm={'4'}>
+          <Questionnaire
+            completed={false}
+            title={'Self-Phenotyping Questionnaire'}
+            buttonText={'Start'}
+            link={''}
+            percentComplete={0}
+            questionCount={30}
+          />
+        </Col>
+      </Row>
+    </Grid>
+  ))
+  .add('Completed', () => (
+    <Grid>
+      <Row>
+        <Col sm={'4'}>
+          <Questionnaire
+            completed={true}
+            title={'Self-Phenotyping Questionnaire'}
+            buttonText={'Completed'}
+            link={''}
+            percentComplete={100}
+            questionCount={30}
+          />
+        </Col>
+      </Row>
+    </Grid>
+  ));
 
 storiesOf('Button', module)
   .add('with text', () => <Button onClick={action('clicked')}>Click Me</Button>)
