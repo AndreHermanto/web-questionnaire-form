@@ -14,6 +14,7 @@ class NewElement extends Component {
     selectAnswer: PropTypes.func.isRequired,
     toggleAnswer: PropTypes.func.isRequired,
     setAnswerValue: PropTypes.func.isRequired,
+    deleteAnswerValue: PropTypes.func.isRequired,
     onPreferNotToAnswer: PropTypes.func.isRequired,
     onFollowUpChanged: PropTypes.func.isRequired
   };
@@ -41,11 +42,8 @@ class NewElement extends Component {
       default:
         return (
           <div>
-            Sorry, the element type
-            {' '}
-            {this.props.element.type}
-            {' '}
-            is not currently supported.
+            Sorry, the element type {this.props.element.type} is not currently
+            supported.
           </div>
         );
     }

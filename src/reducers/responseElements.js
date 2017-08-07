@@ -32,6 +32,8 @@ const byId = (state = fromJS({}), action) => {
         [action.responseElementId, 'answers'],
         fromJS([action.payload.result])
       );
+    case 'DELETE_ANSWER_VALUE':
+      return state.setIn([action.responseElementId, 'answers'], fromJS({}));
     default:
       return state;
   }

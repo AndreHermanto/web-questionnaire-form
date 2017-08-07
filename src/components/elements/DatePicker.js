@@ -6,6 +6,7 @@ class DatePicker extends Component {
   static propTypes: {
     date: PropTypes.string.isRequired,
     dateSelected: PropTypes.func.isRequired,
+    deleteAnswerValue: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired
   };
   constructor(props) {
@@ -45,7 +46,7 @@ class DatePicker extends Component {
         `${this.state.tempYear}-${monthNumber}-${this.state.tempDay}`
       );
     } else {
-      this.props.dateSelected(null);
+      this.props.deleteAnswerValue();
     }
   }
   handleYearChanged(e) {
@@ -60,7 +61,7 @@ class DatePicker extends Component {
       // they are complete, send them away
       this.props.dateSelected(`${value}-${monthNumber}-${this.state.tempDay}`);
     } else {
-      this.props.dateSelected(null);
+      this.props.deleteAnswerValue();
     }
   }
   isValid(year, month, day) {
@@ -77,7 +78,7 @@ class DatePicker extends Component {
       // they are complete, send them away
       this.props.dateSelected(`${this.state.tempYear}-${monthNumber}-${value}`);
     } else {
-      this.props.dateSelected(null);
+      this.props.deleteAnswerValue();
     }
   }
   render() {
@@ -110,7 +111,7 @@ class DatePicker extends Component {
                 onChange={this.handleMonthChanged}
                 disabled={this.props.disabled}
               >
-                <option />
+                <option disabled={true} />
                 <option>January</option>
                 <option>February</option>
                 <option>March</option>

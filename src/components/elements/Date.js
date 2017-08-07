@@ -7,6 +7,7 @@ class Date extends Component {
       responseElement,
       answers,
       setAnswerValue,
+      deleteAnswerValue,
       responseElementAnswers
     } = this.props;
     return (
@@ -14,6 +15,7 @@ class Date extends Component {
         <DatePicker
           date={get(responseElementAnswers, `${answers[0].id}.date`, null)}
           dateSelected={date => setAnswerValue(answers[0].id, 'date', date)}
+          deleteAnswerValue={() => deleteAnswerValue(answers[0].id)}
         />
       </div>
     );

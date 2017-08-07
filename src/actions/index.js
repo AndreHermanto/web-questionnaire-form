@@ -176,7 +176,9 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
   });
   return dispatch(updateResponseOnServer()).then(() => {
     hashHistory.push(
-      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
+      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(
+        encryptedConsentTypeId
+      )}/${responseId}/end`
     );
   });
 };
@@ -252,16 +254,29 @@ export const setAnswerValue = (
       [valuePropertyName]: value
     };
   }
+
   dispatch({
     type: 'SET_ANSWER_VALUE',
     payload: normalize(responseElementAnswer, schema.responseElementAnswer),
+    responseElementId
+  });
+
+  dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(clearPreferNotToAnswer(responseElementId));
+  dispatch(updateResponseOnServer());
+};
+export const deleteAnswerValue = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
+  dispatch({
+    type: 'DELETE_ANSWER_VALUE',
     responseElementId
   });
   dispatch(checkForRepeats(responseElementId, answerId));
   dispatch(clearPreferNotToAnswer(responseElementId));
   dispatch(updateResponseOnServer());
 };
-
 /*
 *async action: fetch all questionnaires
 */

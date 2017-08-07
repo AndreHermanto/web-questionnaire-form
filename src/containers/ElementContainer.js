@@ -82,6 +82,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       )
     );
   },
+  deleteAnswerValue: answerId => {
+    dispatch(actions.deleteAnswerValue(ownProps.responseElementId, answerId));
+  },
   onPreferNotToAnswer: () => {
     dispatch(actions.markAsPreferNotToAnswer(ownProps.responseElementId));
   },
