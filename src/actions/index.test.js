@@ -286,8 +286,8 @@ describe('toggleAnswer', () => {
           },
           responseElements: {
             byId: {
-              id: responseElementId,
               [responseElementId]: {
+                id: responseElementId,
                 answers: [answerId]
               }
             }
@@ -329,6 +329,21 @@ describe('toggleAnswer', () => {
         },
         responseElementId: responseElementId
       },
+      {
+        type: 'CLEAR_PREFER_NOT_TO_ANSWER',
+        payload: {
+          entities: {
+            responseElements: {
+              [responseElementId]: {
+                id: responseElementId,
+                answers: [answerId],
+                preferNotToAnswer: false
+              }
+            }
+          },
+          result: responseElementId
+        }
+      },
       { type: 'UPDATE_RESPONSE_REQUEST' }
     ];
     store.dispatch(actions.toggleAnswer(responseElementId, answerId));
@@ -355,8 +370,8 @@ describe('selectAnswer', () => {
           },
           responseElements: {
             byId: {
-              id: responseElementId,
               [responseElementId]: {
+                id: responseElementId,
                 answers: [answerId]
               }
             }
@@ -398,6 +413,21 @@ describe('selectAnswer', () => {
         },
         responseElementId: responseElementId
       },
+      {
+        type: 'CLEAR_PREFER_NOT_TO_ANSWER',
+        payload: {
+          entities: {
+            responseElements: {
+              [responseElementId]: {
+                id: responseElementId,
+                answers: [answerId],
+                preferNotToAnswer: false
+              }
+            }
+          },
+          result: responseElementId
+        }
+      },
       { type: 'UPDATE_RESPONSE_REQUEST' }
     ];
     store.dispatch(actions.selectAnswer(responseElementId, answerId));
@@ -424,8 +454,8 @@ describe('setAnswerValue', () => {
           },
           responseElements: {
             byId: {
-              id: responseElementId,
               [responseElementId]: {
+                id: responseElementId,
                 answers: [answerId]
               }
             }
@@ -468,7 +498,21 @@ describe('setAnswerValue', () => {
         },
         responseElementId: responseElementId
       },
-      { type: 'UPDATE_RESPONSE_REQUEST' }
+      {
+        type: 'CLEAR_PREFER_NOT_TO_ANSWER',
+        payload: {
+          entities: {
+            responseElements: {
+              [responseElementId]: {
+                id: responseElementId,
+                answers: [answerId],
+                preferNotToAnswer: false
+              }
+            }
+          },
+          result: responseElementId
+        }
+      }
     ];
     store.dispatch(
       actions.setAnswerValue(responseElementId, answerId, 'text', 'test')
