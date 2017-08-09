@@ -29,10 +29,10 @@ const elements = combineReducers({
 export default elements;
 
 export const getAllElements = state => {
-  return state.get('allIds').map(id => state.get('byId').get(id));
+  return state.get('allIds').map(id => state.get('byId').get(id + ''));
 };
 export const getById = (state, id) => {
-  return state.get('byId').get(id);
+  return state.get('byId').get(id + '');
 };
 
 // import { fromJS } from 'immutable';
@@ -102,5 +102,5 @@ export const getEndPage = state => {
 // export default versions;
 //
 export const getVersionById = (state, id) => {
-  return state.get('byId').get(id);
+  return state.get('byId').get(id + '');
 };

@@ -29,8 +29,8 @@ const answers = combineReducers({
 export default answers;
 
 export const getAllAnswers = state => {
-  return state.get('allIds').map(id => state.get('byId').get(id));
+  return state.get('allIds').map(id => state.get('byId').get(id + ''));
 };
 export const getById = (state, id) => {
-  return state.get('byId').get(id);
+  return state.get('byId').get(id + '');
 };

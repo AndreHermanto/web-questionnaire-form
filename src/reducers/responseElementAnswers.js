@@ -41,8 +41,8 @@ const responseElementAnswers = combineReducers({
 export default responseElementAnswers;
 
 export const getAllResponseElementAnswers = state => {
-  return state.get('allIds').map(id => state.get('byId').get(id));
+  return state.get('allIds').map(id => state.get('byId').get(id + ''));
 };
 export const getById = (state, id) => {
-  return state.get('byId').get(id);
+  return state.get('byId').get(id + '');
 };
