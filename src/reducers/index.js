@@ -192,19 +192,8 @@ export const getVisibleResponseElementIds = state => {
               });
             }, {});
           const answerObj = getResponseElementAnswersById(state, ids.answerId);
-          const matchingResponseElement = responseElements.findLast(
-            (responseElement, searchIndex) => {
-              return (
-                searchIndex < index &&
-                responseElement.get('elementId') === ids.elementId &&
-                responseElement.get('answers').contains(ids.answerId)
-              );
-            }
-          );
           if (answerObj) {
             return JSON.stringify(answerObj);
-          } else if (matchingResponseElement) {
-            return JSON.stringify(matchingResponseElement);
           }
           return false;
         });
