@@ -195,11 +195,11 @@ export const getVisibleResponseElementIds = state => {
           if (answerObj) {
             return JSON.stringify(answerObj);
           }
-          return false;
+          return 'NaN';
         });
       let result = true;
       try {
-        result = eval(`true && ${newLogic}`);
+        result = !!eval(`true && ${newLogic}`);
       } catch (e) {
         window.alert('There are an error parsing the branching logic');
       }
