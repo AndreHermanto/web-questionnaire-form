@@ -146,7 +146,7 @@ export const getPreferNotToAnswerById = (state, responseElementId) => {
     'preferNotToAnswer'
   ]);
 };
-
+//See logic.md to view the logic
 export const getVisibleResponseElementIds = state => {
   const response = fromResponses.getById(
     state.getIn(['entities', 'responses']),
