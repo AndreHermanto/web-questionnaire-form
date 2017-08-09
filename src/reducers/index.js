@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux-immutable';
 import { List } from 'immutable';
+import moment from 'moment';
 import * as fromQuestionnaires from './questionnaires';
 import * as fromVersions from './versions';
 import * as fromResponses from './responses';
@@ -198,8 +199,19 @@ export const getVisibleResponseElementIds = state => {
           return 'NaN';
         });
       let result = true;
+
+      // age() might be used in the eval, so we dont know if its unsused
+      /* eslint-disable no-unused-vars */
+      const age = answer => {
+        const date = moment(answer.date, 'YYYY-MM-DD');
+        const now = moment();
+        return now.diff(date, 'years');
+      };
+      /* eslint-enable no-unused-vars */
       try {
+        /* eslint-disable no-eval */
         result = !!eval(`true && ${newLogic}`);
+        /* eslint-enable no-eval */
       } catch (e) {
         window.alert('There are an error parsing the branching logic');
       }
