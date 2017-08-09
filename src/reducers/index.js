@@ -146,7 +146,7 @@ export const getPreferNotToAnswerById = (state, responseElementId) => {
     'preferNotToAnswer'
   ]);
 };
-
+//See logic.md to view the logic
 export const getVisibleResponseElementIds = state => {
   const response = fromResponses.getById(
     state.getIn(['entities', 'responses']),
@@ -172,6 +172,7 @@ export const getVisibleResponseElementIds = state => {
       if (!logic) {
         return true;
       }
+
       // we want to replace the logic string,
       // with real logic we can eval!
       const newLogic = logic
@@ -190,20 +191,15 @@ export const getVisibleResponseElementIds = state => {
                 answerId: id.slice(0, id.length - 1)
               });
             }, {});
-          const matchingResponseElement = responseElements.findLast(
-            (responseElement, searchIndex) =>
-              searchIndex < index &&
-              responseElement.get('elementId') === ids.elementId &&
-              responseElement.get('answers').contains(ids.answerId)
-          );
-          if (matchingResponseElement) {
-            return JSON.stringify(matchingResponseElement);
+          const answerObj = getResponseElementAnswersById(state, ids.answerId);
+          if (answerObj) {
+            return JSON.stringify(answerObj);
           }
-          return false;
+          return 'NaN';
         });
       let result = true;
       try {
-        result = eval(`true && ${newLogic}`);
+        result = !!eval(`true && ${newLogic}`);
       } catch (e) {
         window.alert('There are an error parsing the branching logic');
       }
