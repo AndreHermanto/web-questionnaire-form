@@ -27,7 +27,7 @@ const consentTypeMappings = combineReducers({
 export default consentTypeMappings;
 
 export const getAllConsentTypeMappings = state => {
-  return state.get('allIds').map(id => state.get('byId').get(id));
+  return state.get('allIds').map(id => state.get('byId').get(id + ''));
 };
 
 export const getByConsentTypeId = (state, consentTypeId) => {
