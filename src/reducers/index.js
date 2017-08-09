@@ -172,72 +172,6 @@ export const getVisibleResponseElementIds = state => {
       if (!logic) {
         return true;
       }
-      let newNumberLogic = logic
-        .replace(/(\r\n|\n|\r)/gm, '')
-        .replace(/{(.*?)}/g, bits => {
-          const ids = bits
-            .slice(bits.lastIndexOf('/') + 1)
-            .trim()
-            .split(' ')
-            .map(id => id.trim())
-            .reduce((acc, id, index) => {
-              if (index === 0) {
-                return Object.assign({}, acc, { elementId: id });
-              }
-              return Object.assign({}, acc, {
-                answerId: id.slice(0, id.length - 1)
-              });
-            }, {});
-          const answerObj = getResponseElementAnswersById(state, ids.answerId);
-
-          return JSON.stringify(answerObj);
-        });
-
-      newNumberLogic = newNumberLogic.replace(/(undefined\S+)/gi, 'false');
-      console.log(newNumberLogic);
-
-      if (newNumberLogic.includes('false')) {
-        return false;
-      } else if (newNumberLogic.includes('true')) {
-        return true;
-      } else {
-        let answerObjCollections = newNumberLogic.match(/{(.*?)}/g);
-
-        answerObjCollections.forEach((element, i) => {
-          answerObjCollections[i] = JSON.parse(element);
-        });
-
-        let keyCollections = newNumberLogic.match(/\..*?\ /g);
-
-        keyCollections.forEach((element, i) => {
-          keyCollections[i] = element.substring(
-            element.indexOf('.') + 1,
-            element.indexOf(' ')
-          );
-        });
-
-        let comparisonValueCollections = newNumberLogic.match(
-          /\ [0-9]*?\)|\ [0-9]*?\ /g
-        );
-
-        comparisonValueCollections.forEach((element, i) => {
-          comparisonValueCollections[i] = element.substring(
-            1,
-            element.length - 1
-          );
-        });
-
-        let comparisonOperatorCollections = newNumberLogic.match(
-          /\>|<|>=|<=|==/g
-        );
-
-        let logicalOperatorCollections = newNumberLogic.match(/&&|/g);
-
-        console.log(comparisonOperatorCollections);
-        console.log(answerObjCollections);
-        console.log(keyCollections);
-        console.log(comparisonValueCollections);
-      }
 
       // we want to replace the logic string,
       // with real logic we can eval!
@@ -257,6 +191,7 @@ export const getVisibleResponseElementIds = state => {
                 answerId: id.slice(0, id.length - 1)
               });
             }, {});
+          const answerObj = getResponseElementAnswersById(state, ids.answerId);
           const matchingResponseElement = responseElements.findLast(
             (responseElement, searchIndex) => {
               return (
@@ -266,7 +201,9 @@ export const getVisibleResponseElementIds = state => {
               );
             }
           );
-          if (matchingResponseElement) {
+          if (answerObj) {
+            return JSON.stringify(answerObj);
+          } else if (matchingResponseElement) {
             return JSON.stringify(matchingResponseElement);
           }
           return false;
