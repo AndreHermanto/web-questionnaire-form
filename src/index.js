@@ -13,6 +13,7 @@ import reducer from './reducers';
 import './index.css';
 import { getCurrentResponse } from './reducers';
 import * as api from './api';
+import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 // logger
 // extra stuff for logging immutanle
 
@@ -30,7 +31,7 @@ if (process.env.NODE_ENV === `development`) {
 // create patient portal store
 const store = createStore(
   reducer,
-  applyMiddleware(...middleware) // add logging in as middleware
+  composeWithDevTools(applyMiddleware(...middleware)) // add logging in as middleware
 );
 
 ReactDOM.render(
