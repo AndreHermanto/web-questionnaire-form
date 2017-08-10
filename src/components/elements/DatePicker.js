@@ -64,7 +64,7 @@ class DatePicker extends Component {
     }
   }
   isValid(year, month, day) {
-    return month && day && day.length === 2 && year && year.length === 4;
+    return month && day && day.length > 0 && year && year.length === 4;
   }
   handleDayChanged(e) {
     const value = e.target.value.slice(0, 2);
