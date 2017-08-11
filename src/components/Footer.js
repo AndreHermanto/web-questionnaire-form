@@ -1,18 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import genomeone from '../assets/images/genomeone.jpg';
-import monarch from '../assets/images/monarch.jpg';
-import hpo from '../assets/images/hpo.jpg';
 
 const DashboardFooter = styled.div`
   width: 100%;
-  min-height: 110px;
-  position: fixed;
-  left: 0px;
+  min-height: 120px;
   bottom: 0px;
-  padding-bottom: 25px;
+  padding-bottom: 30px;
   background-color: #fff;
-  border-top: 1px solid #c9c9c9;
+  border-top: 1px solid #C9C9C9;
 `;
 
 const LogosContainer = styled.div`
@@ -39,9 +34,9 @@ export default class Footer extends React.Component {
     return (
       <DashboardFooter>
         <LogosContainer>
-          <Logo url={genomeone} />
-          <Logo url={monarch} />
-          <Logo url={hpo} />
+          <Logo url="static/media/genomeone.1d30bbc8.jpg" />
+          <Logo url="static/media/monarch.9124de21.jpg" />
+          <Logo url="static/media/hpo.617083f9.jpg" />
         </LogosContainer>
       </DashboardFooter>
     );
