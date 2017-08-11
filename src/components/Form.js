@@ -40,6 +40,10 @@ class Form extends Component {
         {this.props.responseElementIds.map(id => (
           <ElementContainer key={id} responseElementId={id} />
         ))}
+        <div className="text-muted">
+          Built at: {process.env.REACT_APP_BUILD_TIME}
+        </div>
+
         <div
           style={{
             position: 'fixed',
