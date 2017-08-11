@@ -192,11 +192,19 @@ export const getVisibleResponseElementIds = state => {
                 answerId: id.slice(0, id.length - 1)
               });
             }, {});
-          const answerObj = getResponseElementAnswersById(state, ids.answerId);
-          if (answerObj) {
-            return JSON.stringify(answerObj);
+
+          const matchingResponseElement = responseElements.findLast(
+            (responseElement, searchIndex) =>
+              searchIndex < index &&
+              responseElement.get('elementId') === ids.elementId &&
+              responseElement.get('answers').contains(ids.answerId)
+          );
+          // we couldnt find that question + answer combo
+          if (!matchingResponseElement) {
+            return 'NaN';
           }
-          return 'NaN';
+          const answerObj = getResponseElementAnswersById(state, ids.answerId);
+          return JSON.stringify(answerObj);
         });
       let result = true;
 
