@@ -21,7 +21,6 @@ class PatientHomeContainer extends Component {
     return (
       <div>
         <QuestionnaireDashboard {...this.props} />
-        <Footer />
       </div>
     );
   }
