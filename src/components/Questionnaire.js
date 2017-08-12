@@ -10,9 +10,7 @@ const OuterBox = styled.div`
 `;
 const ColoredSection = styled.a`
   display: block;
-  background: ${props => (props.completed ? 'grey' : '#ff9966')};
-  background: ${props => (props.completed ? 'grey' : '-webkit-linear-gradient(to right, #ff9966, #ff5e62)')};
-  background: ${props => (props.completed ? 'grey' : 'linear-gradient(to right, #ff9966, #ff5e62);')};
+  background: ${props => (props.completed ? 'grey' : '#00437e')};
   height: 150px;
   color: white;
   text-align: center;
