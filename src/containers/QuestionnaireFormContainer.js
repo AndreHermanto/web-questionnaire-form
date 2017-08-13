@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import toJS from '../components/toJS';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Immutable from 'immutable';
 // import { scroller } from 'react-scroll';
 import * as actions from '../actions';
 import * as selectors from '../reducers';

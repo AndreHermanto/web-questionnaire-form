@@ -62,8 +62,9 @@ class Question extends Component {
           marginBottom: 24,
           padding: 24,
           backgroundColor: 'white',
-          borderColor: this.props.responseElement.answers.length ||
-            this.props.responseElement.preferNotToAnswer
+          borderColor: (this.props.responseElement.answers.length ||
+            this.props.responseElement.preferNotToAnswer) &&
+            !this.props.isInvalid
             ? 'green'
             : '#eee'
         }}

@@ -44,7 +44,9 @@ describe('getVisibleResponseElementIds', () => {
             }
           },
           responseElementAnswers: {
-            byId: {}
+            byId: {
+              '1': { text: 'my answer' }
+            }
           }
         }
       })

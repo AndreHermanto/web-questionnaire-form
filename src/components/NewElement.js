@@ -11,6 +11,8 @@ class NewElement extends Component {
     element: PropTypes.object.isRequired,
     answers: PropTypes.array.isRequired,
     responseElementAnswers: PropTypes.object.isRequired,
+    isInvalid: PropTypes.bool.isRequired,
+
     selectAnswer: PropTypes.func.isRequired,
     toggleAnswer: PropTypes.func.isRequired,
     setAnswerValue: PropTypes.func.isRequired,

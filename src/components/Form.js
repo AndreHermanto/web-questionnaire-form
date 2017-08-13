@@ -12,6 +12,7 @@ class Form extends Component {
     progress: PropTypes.number.isRequired,
     showSubmit: PropTypes.bool.isRequired,
     alreadySubmitted: PropTypes.bool.isRequired,
+    responseElementsWithInvalidAnswers: PropTypes.object.isRequired,
 
     onShowSubmissionConfirmation: PropTypes.func.isRequired,
     onCancelSubmit: PropTypes.func.isRequired,
@@ -56,14 +57,14 @@ class Form extends Component {
           }}
         >
           <Row>
-            <Col sm="10">
+            <Col sm={10}>
               <ProgressBar
                 style={{ marginTop: 15 }}
                 now={this.props.progress}
                 label={parseInt(this.props.progress, 10) + '%'}
               />
             </Col>
-            <Col sm="2">
+            <Col sm={2}>
               <button
                 onClick={this.props.onShowSubmissionConfirmation}
                 className="btn btn-lg btn-primary btn-block"

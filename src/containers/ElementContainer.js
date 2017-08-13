@@ -61,7 +61,13 @@ function mapStateToProps(state, ownProps) {
     questionNumber: selectors.getQuestionNumber(
       state,
       ownProps.responseElementId
-    )
+    ),
+    isInvalid: !!selectors
+      .getResponseElementsWithInvalidAnswers(state)
+      .find(
+        responseElement =>
+          responseElement.get('id') === ownProps.responseElementId
+      )
   };
 }
 

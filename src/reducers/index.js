@@ -207,11 +207,16 @@ export const getVisibleResponseElementIds = state => {
           return JSON.stringify(answerObj);
         });
       let result = true;
-
       // age() might be used in the eval, so we dont know if its unsused
       /* eslint-disable no-unused-vars */
       const age = answer => {
-        const date = moment(answer.date, 'YYYY-MM-DD');
+        if (!answer.year || !answer.month || !answer.day) {
+          return 'false';
+        }
+        const date = moment(
+          `${answer.year}-${answer.month}-${answer.day}`,
+          'YYYY-MM-DD'
+        );
         const now = moment();
         return now.diff(date, 'years');
       };
@@ -287,7 +292,6 @@ export const getElementById = (state, elementId) => {
   return fromElements.getById(state.getIn(['entities', 'elements']), elementId);
 };
 export const getAnswerById = (state, answerId) => {
-  // console.log('get it', state, answerId);
   return fromAnswers.getById(state.getIn(['entities', 'answers']), answerId);
 };
 export const getResponseElementAnswersById = (
@@ -336,15 +340,56 @@ export const getProgress = state => {
     // no valid elements, so...its done
     return 100;
   }
+  const responseElementsWithInvalidAnswers = getResponseElementsWithInvalidAnswers(
+    state
+  );
   return (
-    questionResponseElements.filter(
+    (questionResponseElements.filter(
       responseElement =>
         !!responseElement.get('answers').size ||
         responseElement.get('preferNotToAnswer')
-    ).size /
+    ).size -
+      responseElementsWithInvalidAnswers.size) /
     questionResponseElements.size *
     100
   );
+};
+
+export const getResponseElementsWithInvalidAnswers = state => {
+  const responseId = getResponseId(state);
+  if (!responseId) {
+    return List();
+  }
+  // check if any of the answers have invalid properties
+  return getResponseById(state, responseId)
+    .get('answeredQuestions')
+    .map(responseElementId => getResponseElementById(state, responseElementId))
+    .filter(
+      responseElement =>
+        getElementById(state, responseElement.get('elementId')).get('type') ===
+        'date'
+    )
+    .filter(responseElement => {
+      // keep invalid dates
+      const answers = responseElement.get('answers');
+      if (!answers.size) {
+        return false;
+      }
+      const responseElementAnswer = getResponseElementAnswersById(
+        state,
+        responseElement.get('answers').get(0)
+      );
+      return (
+        !responseElementAnswer.get('year') ||
+        responseElementAnswer.get('year').length !== 4 ||
+        !responseElementAnswer.get('day') ||
+        responseElementAnswer.get('day').length === 0 ||
+        !responseElementAnswer.get('month') ||
+        responseElementAnswer.get('month').length === 0 ||
+        responseElementAnswer.get('day') > 31 ||
+        responseElementAnswer.get('day') <= 0
+      );
+    });
 };
 
 export const getFullResponse = state => {
