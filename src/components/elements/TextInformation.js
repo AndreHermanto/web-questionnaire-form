@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 class TextInformation extends Component {
   render() {
     const { element } = this.props;
-    return <div>{element.text}</div>;
+    return (
+      <div
+        style={{
+          fontWeight: `${element.textStyle.isBold ? 'bold' : 'normal'}`
+        }}
+      >
+        {element.text}
+      </div>
+    );
   }
 }
 
