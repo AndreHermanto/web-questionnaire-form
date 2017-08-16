@@ -1,15 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Modal,
-  ProgressBar,
-  Grid,
-  Col,
-  Row,
-  SplitButton,
-  MenuItem,
-  ButtonToolbar,
-  Glyphicon
-} from 'react-bootstrap';
+import { Modal, ProgressBar, Grid, Col, Row, Glyphicon } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ElementContainer from '../containers/ElementContainer';
 import FailedToDecryptMessage from './FailedToDecryptMessage';
