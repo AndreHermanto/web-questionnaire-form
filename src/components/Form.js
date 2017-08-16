@@ -39,9 +39,9 @@ class Form extends Component {
     return (
       <div className="container" style={{ paddingBottom: '75px' }}>
         <div id="section-to-print">
-          {this.props.responseElementIds.map(id =>
+          {this.props.responseElementIds.map(id => (
             <ElementContainer key={id} responseElementId={id} />
-          )}
+          ))}
         </div>
         <div className="text-muted">
           Built at: {process.env.REACT_APP_BUILD_TIME}
@@ -90,15 +90,35 @@ class Form extends Component {
           <Modal.Body>
             <h4>Are you sure you are ready to submit?</h4>
             <p>Please review your answers at this time before submitting.</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <button className="btn btn-warning" onClick={() => window.print()}>
-              <Glyphicon glyph="print" /> Print
-            </button>{' '}
-            <button className="btn btn-primary" onClick={this.props.onSubmit}>
-              Submit
+
+            <h5 style={{ marginTop: 24 }}>A. I’m not ready</h5>
+            <button
+              className="btn btn-primary btn-block btn-lg"
+              style={{ textAlign: 'left' }}
+              onClick={this.props.onCancelSubmit}
+            >
+              I want to review or change my answers
             </button>
-          </Modal.Footer>
+
+            <h5 style={{ marginTop: 24 }}> B. I’m ready to go</h5>
+            <button
+              className="btn btn-default btn-block btn-lg"
+              style={{ textAlign: 'left' }}
+              onClick={() => window.print()}
+            >
+              Print My Answers
+            </button>{' '}
+            <button
+              className="btn btn-success btn-block btn-lg"
+              style={{ textAlign: 'left' }}
+              onClick={this.props.onSubmit}
+            >
+              Submit My Answers
+            </button>{' '}
+            <p className="text-muted text-center" style={{ marginTop: 8 }}>
+              After submission, you cannot review or change your answers
+            </p>
+          </Modal.Body>
         </Modal>
       </div>
     );
