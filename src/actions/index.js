@@ -183,7 +183,9 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
   });
   return dispatch(updateResponseOnServer()).then(() => {
     hashHistory.push(
-      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
+      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(
+        encryptedConsentTypeId
+      )}/${responseId}/end`
     );
   });
 };
@@ -652,5 +654,17 @@ export const setMatrixQuestionAnswer = ({
 export function setResponseSubmitted() {
   return {
     type: 'SUBMIT_RESPONSE'
+  };
+}
+
+export function initLargeText() {
+  return {
+    type: types.INIT_LARGE_TEXT
+  };
+}
+
+export function setLargeText() {
+  return {
+    type: types.SET_LARGE_TEXT
   };
 }

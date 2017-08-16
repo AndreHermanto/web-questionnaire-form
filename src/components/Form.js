@@ -37,8 +37,20 @@ class Form extends Component {
       return <div className="container">Loading...</div>;
     }
     return (
-      <div className="container" style={{ paddingBottom: '75px' }}>
-        <div id="section-to-print">
+      <div
+        className="container"
+        style={{
+          paddingBottom: '75px',
+          fontSize: this.props.largeText ? '175%' : '100%'
+        }}
+      >
+        <button
+          className="btn btn-xs btn-default pull-right"
+          onClick={this.props.setLargeText}
+        >
+          {this.props.largeText ? 'Small Text' : 'Large Text'}
+        </button>
+        <div style={{ marginTop: '30px' }} id="section-to-print">
           {this.props.responseElementIds.map(id =>
             <ElementContainer key={id} responseElementId={id} />
           )}

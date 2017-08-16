@@ -6,6 +6,7 @@ import Immutable from 'immutable';
 // import { scroller } from 'react-scroll';
 import * as actions from '../actions';
 import * as selectors from '../reducers';
+import * as UIselectors from '../reducers/ui';
 import Form from '../components/Form';
 
 const propTypes = {
@@ -37,6 +38,7 @@ class QuestionnaireFormContainer extends Component {
   componentDidMount() {
     const { userId, consentTypeId, questionnaireId } = this.props.params;
     const { timestamp } = this.props.location.query;
+    this.props.initLargeText();
     this.props
       .dispatch(actions.decryptTokens(userId, consentTypeId, timestamp))
       .then(() => {
@@ -80,6 +82,7 @@ function mapStateToProps(state, ownProps) {
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     responseElementIds: selectors.getVisibleResponseElementIds(state),
     showModal: selectors.getIsShowingSubmitModal(state),
+    largeText: UIselectors.getLargeText(state.get('ui')),
     progress,
     showSubmit: progress === 100,
     alreadySubmitted
@@ -98,6 +101,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           ownProps.params.consentTypeId
         )
       ),
+    initLargeText: () => dispatch(actions.initLargeText()),
+    setLargeText: () => dispatch(actions.setLargeText()),
+
     dispatch
   };
 };

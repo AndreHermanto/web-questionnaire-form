@@ -15,6 +15,10 @@ const ui = (state = Map(), action) => {
     case types.HIDE_SUBMISSION_CONFIRMATION:
     case types.SUBMIT_RESPONSE:
       return state.set('isShowingSubmissionConfirmation', false);
+    case types.INIT_LARGE_TEXT:
+      return state.set('largeText', false);
+    case types.SET_LARGE_TEXT:
+      return state.set('largeText', !state.get('largeText'));
     default:
       return state;
   }
@@ -24,4 +28,8 @@ export default ui;
 
 export const getFailedToDecrypt = state => {
   return state.get('failedToDecrypt');
+};
+
+export const getLargeText = state => {
+  return state.get('largeText');
 };
