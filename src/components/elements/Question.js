@@ -45,11 +45,8 @@ class Question extends Component {
       default:
         return (
           <div>
-            Sorry, the question type
-            {' '}
-            {this.props.element.type}
-            {' '}
-            is not currently supported.
+            Sorry, the question type {this.props.element.type} is not currently
+            supported.
           </div>
         );
     }
@@ -57,16 +54,18 @@ class Question extends Component {
   render() {
     return (
       <div
+        className="question-container"
         style={{
           border: '1px solid #eee',
           marginBottom: 24,
           padding: 24,
           backgroundColor: 'white',
-          borderColor: (this.props.responseElement.answers.length ||
-            this.props.responseElement.preferNotToAnswer) &&
+          borderColor:
+            (this.props.responseElement.answers.length ||
+              this.props.responseElement.preferNotToAnswer) &&
             !this.props.isInvalid
-            ? 'green'
-            : '#eee'
+              ? 'green'
+              : '#eee'
         }}
       >
         <div style={{ whiteSpace: 'pre-wrap' }}>
@@ -83,8 +82,7 @@ class Question extends Component {
                 type="checkbox"
                 checked={this.props.responseElement.preferNotToAnswer}
                 onChange={this.props.onPreferNotToAnswer}
-              />
-              {' '}
+              />{' '}
               Prefer not to answer
             </label>
           </div>}

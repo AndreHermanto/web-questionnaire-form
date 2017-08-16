@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { Modal, ProgressBar, Grid, Col, Row } from 'react-bootstrap';
+import {
+  Modal,
+  ProgressBar,
+  Grid,
+  Col,
+  Row,
+  SplitButton,
+  MenuItem,
+  ButtonToolbar,
+  Glyphicon
+} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ElementContainer from '../containers/ElementContainer';
 import FailedToDecryptMessage from './FailedToDecryptMessage';
@@ -38,9 +48,11 @@ class Form extends Component {
     }
     return (
       <div className="container" style={{ paddingBottom: '75px' }}>
-        {this.props.responseElementIds.map(id => (
-          <ElementContainer key={id} responseElementId={id} />
-        ))}
+        <div id="section-to-print">
+          {this.props.responseElementIds.map(id =>
+            <ElementContainer key={id} responseElementId={id} />
+          )}
+        </div>
         <div className="text-muted">
           Built at: {process.env.REACT_APP_BUILD_TIME}
         </div>
@@ -55,6 +67,7 @@ class Form extends Component {
             padding: 8,
             borderTop: '1px solid #eee'
           }}
+          id="progress-bar-container"
         >
           <Row>
             <Col sm={10}>
@@ -76,7 +89,11 @@ class Form extends Component {
           </Row>
         </div>
 
-        <Modal show={this.props.showModal} onHide={this.props.onCancelSubmit}>
+        <Modal
+          show={this.props.showModal}
+          onHide={this.props.onCancelSubmit}
+          id="submit-modal"
+        >
           <Modal.Header closeButton>
             <Modal.Title>Submit Questionnaire</Modal.Title>
           </Modal.Header>
@@ -85,14 +102,11 @@ class Form extends Component {
             <p>Please review your answers at this time before submitting.</p>
           </Modal.Body>
           <Modal.Footer>
+            <button className="btn btn-warning" onClick={() => window.print()}>
+              <Glyphicon glyph="print" /> Print
+            </button>{' '}
             <button className="btn btn-primary" onClick={this.props.onSubmit}>
               Submit
-            </button>
-            <button
-              className="btn btn-default"
-              onClick={this.props.onCancelSubmit}
-            >
-              Review Answers
             </button>
           </Modal.Footer>
         </Modal>
