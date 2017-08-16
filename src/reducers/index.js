@@ -394,6 +394,8 @@ export const getResponseElementsWithInvalidAnswers = state => {
 
 export const getFullResponse = state => {
   const responseId = getResponseId(state);
+  const visibleResponseElementIds = getVisibleResponseElementIds(state);
+
   return getResponseById(
     state,
     responseId
@@ -406,11 +408,23 @@ export const getFullResponse = state => {
         if (!responseElement.get('answers')) {
           return responseElement;
         }
-        return responseElement.update('answers', responseElementAnswerIds => {
-          return responseElementAnswerIds.map(responseElementAnswerId =>
-            getResponseElementAnswersById(state, responseElementAnswerId)
-          );
-        });
+
+        // Clear up invalid answers and flag it as invisible when element is not hidden
+        if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
+          return responseElement
+            .set('visible', false)
+            .update('answers', responseElementAnswerIds =>
+              responseElementAnswerIds.clear()
+            );
+        }
+
+        return responseElement
+          .set('visible', true)
+          .update('answers', responseElementAnswerIds => {
+            return responseElementAnswerIds.map(responseElementAnswerId =>
+              getResponseElementAnswersById(state, responseElementAnswerId)
+            );
+          });
       })
   );
 };
