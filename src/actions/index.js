@@ -657,14 +657,9 @@ export function setResponseSubmitted() {
   };
 }
 
-export function initLargeText() {
+export function cycleFontSize(fontSize) {
   return {
-    type: types.INIT_LARGE_TEXT
-  };
-}
-
-export function setLargeText() {
-  return {
-    type: types.SET_LARGE_TEXT
+    type: types.CYCLE_FONT_SIZE,
+    fontSize
   };
 }

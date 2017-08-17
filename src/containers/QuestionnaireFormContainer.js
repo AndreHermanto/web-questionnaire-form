@@ -38,7 +38,6 @@ class QuestionnaireFormContainer extends Component {
   componentDidMount() {
     const { userId, consentTypeId, questionnaireId } = this.props.params;
     const { timestamp } = this.props.location.query;
-    this.props.initLargeText();
     this.props
       .dispatch(actions.decryptTokens(userId, consentTypeId, timestamp))
       .then(() => {
@@ -101,8 +100,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           ownProps.params.consentTypeId
         )
       ),
-    initLargeText: () => dispatch(actions.initLargeText()),
-    setLargeText: () => dispatch(actions.setLargeText()),
+    cycleFontSize: fontSize => dispatch(actions.cycleFontSize(fontSize)),
 
     dispatch
   };

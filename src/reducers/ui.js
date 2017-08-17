@@ -2,7 +2,7 @@ import { fromJS, Map } from 'immutable';
 import * as types from '../constants/ActionTypes';
 import * as securityTypes from '../constants/SecurityTypes';
 
-const ui = (state = Map(), action) => {
+const ui = (state = Map({ largeText: 0 }), action) => {
   switch (action.type) {
     case securityTypes.DECRYPT_TOKENS_FAILURE:
       return state.set('failedToDecrypt', true);
@@ -15,10 +15,8 @@ const ui = (state = Map(), action) => {
     case types.HIDE_SUBMISSION_CONFIRMATION:
     case types.SUBMIT_RESPONSE:
       return state.set('isShowingSubmissionConfirmation', false);
-    case types.INIT_LARGE_TEXT:
-      return state.set('largeText', false);
-    case types.SET_LARGE_TEXT:
-      return state.set('largeText', !state.get('largeText'));
+    case types.CYCLE_FONT_SIZE:
+      return state.set('largeText', action.fontSize);
     default:
       return state;
   }

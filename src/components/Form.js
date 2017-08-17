@@ -3,6 +3,7 @@ import { Modal, ProgressBar, Grid, Col, Row, Glyphicon } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ElementContainer from '../containers/ElementContainer';
 import FailedToDecryptMessage from './FailedToDecryptMessage';
+import fontSizeLogo from '../assets/images/fontsize_logo.png';
 
 class Form extends Component {
   static propTypes: {
@@ -41,15 +42,18 @@ class Form extends Component {
         className="container"
         style={{
           paddingBottom: '75px',
-          fontSize: this.props.largeText ? '175%' : '100%'
+          fontSize: `${100 + this.props.largeText * 37}%`
         }}
       >
-        <button
-          className="btn btn-xs btn-default pull-right"
-          onClick={this.props.setLargeText}
-        >
-          {this.props.largeText ? 'Small Text' : 'Large Text'}
-        </button>
+        <img
+          alt="icon"
+          src={fontSizeLogo}
+          style={{ position: 'absolute', top: '110px', right: '11%' }}
+          onClick={() =>
+            this.props.cycleFontSize(
+              this.props.largeText < 2 ? this.props.largeText + 1 : 0
+            )}
+        />
         <div style={{ marginTop: '30px' }} id="section-to-print">
           {this.props.responseElementIds.map(id =>
             <ElementContainer key={id} responseElementId={id} />
