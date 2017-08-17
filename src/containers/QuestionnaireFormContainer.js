@@ -6,6 +6,7 @@ import Immutable from 'immutable';
 // import { scroller } from 'react-scroll';
 import * as actions from '../actions';
 import * as selectors from '../reducers';
+import * as UIselectors from '../reducers/ui';
 import Form from '../components/Form';
 
 const propTypes = {
@@ -80,6 +81,7 @@ function mapStateToProps(state, ownProps) {
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     responseElementIds: selectors.getVisibleResponseElementIds(state),
     showModal: selectors.getIsShowingSubmitModal(state),
+    largeText: UIselectors.getLargeText(state.get('ui')),
     progress,
     showSubmit: progress === 100,
     alreadySubmitted
@@ -98,6 +100,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           ownProps.params.consentTypeId
         )
       ),
+    cycleFontSize: fontSize => dispatch(actions.cycleFontSize(fontSize)),
+
     dispatch
   };
 };

@@ -18,3 +18,7 @@ body {
     page-break-inside: avoid;
   }
 }
+
+.form-control{
+  font-size: inherit;
+}
