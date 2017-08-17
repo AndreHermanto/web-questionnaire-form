@@ -46,7 +46,11 @@ class Date extends Component {
                 placeholder="DD"
                 value={get(responseElementAnswers, `${answers[0].id}.day`, '')}
                 onChange={e =>
-                  setAnswerValue(answers[0].id, 'day', e.target.value)}
+                  setAnswerValue(
+                    answers[0].id,
+                    'day',
+                    e.target.value.slice(0, 2)
+                  )}
               />
             </div>
           </div>
@@ -60,7 +64,11 @@ class Date extends Component {
                 placeholder="YYYY"
                 value={get(responseElementAnswers, `${answers[0].id}.year`, '')}
                 onChange={e =>
-                  setAnswerValue(answers[0].id, 'year', e.target.value)}
+                  setAnswerValue(
+                    answers[0].id,
+                    'year',
+                    e.target.value.slice(0, 4)
+                  )}
               />
             </div>
           </div>

@@ -381,7 +381,8 @@ export const getResponseElementsWithInvalidAnswers = state => {
       );
       return (
         !responseElementAnswer.get('year') ||
-        responseElementAnswer.get('year').length !== 4 ||
+        responseElementAnswer.get('year') < 1900 ||
+        responseElementAnswer.get('year') > 2100 ||
         !responseElementAnswer.get('day') ||
         responseElementAnswer.get('day').length === 0 ||
         !responseElementAnswer.get('month') ||
