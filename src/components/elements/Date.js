@@ -51,6 +51,11 @@ class Date extends Component {
                     'day',
                     e.target.value.slice(0, 2)
                   )}
+                onKeyDown={e => {
+                  if (e.keyCode === 189) {
+                    e.preventDefault();
+                  }
+                }}
               />
             </div>
           </div>
@@ -69,6 +74,11 @@ class Date extends Component {
                     'year',
                     e.target.value.slice(0, 4)
                   )}
+                onKeyDown={e => {
+                  if (e.keyCode === 189) {
+                    e.preventDefault();
+                  }
+                }}
               />
             </div>
           </div>
