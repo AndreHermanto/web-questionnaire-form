@@ -6,7 +6,8 @@ const FailedToDecryptMessage = props => {
     <Alert bsStyle="danger">
       <h4>Unable to Verify User</h4>
       <p>
-        We are unable to verify who you are. Please return to MyChart and try again.
+        The time window allocated to accessing this URL has expired. Please
+        return to MyChart and try again.
       </p>
     </Alert>
   );
