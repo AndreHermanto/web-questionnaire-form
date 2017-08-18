@@ -55,9 +55,9 @@ class Form extends Component {
           <img alt="icon" src={fontSizeLogo} />
         </button>
         <div style={{ marginTop: '30px' }} id="section-to-print">
-          {this.props.responseElementIds.map(id => (
+          {this.props.responseElementIds.map(id =>
             <ElementContainer key={id} responseElementId={id} />
-          ))}
+          )}
         </div>
         <div className="text-muted">
           Built at: {process.env.REACT_APP_BUILD_TIME}
@@ -88,6 +88,10 @@ class Form extends Component {
                 onClick={this.props.onShowSubmissionConfirmation}
                 className="btn btn-lg btn-primary btn-block"
                 disabled={!this.props.showSubmit}
+                style={{
+                  backgroundColor: !this.props.showSubmit ? '#ccc' : '#337ab7',
+                  borderColor: !this.props.showSubmit ? '#ccc' : '#2e6da4'
+                }}
               >
                 Submit
               </button>
@@ -106,7 +110,6 @@ class Form extends Component {
           <Modal.Body>
             <h4>Are you sure you are ready to submit?</h4>
             <p>Please review your answers at this time before submitting.</p>
-
             <h5 style={{ marginTop: 24 }}>A. I’m not ready</h5>
             <button
               className="btn btn-primary btn-block btn-lg"
@@ -115,7 +118,6 @@ class Form extends Component {
             >
               I want to review or change my answers
             </button>
-
             <h5 style={{ marginTop: 24 }}> B. I’m ready to go</h5>
             <button
               className="btn btn-default btn-block btn-lg"
