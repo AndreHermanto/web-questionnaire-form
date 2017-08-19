@@ -15,6 +15,9 @@ class PatientHomeContainer extends Component {
       .dispatch(decryptTokens(userId, consentTypeId, timestamp))
       .then(() => {
         this.props.dispatch(fetchDataForHomepage());
+      })
+      .catch(error => {
+        console.log('Decryption Failed', error);
       });
   }
   render() {

@@ -46,6 +46,9 @@ class QuestionnaireFormContainer extends Component {
             questionnaireId
           })
         );
+      })
+      .catch(error => {
+        console.log('Decryption failed', error);
       });
   }
 

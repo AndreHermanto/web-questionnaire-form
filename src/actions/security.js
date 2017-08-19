@@ -17,9 +17,7 @@ export const decryptTokens = (userId, consentTypeId, timestamp) => (
     .decryptTokens(userId, consentTypeId, timestamp)
     .then(response => {
       if (!response.ok) {
-        var error = new Error(response.statusText || response.status);
-        error.response = response;
-        return Promise.reject(error);
+        return Promise.reject(response);
       }
       return response.json();
     })
@@ -31,10 +29,10 @@ export const decryptTokens = (userId, consentTypeId, timestamp) => (
         payload: tokens
       });
     })
-    .catch(e => {
+    .catch(error => {
       dispatch({
         type: securityTypes.DECRYPT_TOKENS_FAILURE
       });
-      throw e;
+      return Promise.reject(error);
     });
 };
