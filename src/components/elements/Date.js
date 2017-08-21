@@ -3,6 +3,11 @@ import get from 'lodash.get';
 class Date extends Component {
   render() {
     const { answers, setAnswerValue, responseElementAnswers } = this.props;
+    const preventTypingMinus = e => {
+      if (e.keyCode === 189) {
+        e.preventDefault();
+      }
+    };
     return (
       <div>
         <div className="row">
@@ -51,6 +56,7 @@ class Date extends Component {
                     'day',
                     e.target.value.slice(0, 2)
                   )}
+                onKeyDown={preventTypingMinus}
               />
             </div>
           </div>
@@ -69,6 +75,7 @@ class Date extends Component {
                     'year',
                     e.target.value.slice(0, 4)
                   )}
+                onKeyDown={preventTypingMinus}
               />
             </div>
           </div>
