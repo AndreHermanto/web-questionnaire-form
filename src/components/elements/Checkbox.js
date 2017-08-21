@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import { Checkbox as CheckboxBootstrap } from 'react-bootstrap';
+import styled from 'styled-components';
 import get from 'lodash.get';
+
+const CheckboxContainer = styled.div`
+  input[type="checkbox"] {
+    margin-top: ${props =>
+      props.largeText === 0 ? '' : props.largeText > 1 ? '20px' : '10px'};
+  }
+`;
 class Checkbox extends Component {
   render() {
     const {
@@ -8,10 +16,11 @@ class Checkbox extends Component {
       answers,
       responseElementAnswers,
       toggleAnswer,
-      onFollowUpChanged
+      onFollowUpChanged,
+      largeText
     } = this.props;
     return (
-      <div>
+      <CheckboxContainer largeText={largeText}>
         <ul className="list-unstyled">
           {answers.map(answer =>
             <li key={answer.id}>
@@ -39,7 +48,7 @@ class Checkbox extends Component {
             </li>
           )}
         </ul>
-      </div>
+      </CheckboxContainer>
     );
   }
 }

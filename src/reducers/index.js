@@ -456,3 +456,5 @@ export const getQuestionNumber = (state, responseElementId) => {
 };
 export const getFailedToDecrypt = state =>
   fromUI.getFailedToDecrypt(state.get('ui'));
+
+export const getLargeText = state => fromUI.getLargeText(state.get('ui'));

@@ -67,7 +67,8 @@ function mapStateToProps(state, ownProps) {
       .find(
         responseElement =>
           responseElement.get('id') === ownProps.responseElementId
-      )
+      ),
+    largeText: selectors.getLargeText(state)
   };
 }
 
