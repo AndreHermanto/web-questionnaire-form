@@ -8,6 +8,7 @@ import toJS from '../components/toJS';
 import * as selectors from '../reducers';
 import NewElement from '../components/NewElement';
 import Immutable from 'immutable';
+import * as UIselectors from '../reducers/ui';
 
 class ElementContainer extends Component {
   static propTyes: {
@@ -67,7 +68,8 @@ function mapStateToProps(state, ownProps) {
       .find(
         responseElement =>
           responseElement.get('id') === ownProps.responseElementId
-      )
+      ),
+    largeText: UIselectors.getLargeText(state.get('ui'))
   };
 }
 

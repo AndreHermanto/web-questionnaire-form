@@ -82,6 +82,11 @@ class Question extends Component {
                 type="checkbox"
                 checked={this.props.responseElement.preferNotToAnswer}
                 onChange={this.props.onPreferNotToAnswer}
+                style={{
+                  marginTop: `${this.props.largeText === 0
+                    ? ''
+                    : this.props.largeText > 1 ? '20px' : '10px'}`
+                }}
               />{' '}
               Prefer not to answer
             </label>

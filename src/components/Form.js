@@ -42,7 +42,7 @@ class Form extends Component {
         className="container"
         style={{
           paddingBottom: '75px',
-          fontSize: `${100 + this.props.largeText * 37}%`
+          fontSize: `${100 + this.props.largeText * 75}%`
         }}
       >
         <button

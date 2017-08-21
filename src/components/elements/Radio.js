@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import { Radio as RadioBootstrap } from 'react-bootstrap';
+import styled from 'styled-components';
 import get from 'lodash.get';
+
+const RadioContainer = styled.div`
+  input[type="radio"] {
+    margin-top: ${props =>
+      props.largeText === 0 ? '' : props.largeText > 1 ? '20px' : '10px'};
+  }
+`;
 class Radio extends Component {
   render() {
     const {
@@ -8,10 +16,11 @@ class Radio extends Component {
       answers,
       responseElementAnswers,
       selectAnswer,
-      onFollowUpChanged
+      onFollowUpChanged,
+      largeText
     } = this.props;
     return (
-      <div>
+      <RadioContainer largeText={largeText}>
         <ul className="list-unstyled">
           {answers.map(answer =>
             <li key={answer.id}>
@@ -39,7 +48,7 @@ class Radio extends Component {
             </li>
           )}
         </ul>
-      </div>
+      </RadioContainer>
     );
   }
 }
