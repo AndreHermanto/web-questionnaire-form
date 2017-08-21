@@ -15,6 +15,14 @@ const ui = (state = Map({ largeText: 0 }), action) => {
     case types.HIDE_SUBMISSION_CONFIRMATION:
     case types.SUBMIT_RESPONSE:
       return state.set('isShowingSubmissionConfirmation', false);
+    case 'SUBMIT_RESPONSE_REQUEST':
+      return state.set('isSubmittingResponse', true);
+    case 'SUBMIT_RESPONSE_SUCCESS':
+      return state.set('isSubmittingResponse', false);
+    case 'SUBMIT_RESPONSE_FAILURE':
+      return state
+        .set('isSubmittingResponse', false)
+        .set('submitResponseFailure', action.payload.response);
     case types.CYCLE_FONT_SIZE:
       return state.set('largeText', action.fontSize);
     default:

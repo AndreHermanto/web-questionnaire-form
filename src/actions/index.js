@@ -34,6 +34,12 @@ const updateResponseClean = (dispatch, getState) => {
   });
   return api
     .updateResponse(responseId, fullResponse)
+    .then(response => {
+      if (!response.ok) {
+        return Promise.reject(response);
+      }
+      return response;
+    })
     .then(response => response.json())
     .then(json => json.data)
     .then(response => {
@@ -41,6 +47,13 @@ const updateResponseClean = (dispatch, getState) => {
         type: types.UPDATE_RESPONSE_SUCCESS,
         payload: normalize(response, schema.response)
       });
+    })
+    .catch(response => {
+      dispatch({
+        type: types.UPDATE_RESPONSE_FAILURE,
+        payload: response
+      });
+      return Promise.reject(response);
     });
 };
 export const updateResponseOnServer = () => updateResponseClean;
@@ -181,13 +194,24 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
     type: types.SUBMIT_RESPONSE,
     payload: normalize(response.toJS(), schema.response)
   });
-  return dispatch(updateResponseOnServer()).then(() => {
-    hashHistory.push(
-      `users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(
-        encryptedConsentTypeId
-      )}/${responseId}/end`
-    );
+  dispatch({
+    type: 'SUBMIT_RESPONSE_REQUEST'
   });
+  return dispatch(updateResponseOnServer())
+    .then(() => {
+      dispatch({
+        type: 'SUBMIT_RESPONSE_SUCCESS'
+      });
+      hashHistory.push(
+        `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
+      );
+    })
+    .catch(response => {
+      dispatch({
+        type: 'SUBMIT_RESPONSE_FAILURE',
+        payload: response
+      });
+    });
 };
 
 export const clearPreferNotToAnswer = responseElementId => (

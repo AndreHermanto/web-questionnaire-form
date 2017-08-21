@@ -27,10 +27,25 @@ class Form extends Component {
         </Grid>
       );
     }
+    if (this.props.isSubmittingResponse) {
+      return <Grid>Submitting...</Grid>;
+    }
     if (this.props.alreadySubmitted) {
       return (
         <Grid>
           You have already submitted a response to this questionnaire.
+        </Grid>
+      );
+    }
+    if (this.props.submitResponseFailure) {
+      return (
+        <Grid>
+          <p>Sorry your response couldnt be submitted. The error is below:</p>
+          <div>
+            <pre>
+              {JSON.stringify(this.props.submitResponseFailure, null, 2)}
+            </pre>
+          </div>
         </Grid>
       );
     }
@@ -55,9 +70,9 @@ class Form extends Component {
           <img alt="icon" src={fontSizeLogo} />
         </button>
         <div style={{ marginTop: '30px' }} id="section-to-print">
-          {this.props.responseElementIds.map(id =>
+          {this.props.responseElementIds.map(id => (
             <ElementContainer key={id} responseElementId={id} />
-          )}
+          ))}
         </div>
         <div className="text-muted">
           Built at: {process.env.REACT_APP_BUILD_TIME}

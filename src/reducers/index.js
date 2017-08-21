@@ -458,3 +458,9 @@ export const getFailedToDecrypt = state =>
   fromUI.getFailedToDecrypt(state.get('ui'));
 
 export const getLargeText = state => fromUI.getLargeText(state.get('ui'));
+
+export const getIsSubmitting = state =>
+  state.get('ui').get('isSubmittingResponse');
+
+export const getSubmitResponseFailure = state =>
+  state.get('ui').get('submitResponseFailure');
