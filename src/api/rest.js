@@ -1,7 +1,7 @@
 import { getAccessToken } from '../cookies';
 
 const addTrailingSlash = url => {
-  if (url.indexOf('?')) {
+  if (url.indexOf('?') >= 0) {
     return url;
   }
   return url.slice(-1) === '/' ? url : `${url}/`;
