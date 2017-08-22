@@ -33,7 +33,7 @@ class Form extends Component {
     if (this.props.alreadySubmitted) {
       return (
         <Grid>
-          You have already submitted a response to this questionnaire.
+          This questionnaire has been submitted.
         </Grid>
       );
     }
