@@ -194,23 +194,14 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
     type: types.SUBMIT_RESPONSE,
     payload: normalize(response.toJS(), schema.response)
   });
-  dispatch({
-    type: 'SUBMIT_RESPONSE_REQUEST'
-  });
   return dispatch(updateResponseOnServer())
     .then(() => {
-      dispatch({
-        type: 'SUBMIT_RESPONSE_SUCCESS'
-      });
       hashHistory.push(
         `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
       );
     })
-    .catch(response => {
-      dispatch({
-        type: 'SUBMIT_RESPONSE_FAILURE',
-        payload: response
-      });
+    .catch(() => {
+      console.log('Submitting response failed');
     });
 };
 

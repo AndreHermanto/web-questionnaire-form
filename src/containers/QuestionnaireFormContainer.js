@@ -2,13 +2,10 @@ import React, { Component } from 'react';
 import toJS from '../components/toJS';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Immutable from 'immutable';
-// import { scroller } from 'react-scroll';
 import * as actions from '../actions';
 import * as selectors from '../reducers';
 import * as UIselectors from '../reducers/ui';
 import Form from '../components/Form';
-
 const propTypes = {
   routeParams: PropTypes.shape({
     userId: PropTypes.string.isRequired,
@@ -82,14 +79,14 @@ function mapStateToProps(state, ownProps) {
 
   return {
     submitResponseFailure: selectors.getSubmitResponseFailure(state),
-    isSubmittingResponse: selectors.getIsSubmitting(state),
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     responseElementIds: selectors.getVisibleResponseElementIds(state),
     showModal: selectors.getIsShowingSubmitModal(state),
     largeText: UIselectors.getLargeText(state.get('ui')),
     progress,
     showSubmit: progress === 100,
-    alreadySubmitted
+    alreadySubmitted,
+    isLoading: selectors.getIsResponseLoading(state)
   };
 }
 

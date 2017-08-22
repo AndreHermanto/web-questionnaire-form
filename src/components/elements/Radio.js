@@ -5,8 +5,7 @@ import get from 'lodash.get';
 
 const RadioContainer = styled.div`
   input[type="radio"] {
-    margin-top: ${props =>
-      props.largeText === 0 ? '' : props.largeText > 1 ? '20px' : '10px'};
+    margin-top: ${props => (props.largeText === 0 ? '' : props.largeText > 1 ? '20px' : '10px')};
   }
 `;
 class Radio extends Component {
@@ -22,7 +21,7 @@ class Radio extends Component {
     return (
       <RadioContainer largeText={largeText}>
         <ul className="list-unstyled">
-          {answers.map(answer =>
+          {answers.map(answer => (
             <li key={answer.id}>
               <RadioBootstrap
                 checked={get(responseElementAnswers, answer.id, false)}
@@ -46,7 +45,7 @@ class Radio extends Component {
                   />
                 </div>}
             </li>
-          )}
+          ))}
         </ul>
       </RadioContainer>
     );

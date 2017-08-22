@@ -9,6 +9,9 @@ import * as fromResponseElements from '././responseElements';
 import * as fromResponseElementAnswers from './responseElementAnswers';
 import * as fromAnswers from './answers';
 import ui, * as fromUI from './ui';
+import uiQuestionnaires from './uiQuestionnaires';
+import uiResponses from './uiResponses';
+import * as fromUIQuestionnaires from './uiQuestionnaires';
 import * as fromConsentTypeMappings from './consentTypeMappings';
 import entities from './entities';
 import questionTypes from '../constants/QuestionTypes';
@@ -23,6 +26,8 @@ export default combineReducers({
     }
   },
   ui,
+  uiQuestionnaires,
+  uiResponses,
   entities
 });
 
@@ -383,6 +388,7 @@ export const getResponseElementsWithInvalidAnswers = state => {
         !responseElementAnswer.get('year') ||
         responseElementAnswer.get('year') < 1900 ||
         responseElementAnswer.get('year') > 2100 ||
+        responseElementAnswer.get('year').length !== 4 ||
         !responseElementAnswer.get('day') ||
         responseElementAnswer.get('day').length === 0 ||
         !responseElementAnswer.get('month') ||
@@ -457,10 +463,14 @@ export const getQuestionNumber = (state, responseElementId) => {
 export const getFailedToDecrypt = state =>
   fromUI.getFailedToDecrypt(state.get('ui'));
 
-export const getLargeText = state => fromUI.getLargeText(state.get('ui'));
+export const fetchQuestionnairesIsLoading = state => {
+  return state.get('uiQuestionnaires').get('isLoading');
+};
 
-export const getIsSubmitting = state =>
-  state.get('ui').get('isSubmittingResponse');
+export const getIsResponseLoading = state => {
+  return state.get('uiResponses').get('isLoading');
+};
+export const getLargeText = state => fromUI.getLargeText(state.get('ui'));
 
 export const getSubmitResponseFailure = state =>
   state.get('ui').get('submitResponseFailure');

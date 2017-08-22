@@ -60,12 +60,11 @@ class Question extends Component {
           marginBottom: 24,
           padding: 24,
           backgroundColor: 'white',
-          borderColor:
-            (this.props.responseElement.answers.length ||
-              this.props.responseElement.preferNotToAnswer) &&
+          borderColor: (this.props.responseElement.answers.length ||
+            this.props.responseElement.preferNotToAnswer) &&
             !this.props.isInvalid
-              ? 'green'
-              : '#eee'
+            ? 'green'
+            : '#eee'
         }}
       >
         <div style={{ whiteSpace: 'pre-wrap' }}>
@@ -83,9 +82,7 @@ class Question extends Component {
                 checked={this.props.responseElement.preferNotToAnswer}
                 onChange={this.props.onPreferNotToAnswer}
                 style={{
-                  marginTop: `${this.props.largeText === 0
-                    ? ''
-                    : this.props.largeText > 1 ? '20px' : '10px'}`
+                  marginTop: `${this.props.largeText === 0 ? '' : this.props.largeText > 1 ? '20px' : '10px'}`
                 }}
               />{' '}
               Prefer not to answer

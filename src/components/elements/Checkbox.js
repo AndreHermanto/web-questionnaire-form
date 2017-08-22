@@ -5,8 +5,7 @@ import get from 'lodash.get';
 
 const CheckboxContainer = styled.div`
   input[type="checkbox"] {
-    margin-top: ${props =>
-      props.largeText === 0 ? '' : props.largeText > 1 ? '20px' : '10px'};
+    margin-top: ${props => (props.largeText === 0 ? '' : props.largeText > 1 ? '20px' : '10px')};
   }
 `;
 class Checkbox extends Component {
@@ -22,7 +21,7 @@ class Checkbox extends Component {
     return (
       <CheckboxContainer largeText={largeText}>
         <ul className="list-unstyled">
-          {answers.map(answer =>
+          {answers.map(answer => (
             <li key={answer.id}>
               <CheckboxBootstrap
                 onChange={() => toggleAnswer(answer.id)}
@@ -46,7 +45,7 @@ class Checkbox extends Component {
                   />
                 </div>}
             </li>
-          )}
+          ))}
         </ul>
       </CheckboxContainer>
     );

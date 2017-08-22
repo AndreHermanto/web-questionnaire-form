@@ -3,6 +3,7 @@ import { Grid, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Immutable from 'immutable';
 import styled from 'styled-components';
+
 const DisplayText = styled.div`
   text-align: center !important;
   padding-top: 30px;

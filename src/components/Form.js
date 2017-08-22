@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, ProgressBar, Grid, Col, Row, Glyphicon } from 'react-bootstrap';
+import { Modal, ProgressBar, Grid, Col, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ElementContainer from '../containers/ElementContainer';
 import FailedToDecryptMessage from './FailedToDecryptMessage';
 import fontSizeLogo from '../assets/images/fontsize_logo.png';
+import '../loading.css';
 
 class Form extends Component {
   static propTypes: {
@@ -17,18 +18,19 @@ class Form extends Component {
 
     onShowSubmissionConfirmation: PropTypes.func.isRequired,
     onCancelSubmit: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired
   };
   render() {
+    if (this.props.isLoading) {
+      return <span className="loading" />;
+    }
     if (this.props.failedToDecrypt) {
       return (
         <Grid>
           <FailedToDecryptMessage />
         </Grid>
       );
-    }
-    if (this.props.isSubmittingResponse) {
-      return <Grid>Submitting...</Grid>;
     }
     if (this.props.alreadySubmitted) {
       return (
@@ -50,7 +52,7 @@ class Form extends Component {
       );
     }
     if (!this.props.responseElementIds) {
-      return <div className="container">Loading...</div>;
+      return <span className="loading" />;
     }
     return (
       <div
