@@ -1,5 +1,12 @@
 import { getAccessToken } from '../cookies';
 
+const addTrailingSlash = url => {
+  if (url.indexOf('?')) {
+    return url;
+  }
+  return url.slice(-1) === '/' ? url : `${url}/`;
+};
+
 /**
  * This is short form of performing a Fetch GET including a authorisation cookie.
  * @param {String} url URL of the api call.
@@ -9,7 +16,7 @@ export function get(url) {
   if (getAccessToken()) {
     headers.jwt = getAccessToken();
   }
-  return fetch(url, {
+  return fetch(addTrailingSlash(url), {
     method: 'GET',
     headers
   });
@@ -22,7 +29,7 @@ export function get(url) {
  * @param {JSONString} Data in JSON string to be stringify.
  */
 export function put(url, body) {
-  return fetch(url, {
+  return fetch(addTrailingSlash(url), {
     method: 'Put',
     headers: {
       jwt: `${getAccessToken()}`,
@@ -45,7 +52,7 @@ export function post(url, body) {
   if (getAccessToken()) {
     headers.jwt = getAccessToken();
   }
-  return fetch(url, {
+  return fetch(addTrailingSlash(url), {
     method: 'POST',
     headers,
     body: JSON.stringify(body)
@@ -59,7 +66,7 @@ export function del(url) {
   if (getAccessToken()) {
     headers.jwt = getAccessToken();
   }
-  return fetch(url, {
+  return fetch(addTrailingSlash(url), {
     method: 'DELETE',
     headers
   });
