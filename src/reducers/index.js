@@ -466,21 +466,25 @@ export const getSkippedQuestionNumbers = state => {
   if (!visibleResponseElementIds) {
     return null;
   }
+
   const skippedResponseElements = visibleResponseElementIds.filter(
     responseElement => {
       return (
-        fromResponseElements
+        (fromResponseElements
           .getById(
             state.getIn(['entities', 'responseElements']),
             responseElement
           )
           .get('answers').size === 0 &&
-        !fromResponseElements
-          .getById(
-            state.getIn(['entities', 'responseElements']),
-            responseElement
-          )
-          .get('preferNotToAnswer')
+          !fromResponseElements
+            .getById(
+              state.getIn(['entities', 'responseElements']),
+              responseElement
+            )
+            .get('preferNotToAnswer')) ||
+        getResponseElementsWithInvalidAnswers(state).find(
+          element => element.get('id') === responseElement
+        )
       );
     }
   );
