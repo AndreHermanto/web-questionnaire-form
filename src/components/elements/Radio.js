@@ -11,7 +11,6 @@ const RadioContainer = styled.div`
 class Radio extends Component {
   render() {
     const {
-      responseElement,
       answers,
       responseElementAnswers,
       selectAnswer,
