@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import QuestionnaireSummary from '../components/QuestionnaireSummary';
 import { connect } from 'react-redux';
 import * as selectors from '../reducers';
 import * as actions from '../actions';

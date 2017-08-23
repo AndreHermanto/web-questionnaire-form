@@ -4,7 +4,8 @@ import PatientHomeContainer from '../containers/PatientHomeContainer';
 import QuestionnaireAdminContainer
   from '../containers/QuestionnaireAdminContainer';
 import QuestionnaireForm from '../containers/QuestionnaireFormContainer';
-import QuestionnaireSummary from '../containers/QuestionnaireSummaryContainer';
+import QuestionnaireSummaryContainer
+  from '../containers/QuestionnaireSummaryContainer';
 import QuestionnaireFormSubmittedContainer
   from '../containers/QuestionnaireFormSubmittedContainer';
 import Container from '../components/Container';
@@ -22,7 +23,7 @@ class Routes extends Component {
           />
           <Route
             path="/users/:encryptedUserId/:encryptedConsentTypeId/:responseId/end"
-            component={QuestionnaireSummary}
+            component={QuestionnaireSummaryContainer}
           />
           <Route
             path="/submitted"

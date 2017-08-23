@@ -11,7 +11,6 @@ import * as fromAnswers from './answers';
 import ui, * as fromUI from './ui';
 import uiQuestionnaires from './uiQuestionnaires';
 import uiResponses from './uiResponses';
-import * as fromUIQuestionnaires from './uiQuestionnaires';
 import * as fromConsentTypeMappings from './consentTypeMappings';
 import entities from './entities';
 import questionTypes from '../constants/QuestionTypes';
