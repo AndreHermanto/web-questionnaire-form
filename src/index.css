@@ -1,5 +1,15 @@
+html {
+  height: 100%;
+}
 body {
   background-color: #FAFAFA;
+  height: inherit;
+}
+
+div#root,
+div#root > div,
+div#root > div > div {
+  height: inherit;
 }
 
 @media print {

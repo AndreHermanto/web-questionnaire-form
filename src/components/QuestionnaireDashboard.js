@@ -34,8 +34,8 @@ function QuestionnaireDashboard(props) {
     );
   }
   return (
-    <div>
-      <div className="container" style={{ marginBottom: 120 }}>
+    <div style={{ position: 'relative', minHeight: '100%' }}>
+      <div className="container" style={{ paddingBottom: 120 }}>
         <DashboardIntro>
           <Header color="#00437E">Welcome back</Header>
           <Header color="#62A5DB">
