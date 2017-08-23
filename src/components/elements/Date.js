@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import get from 'lodash.get';
+import moment from 'moment';
+
 class Date extends Component {
   render() {
     const { answers, setAnswerValue, responseElementAnswers } = this.props;
@@ -8,6 +10,8 @@ class Date extends Component {
         e.preventDefault();
       }
     };
+    const dayValue = get(responseElementAnswers, `${answers[0].id}.day`, '');
+    const yearValue = get(responseElementAnswers, `${answers[0].id}.year`, '');
     return (
       <div>
         <div className="row">
@@ -49,7 +53,7 @@ class Date extends Component {
                 type="number"
                 className="form-control"
                 placeholder="DD"
-                value={get(responseElementAnswers, `${answers[0].id}.day`, '')}
+                value={dayValue}
                 onChange={e =>
                   setAnswerValue(
                     answers[0].id,
@@ -68,7 +72,7 @@ class Date extends Component {
                 type="number"
                 className="form-control"
                 placeholder="YYYY"
-                value={get(responseElementAnswers, `${answers[0].id}.year`, '')}
+                value={yearValue}
                 onChange={e =>
                   setAnswerValue(
                     answers[0].id,
@@ -80,6 +84,16 @@ class Date extends Component {
             </div>
           </div>
         </div>
+        {!!dayValue.length &&
+          (dayValue < 1 || dayValue > 31) &&
+          <div className="text-danger">
+            Invalid Day: Day must be between 1 and 31
+          </div>}
+        {!!yearValue.length &&
+          (yearValue < 1900 || yearValue > moment().year()) &&
+          <div className="text-danger">
+            Invalid Year: Year must be between 1900 and {moment().year()}
+          </div>}
       </div>
     );
   }
