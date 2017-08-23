@@ -512,10 +512,8 @@ export const fetchVersion = (questionnaireId, versionId) => dispatch => {
     .then(response => response.json())
     .then(json => json.data)
     .then(version => {
-      const realVersion = version;
-      realVersion.body = JSON.parse(realVersion.body);
-      dispatch(fetchVersionSuccess(realVersion));
-      return realVersion;
+      dispatch(fetchVersionSuccess(version));
+      return version;
     })
     .catch(e => dispatch(fetchVersionFailure(e)));
 };
