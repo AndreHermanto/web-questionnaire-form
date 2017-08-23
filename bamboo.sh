@@ -7,6 +7,8 @@ curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --reques
 # Send Copy paste detector pending to github
 curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data '{"state": "pending", "description": "Duplicate Code detector is running", "target_url": "", "context": "Duplicate Code Detector"}' https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
 
+# Send Unused files
+curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data '{"state": "pending", "description": "Unused file detector is running", "target_url": "", "context": "Unused Files"}' https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
 
 branch_name="$bamboo_repository_git_branch"
 # replace / with - i.e. feature/branch_name to feature-branch-name
@@ -14,6 +16,7 @@ santized_branch_name="${branch_name/\//-}";
 output_file_name="$santized_branch_name.md"
 lint_output_file_name="$santized_branch_name-lint.md"
 cp_output_file_name="$santized_branch_name-cp.md"
+unused_file_name="$santized_branch_name-unused.md"
 
 #!/bin/sh
 repo_name='web-questionnaire-form.wiki'
@@ -28,6 +31,8 @@ node node_modules/eslint/bin/eslint.js --config node_modules/eslint-config-react
 # Output Copy Paste Detector Results
 node_modules/jsinspect/bin/jsinspect -t 40 src/ > $cp_output_file_name
 
+# Ouput unused file results
+./detect-unused-files.sh > $unused_file_name
 # Clean up repo locally
 rm -rf $repo_name
 
@@ -38,6 +43,7 @@ git clone $repo_url
 mv $output_file_name $repo_name/
 mv $lint_output_file_name $repo_name/
 mv $cp_output_file_name $repo_name/
+mv $unused_file_name $repo_name/
 
 # Appending building SMS to wiki
 cd $repo_name
@@ -45,6 +51,7 @@ cd $repo_name
 echo $'\r' >> $output_file_name
 echo $'\r' >> $lint_output_file_name
 echo $'\r' >> $cp_output_file_name
+echo $'\r' >> $unused_file_name
 
 # Add all untracked files
 git add -A
@@ -81,3 +88,8 @@ fi
 echo "Send CP starting to Github: Request"
 curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data "{\"state\": \"success\", \"description\": \"Duplicate Code Detected - Click Details to review.\", \"target_url\": \"https://github.com/GenomeOne/web-questionnaire-form/wiki/$cp_output_file_name\", \"context\": \"Duplicate Code Detector\"}" https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
 echo "Send CP starting to Github: Success"
+
+# Send
+echo "Send Unused starting to Github: Request"
+curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data "{\"state\": \"success\", \"description\": \"List of Unused Files.\", \"target_url\": \"https://github.com/GenomeOne/web-questionnaire-form/wiki/$unused_file_name\", \"context\": \"Unused Files\"}" https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+echo "Send Unused starting to Github: Success"
