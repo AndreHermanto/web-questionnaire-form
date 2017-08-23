@@ -7,6 +7,7 @@ import Date from './Date';
 import Height from './Height';
 import Weight from './Weight';
 import Number from './Number';
+import Checkmark from '../Checkmark';
 
 class Question extends Component {
   static propTypes: {
@@ -52,6 +53,10 @@ class Question extends Component {
     }
   }
   render() {
+    const isAnswered =
+      (this.props.responseElement.answers.length ||
+        this.props.responseElement.preferNotToAnswer) &&
+      !this.props.isInvalid;
     return (
       <div
         className="question-container"
@@ -60,13 +65,15 @@ class Question extends Component {
           marginBottom: 24,
           padding: 24,
           backgroundColor: 'white',
-          borderColor: (this.props.responseElement.answers.length ||
-            this.props.responseElement.preferNotToAnswer) &&
-            !this.props.isInvalid
-            ? 'green'
-            : '#eee'
+          borderColor: isAnswered ? 'green' : '#eee',
+          position: 'relative'
         }}
       >
+        {isAnswered &&
+          <div style={{ float: 'right' }}>
+            <Checkmark />
+          </div>}
+
         <div style={{ whiteSpace: 'pre-wrap' }}>
           <strong>
             {this.props.questionNumber}. {this.props.element.question}
