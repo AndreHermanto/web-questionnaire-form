@@ -39,17 +39,10 @@ function QuestionnaireDashboard(props) {
         <DashboardIntro>
           <Header color="#00437E">Welcome back</Header>
           <Header color="#62A5DB">
-            Its time to complete your profile v1.0.0
+            Its time to complete your profile
           </Header>
           <Description>
-            We are excited to help you build your healthcare and exposure
-            history profile. You are being asked to fill out the surveys to find
-            out if you have any patterns of symptoms or conditions that can help
-            in your care. This will show us an in-depth and complete picture of
-            your health. This can help you to get more accurate diagnostic
-            testing and risk predication in the future. Please resume your
-            unfinished questionnaire under IN PROGRESS or begin the next
-            questionnaire under TO DO.
+            We are excited to help you build your health and exposure history profile. Each survey that you complete contributes to a profile that is specific to you. The information that you provide in the surveys will improve your diagnostic testing and risk prediction. Thank you for allowing us to be a part of your healthcare journey. We value your time and effort in taking steps to help us better care for you. Please begin your survey or complete your unfinished survey.
           </Description>
         </DashboardIntro>
 
@@ -70,8 +63,8 @@ function QuestionnaireDashboard(props) {
                   percentComplete={
                     version.response
                       ? version.response.completed
-                        ? 100
-                        : Math.random() * 20 + 10
+                          ? 100
+                          : Math.random() * 20 + 10
                       : 0
                   }
                   buttonText={
@@ -81,16 +74,8 @@ function QuestionnaireDashboard(props) {
                   }
                   link={
                     version.response && version.response.completed
-                      ? `#/users/${encodeURIComponent(
-                          props.encryptedUserId
-                        )}/${encodeURIComponent(
-                          props.encryptedConsentTypeId
-                        )}/${encodeURIComponent(version.response.id)}/end`
-                      : `#/users/${encodeURIComponent(
-                          props.encryptedUserId
-                        )}/${encodeURIComponent(
-                          props.encryptedConsentTypeId
-                        )}/${encodeURIComponent(version.questionnaireId)}`
+                      ? `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.response.id)}/end`
+                      : `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.questionnaireId)}`
                   }
                   status={
                     version.response
