@@ -21,7 +21,7 @@ class PatientHomeContainer extends Component {
   }
   render() {
     return (
-      <div>
+      <div style={{ height: 'inherit' }}>
         <QuestionnaireDashboard {...this.props} />
       </div>
     );

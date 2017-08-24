@@ -34,8 +34,8 @@ function QuestionnaireDashboard(props) {
     );
   }
   return (
-    <div>
-      <div className="container">
+    <div style={{ position: 'relative', minHeight: '100%' }}>
+      <div className="container" style={{ paddingBottom: 120 }}>
         <DashboardIntro>
           <Header color="#00437E">Welcome back</Header>
           <Header color="#62A5DB">
@@ -49,7 +49,7 @@ function QuestionnaireDashboard(props) {
         <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
           Questionnaires
         </h2>
-        <Row style={{ marginBottom: 64 }}>
+        <Row>
           {props.questionnaires.map(version => {
             if (!version) {
               return <div>loading</div>;

@@ -7,7 +7,7 @@ import hpo from '../assets/images/hpo.jpg';
 const DashboardFooter = styled.div`
   width: 100%;
   min-height: 110px;
-  position: fixed;
+  position: absolute;
   left: 0px;
   bottom: 0px;
   padding-bottom: 25px;
