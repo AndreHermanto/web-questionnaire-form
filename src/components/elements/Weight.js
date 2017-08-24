@@ -2,12 +2,7 @@ import React, { Component } from 'react';
 import get from 'lodash.get';
 class Weight extends Component {
   render() {
-    const {
-      responseElement,
-      answers,
-      setAnswerValue,
-      responseElementAnswers
-    } = this.props;
+    const { answers, setAnswerValue, responseElementAnswers } = this.props;
     return (
       <div>
         <input

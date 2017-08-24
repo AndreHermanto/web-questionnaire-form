@@ -11,7 +11,6 @@ const CheckboxContainer = styled.div`
 class Checkbox extends Component {
   render() {
     const {
-      responseElement,
       answers,
       responseElementAnswers,
       toggleAnswer,

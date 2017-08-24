@@ -4,7 +4,6 @@ import { fetchDataForHomepage } from '../actions';
 import { decryptTokens } from '../actions/security';
 import toJS from '../components/toJS';
 import QuestionnaireDashboard from '../components/QuestionnaireDashboard';
-import Footer from '../components/Footer';
 import * as selectors from '../reducers';
 
 class PatientHomeContainer extends Component {

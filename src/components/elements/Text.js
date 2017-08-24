@@ -2,12 +2,7 @@ import React, { Component } from 'react';
 import get from 'lodash.get';
 class Text extends Component {
   render() {
-    const {
-      responseElement,
-      answers,
-      setAnswerValue,
-      responseElementAnswers
-    } = this.props;
+    const { answers, setAnswerValue, responseElementAnswers } = this.props;
     return (
       <div>
         <textarea

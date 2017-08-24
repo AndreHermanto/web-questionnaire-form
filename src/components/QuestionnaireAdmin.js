@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
-import loading from '../loading.css';
 
 const propTypes = {
   questionnaires: PropTypes.array.isRequired,

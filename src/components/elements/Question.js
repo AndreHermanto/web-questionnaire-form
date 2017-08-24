@@ -8,6 +8,7 @@ import Height from './Height';
 import Weight from './Weight';
 import Number from './Number';
 import Checkmark from '../Checkmark';
+import Markdown from 'react-markdown';
 
 class Question extends Component {
   static propTypes: {
@@ -75,9 +76,11 @@ class Question extends Component {
           </div>}
 
         <div style={{ whiteSpace: 'pre-wrap' }}>
-          <strong>
-            {this.props.questionNumber}. {this.props.element.question}
-          </strong>
+          <Markdown
+            source={`${this.props.questionNumber}\\. ${this.props.element.question}`}
+            escapeHtml={true}
+            skipHtml={true}
+          />
         </div>
         {this.renderElement()}
 
