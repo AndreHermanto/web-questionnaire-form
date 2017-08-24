@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as selectors from '../reducers';
 import * as actions from '../actions';
 import toJS from '../components/toJS';
+import Markdown from 'react-markdown';
 
 class QuestionnaireSummaryContainer extends Component {
   componentDidMount() {
@@ -20,7 +21,11 @@ class QuestionnaireSummaryContainer extends Component {
       <div className="container">
         {this.props.endPage &&
           <div style={{ whiteSpace: 'pre-wrap' }}>
-            {this.props.endPage.text}
+            <Markdown
+              source={this.props.endPage.text}
+              escapeHtml={true}
+              skipHtml={true}
+            />
           </div>}
         {!this.props.endPage &&
           <div style={{ whiteSpace: 'pre-wrap' }}>
