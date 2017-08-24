@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import Markdown from 'react-markdown';
+
 class Intro extends Component {
   render() {
     const { element } = this.props;
     return (
       <div>
-        {element.text}
+        <Markdown source={element.text} escapeHtml={true} skipHtml={true} />
         {element.image &&
           <img
             src={element.image}

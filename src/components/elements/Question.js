@@ -8,10 +8,7 @@ import Height from './Height';
 import Weight from './Weight';
 import Number from './Number';
 import Markdown from 'react-markdown';
-import styled from 'styled-components';
-const CustomMarkdown = styled(Markdown)`
-  display: inline-block;
-`;
+
 class Question extends Component {
   static propTypes: {
     responseElement: PropTypes.object.isRequired,
@@ -64,18 +61,16 @@ class Question extends Component {
           marginBottom: 24,
           padding: 24,
           backgroundColor: 'white',
-          borderColor:
-            (this.props.responseElement.answers.length ||
-              this.props.responseElement.preferNotToAnswer) &&
+          borderColor: (this.props.responseElement.answers.length ||
+            this.props.responseElement.preferNotToAnswer) &&
             !this.props.isInvalid
-              ? 'green'
-              : '#eee'
+            ? 'green'
+            : '#eee'
         }}
       >
         <div style={{ whiteSpace: 'pre-wrap' }}>
-          {this.props.questionNumber}.{' '}
-          <CustomMarkdown
-            source={this.props.element.question}
+          <Markdown
+            source={`${this.props.questionNumber}\\. ${this.props.element.question}`}
             escapeHtml={true}
             skipHtml={true}
           />
@@ -90,9 +85,7 @@ class Question extends Component {
                 checked={this.props.responseElement.preferNotToAnswer}
                 onChange={this.props.onPreferNotToAnswer}
                 style={{
-                  marginTop: `${this.props.largeText === 0
-                    ? ''
-                    : this.props.largeText > 1 ? '20px' : '10px'}`
+                  marginTop: `${this.props.largeText === 0 ? '' : this.props.largeText > 1 ? '20px' : '10px'}`
                 }}
               />{' '}
               Prefer not to answer
