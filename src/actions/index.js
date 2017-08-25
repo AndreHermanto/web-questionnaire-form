@@ -44,8 +44,7 @@ const updateResponseClean = (dispatch, getState) => {
     .then(json => json.data)
     .then(response => {
       dispatch({
-        type: types.UPDATE_RESPONSE_SUCCESS,
-        payload: normalize(response, schema.response)
+        type: types.UPDATE_RESPONSE_SUCCESS
       });
     })
     .catch(response => {
