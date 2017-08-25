@@ -7,13 +7,14 @@ const propTypes = {
   text: PropTypes.string.isRequired
 };
 
-const defaultProps = {
-};
+const defaultProps = {};
 
 function Heading(props) {
-  return (<h2 style={{ marginBottom: 32, marginTop: 40 }} className="text-capitalize">
-    {props.text}
-  </h2>);
+  return (
+    <h2 style={{ marginBottom: 32, marginTop: 40 }} className="text-capitalize">
+      {props.text}
+    </h2>
+  );
 }
 
 Heading.propTypes = propTypes;

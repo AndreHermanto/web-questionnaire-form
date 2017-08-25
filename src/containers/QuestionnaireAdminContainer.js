@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchQuestionnaires, setResume } from '../actions';
+import { fetchQuestionnaires } from '../actions';
+import {
+  getAllQuestionnaires,
+  fetchQuestionnairesIsLoading
+} from '../reducers';
 import QuestionnaireAdmin from '../components/QuestionnaireAdmin';
+import toJS from '../components/toJS';
 
 class QuestionnaireAdminContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.handleChangeResume = this.handleChangeResume.bind(this);
-  }
   componentDidMount() {
     return this.props.dispatch(fetchQuestionnaires());
   }
-  handleChangeResume() {
-    this.props.dispatch(setResume(!this.props.resume));
-  }
   render() {
-    return <QuestionnaireAdmin {...this.props} handleChangeResume={this.handleChangeResume} />;
+    return <QuestionnaireAdmin {...this.props} />;
   }
 }
 
 function mapStateToProps(state) {
-  return state.questionnaires;
+  return {
+    questionnaires: getAllQuestionnaires(state),
+    isLoading: fetchQuestionnairesIsLoading(state)
+  };
 }
 
-export default connect(mapStateToProps)(QuestionnaireAdminContainer);
+export default connect(mapStateToProps)(toJS(QuestionnaireAdminContainer));

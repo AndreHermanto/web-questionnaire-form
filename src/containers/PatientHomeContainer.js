@@ -1,32 +1,41 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchQuestionnaires, setResume } from '../actions';
+import { fetchDataForHomepage } from '../actions';
+import { decryptTokens } from '../actions/security';
+import toJS from '../components/toJS';
 import QuestionnaireDashboard from '../components/QuestionnaireDashboard';
-import Footer from '../components/Footer';
+import * as selectors from '../reducers';
 
 class PatientHomeContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.handleChangeResume = this.handleChangeResume.bind(this);
-  }
   componentDidMount() {
-    return this.props.dispatch(fetchQuestionnaires());
-  }
-  handleChangeResume() {
-    this.props.dispatch(setResume(!this.props.resume));
+    const { userId, consentTypeId } = this.props.params;
+    const { timestamp } = this.props.location.query;
+    this.props
+      .dispatch(decryptTokens(userId, consentTypeId, timestamp))
+      .then(() => {
+        this.props.dispatch(fetchDataForHomepage());
+      })
+      .catch(error => {
+        console.log('Decryption Failed', error);
+      });
   }
   render() {
     return (
-      <div>
-        <QuestionnaireDashboard />
-        <Footer />
+      <div style={{ height: 'inherit' }}>
+        <QuestionnaireDashboard {...this.props} />
       </div>
-      );
+    );
   }
 }
 
-function mapStateToProps(state) {
-  return state.questionnaires;
+function mapStateToProps(state, ownProps) {
+  const questionnaires = selectors.getHomepageQuestionnaires(state);
+  return {
+    encryptedConsentTypeId: ownProps.params.consentTypeId,
+    encryptedUserId: ownProps.params.userId,
+    failedToDecrypt: selectors.getFailedToDecrypt(state),
+    questionnaires
+  };
 }
 
-export default connect(mapStateToProps)(PatientHomeContainer);
+export default connect(mapStateToProps)(toJS(PatientHomeContainer));

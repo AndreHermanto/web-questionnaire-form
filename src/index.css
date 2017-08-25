@@ -1,238 +1,34 @@
-@import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,800");
-.fw-800 {
-  font-weight: 800; }
-
-.fw-400 {
-  font-weight: 400; }
-
-.colour-dark-blue {
-  color: #00437E; }
-
-.colour-light-blue {
-  color: #62A5DB; }
-
-.colour-mid-grey {
-  color: #767676; }
-
-.colour-light-grey {
-  color: #AAAAAA; }
-
-.colour-forrest-green {
-  color: #2CC36B; }
-
-.btn-dashboard-base {
-  position: relative;
-  float: right;
-  top: 14px;
-  right: 12px;
-  width: 75px;
-  height: 40px;
-  border-radius: 3px;
-  font-size: 9px;
-  font-family: 'Nunito Sans', sans-serif;
-  font-weight: 800;
-  text-align: center;
-  letter-spacing: 1px;
-  line-height: 40px;
-  cursor: pointer; }
-
-.btn-to-do {
-  background-color: #fff;
-  color: #00437E;
-  border: 1px solid #00437E; }
-
-.btn-to-do:hover {
-  background-color: #00437E;
-  color: #fff; }
-
-.btn-in-progress {
-  background-color: #00437E;
-  color: #fff;
-  border: 1px solid #00437E; }
-
-.btn-in-progress:hover {
-  background-color: #fff;
-  color: #00437E; }
-
-.btn-completed {
-  background-color: #fff;
-  color: #AAAAAA;
-  border: 1px solid #AAAAAA; }
-
-.btn-completed:hover {
-  background-color: #2CC36B;
-  color: #fff;
-  border: 1px solid #2CC36B; }
-
-h2 {
-  font-size: 24px;
-  font-family: 'Nunito Sans', sans-serif;
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin: 5px 0px 0px 0px; }
-
-h3 {
-  font-family: 'Nunito Sans', sans-serif;
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: 1px;
-  color: #fff;
-  text-align: center;
-  margin: 5px 0px 0px 0px; }
-
-p {
-  font-size: 12px;
-  font-family: 'Nunito Sans', sans-serif;
-  font-weight: 400;
-  color: #767676;
-  margin-top: 25px;
-  max-width: 500px;
-  letter-spacing: 1px; }
-
-.dashboard-intro-copy {
-  margin: 60px 0px 0px 0px; }
-
-.dashboard-container {
-  background-color: #fff;
-  padding: 0px 30px 60px 30px;
-  margin: 80px 0px 80px 0px;
-  border: 1px solid #C9C9C9; }
-  @media screen and (max-width: 480px) {
-    .dashboard-container {
-      padding: 0px 0px 60px 0px; } }
-  .dashboard-container .dashboard-header {
-    height: 200px;
-    margin-bottom: 30px; }
-    .dashboard-container .dashboard-header .dashboard-icon {
-      position: relative;
-      top: 35px;
-      margin: 0 auto;
-      width: 300px;
-      height: 100px; }
-      .dashboard-container .dashboard-header .dashboard-icon .icon {
-        position: relative;
-        margin: 0 auto;
-        width: 50px;
-        height: 50px;
-        left: -5px;
-        margin-bottom: 12px;
-        background-image: url(assets/images/paper-stack.svg); }
-    .dashboard-container .dashboard-header hr {
-      position: relative;
-      top: 50px;
-      border-top: 1px solid #C9C9C9;
-      opacity: 0.5; }
-  .dashboard-container .col-questionnaires {
-    position: relative;
-    min-height: 200px;
-    margin-bottom: 20px; }
-    .dashboard-container .col-questionnaires ul {
-      padding: 0;
-      list-style-type: none; }
-    .dashboard-container .col-questionnaires .questionnaire-item {
-      position: relative;
-      min-height: 70px;
-      width: 100%;
-      background-color: #F8F8FB;
-      border: 1px solid #C9C9C9;
-      margin: 15px 0px 15px 0px; }
-      .dashboard-container .col-questionnaires .questionnaire-item .questionnaire-info {
-        position: relative;
-        display: block;
-        overflow: auto;
-        width: 70%;
-        padding: 12px;
-        float: left; }
-        .dashboard-container .col-questionnaires .questionnaire-item .questionnaire-info span {
-          display: block;
-          font-size: 12px;
-          font-family: 'Nunito Sans', sans-serif;
-          line-height: 12px;
-          margin-bottom: 3px;
-          letter-spacing: 1px; }
-        .dashboard-container .col-questionnaires .questionnaire-item .questionnaire-info .percentage-complete-container {
-          width: 100%;
-          height: 6px;
-          background-color: #fff;
-          border-radius: 12px;
-          margin-top: 7px;
-          border: 1px solid #C9C9C9; }
-          .dashboard-container .col-questionnaires .questionnaire-item .questionnaire-info .percentage-complete-container .percentage-complete-fill {
-            height: 5px;
-            border-radius: 12px;
-            background-color: #00437E; }
-    .dashboard-container .col-questionnaires .item-completed {
-      background-color: #fff;
-      border: 1px solid #2CC36B; }
-      .dashboard-container .col-questionnaires .item-completed .questionnaire-info {
-        padding-left: 50px;
-        padding-top: 21px; }
-      .dashboard-container .col-questionnaires .item-completed .tick-icon {
-        position: absolute;
-        width: 18px;
-        height: 18px;
-        left: 17px;
-        top: 26px;
-        background-image: url(assets/images/checked.svg);
-        background-size: contain; }
-
+html {
+  height: 100%;
+}
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  font-size: 16px;
-  background-color: #f8f8fb;
-  overflow-x: hidden; }
+  background-color: #FAFAFA;
+  height: inherit;
+}
 
-.container {
-  overflow-x: hidden; }
+div#root,
+div#root > div,
+div#root > div > div {
+  height: inherit;
+}
 
-.App {
-  text-align: center; }
+@media print {
+  #progress-bar-container {
+    visibility: hidden;
+  }
+  #submit-modal {
+    visibility: hidden;
+  }
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+  }
+  .question-container {
+    border: none !important;
+    margin-bottom: 0px !important;
+    page-break-inside: avoid;
+  }
+}
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px; }
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white; }
-
-.App-intro {
-  font-size: large; }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg); }
-  to {
-    transform: rotate(360deg); } }
-
-.dashboard-footer {
-  width: 100%;
-  min-height: 120px;
-  bottom: 0px;
-  padding-bottom: 30px;
-  background-color: #fff;
-  border-top: 1px solid #C9C9C9; }
-  .dashboard-footer .logos-container {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    text-align: center;
-    top: 15px; }
-    .dashboard-footer .logos-container .footer-logo {
-      display: inline-block;
-      width: 120px;
-      height: 65px;
-      margin: 10px;
-      background-size: contain;
-      background-repeat: no-repeat; }
-    .dashboard-footer .logos-container .genome-one {
-      background-image: url(assets/images/genomeone.jpg); }
-    .dashboard-footer .logos-container .monarch {
-      background-image: url(assets/images/monarch.jpg); }
-    .dashboard-footer .logos-container .hpo {
-      background-image: url(assets/images/hpo.jpg); }
+.form-control{
+  font-size: inherit;
+}

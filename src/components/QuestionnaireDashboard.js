@@ -1,108 +1,96 @@
 import React from 'react';
+import styled from 'styled-components';
+import { Grid, Col, Row } from 'react-bootstrap';
+import FailedToDecryptMessage from './FailedToDecryptMessage';
+import Questionnaire from './Questionnaire';
+import Footer from './Footer';
 
-export default function QuestionnaireDashboard() {
+const DashboardIntro = styled.div`margin: 60px 0px 0px 0px;`;
 
-return (
-  <div className="container">
-    <div className="dashboard-intro-copy">
-      <h2 className="colour-dark-blue">Welcome back</h2>
-      <h2 className="colour-light-blue">Its time to complete your profile</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vitae purus eleifend,
-      faucibus velit at, feugiat risus. Donec mauris magna, rhoncus quis tristique a, facilisis eget metus.
-      In et dolor arcu. Fusce at diam dui. Vestibulum sed lacinia mauris, sit amet vestibulum lorem. Class
-      aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+const Header = styled.h2`
+  font-size: 24px;
+  font-weight: 700;
+  margin: 5px 0px 0px 0px;
+  color: ${props => props.color};
+`;
+
+const Description = styled.p`
+  font-weight: 400;
+  color: #767676;
+  margin-top: 25px;
+  max-width: 500px;
+`;
+
+function QuestionnaireDashboard(props) {
+  // let props.questionnaires;
+  if (!props.questionnaires) {
+    return <div>Loading...</div>;
+  }
+  if (props.failedToDecrypt) {
+    return (
+      <Grid>
+        <FailedToDecryptMessage />
+      </Grid>
+    );
+  }
+  return (
+    <div style={{ position: 'relative', minHeight: '100%' }}>
+      <div className="container" style={{ paddingBottom: 120 }}>
+        <DashboardIntro>
+          <Header color="#00437E">Welcome back</Header>
+          <Header color="#62A5DB">
+            Its time to complete your profile
+          </Header>
+          <Description>
+            We are excited to help you build your health and exposure history profile. Each survey that you complete contributes to a profile that is specific to you. The information that you provide in the surveys will improve your diagnostic testing and risk prediction. Thank you for allowing us to be a part of your healthcare journey. We value your time and effort in taking steps to help us better care for you. Please begin your survey or complete your unfinished survey.
+          </Description>
+        </DashboardIntro>
+
+        <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
+          Questionnaires
+        </h2>
+        <Row>
+          {props.questionnaires.map(version => {
+            if (!version) {
+              return <div>loading</div>;
+            }
+            return (
+              <Col sm={'4'} style={{ marginBottom: 32 }}>
+                <Questionnaire
+                  completed={version.response && version.response.completed}
+                  title={version.title}
+                  questionCount={version.body.length}
+                  percentComplete={
+                    version.response
+                      ? version.response.completed
+                          ? 100
+                          : Math.random() * 20 + 10
+                      : 0
+                  }
+                  buttonText={
+                    version.response
+                      ? version.response.completed ? 'Completed' : 'Resume'
+                      : 'Start'
+                  }
+                  link={
+                    version.response && version.response.completed
+                      ? `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.response.id)}/end`
+                      : `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.questionnaireId)}`
+                  }
+                  status={
+                    version.response
+                      ? version.response.completed ? 'Completed' : 'In Progress'
+                      : 'New'
+                  }
+                />
+              </Col>
+            );
+          })}
+        </Row>
+      </div>
+      <Footer />
     </div>
-    <div className="row dashboard-container">
-      <div className="col-xs-12 dashboard-header">
-        <div className="dashboard-icon">
-            <div className="icon"></div>
-            <h3 className="colour-dark-blue">PROFILE QUESTIONS</h3>
-            <h3 className="colour-light-grey fw-400">3 of 7 modules complete</h3>
-        </div>
-        <hr />
-      </div>
-      <div className="col-xs-12 col-sm-6"> 
-        <div className="col-questionnaires"> 
-          <h3 className="colour-dark-blue">IN PROGRESS</h3>
-          <ul>
-            <li className="questionnaire-item"> 
-              <div className="questionnaire-info">
-                  <span className="colour-dark-blue fw-800">Family History</span>
-                  <span className="colour-light-grey fw-400">15% complete</span>
-                  <div className="percentage-complete-container"> 
-                      <div className="percentage-complete-fill" style={{width: '15%'}}> </div>
-                  </div>
-              </div>
-              <div className="btn-dashboard-base btn-in-progress">RESUME</div>
-            </li>
-            <li className="questionnaire-item"> 
-              <div className="questionnaire-info">
-                <span className="colour-dark-blue fw-800">Cultural/Social</span>
-                <span className="colour-light-grey fw-400">45% complete</span>
-                <div className="percentage-complete-container"> 
-                  <div className="percentage-complete-fill" style={{width: '45%'}}> </div>
-                </div>
-              </div>
-              <div className="btn-dashboard-base btn-in-progress">RESUME</div>
-            </li>
-          </ul>
-          <h3 className="colour-dark-blue">TO DO</h3>
-          <ul>
-            <li className="questionnaire-item"> 
-                <div className="questionnaire-info">
-                  <span className="colour-dark-blue fw-800">Self-Phenotyping</span>
-                  <span className="colour-light-grey fw-400">0% complete</span>
-                  <div className="percentage-complete-container"> 
-                      <div className="percentage-complete-fill" style={{width: '2%'}}> </div>
-                  </div>
-                </div>
-                <div className="btn-dashboard-base btn-to-do">START</div>
-            </li>
-            <li className="questionnaire-item"> 
-              <div className="questionnaire-info">
-                <span className="colour-dark-blue fw-800">Screening questionnaire</span>
-                <span className="colour-light-grey fw-400">0% complete</span>
-                <div className="percentage-complete-container"> 
-                  <div className="percentage-complete-fill" style={{width: '2%'}}> </div>
-                </div>
-              </div>
-              <div className="btn-dashboard-base btn-to-do">START</div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div className="col-xs-12 col-sm-6"> 
-        <div className="col-questionnaires"> 
-          <h3 className="colour-forrest-green">COMPLETED</h3>
-          <ul>
-            <li className="questionnaire-item item-completed"> 
-              <div className="questionnaire-info">
-              <div className="tick-icon"></div>
-                <span className="colour-forrest-green fw-800">Exposure A</span>
-                <span className="colour-light-grey fw-400">100% complete</span>
-              </div>
-              <div className="btn-dashboard-base btn-completed">REVIEW</div>
-            </li>
-            <li className="questionnaire-item item-completed"> 
-              <div className="questionnaire-info">
-              <div className="tick-icon"></div>
-                <span className="colour-forrest-green fw-800">Exposure B</span>
-                <span className="colour-light-grey fw-400">100% complete</span>
-              </div>
-              <div className="btn-dashboard-base btn-completed">REVIEW</div>
-            </li>
-            <li className="questionnaire-item item-completed"> 
-              <div className="questionnaire-info">
-              <div className="tick-icon"></div>
-                <span className="colour-forrest-green fw-800">Exposure C</span>
-                <span className="colour-light-grey fw-400">100% complete</span>
-              </div>
-              <div className="btn-dashboard-base btn-completed">REVIEW</div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+  );
 }
+
+export default QuestionnaireDashboard;

@@ -5,3 +5,6 @@ export const HEIGHT = 'height';
 export const WEIGHT = 'weight';
 export const DATE = 'date';
 export const NUMBER = 'number';
+
+const questionTypes = [RADIO, CHECKBOX, TEXT, HEIGHT, WEIGHT, DATE, NUMBER];
+export default questionTypes;

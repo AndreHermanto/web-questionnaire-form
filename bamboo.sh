@@ -1,0 +1,95 @@
+# Send Test Pending to Github
+curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data '{"state": "pending", "description": "Build is running", "target_url": "", "context": "Tests"}' https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+
+# Send Lint Pending to Github
+curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data '{"state": "pending", "description": "Linter is running", "target_url": "", "context": "Linter"}' https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+
+# Send Copy paste detector pending to github
+curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data '{"state": "pending", "description": "Duplicate Code detector is running", "target_url": "", "context": "Duplicate Code Detector"}' https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+
+# Send Unused files
+curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data '{"state": "pending", "description": "Unused file detector is running", "target_url": "", "context": "Unused Files"}' https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+
+branch_name="$bamboo_repository_git_branch"
+# replace / with - i.e. feature/branch_name to feature-branch-name
+santized_branch_name="${branch_name/\//-}";
+output_file_name="$santized_branch_name.md"
+lint_output_file_name="$santized_branch_name-lint.md"
+cp_output_file_name="$santized_branch_name-cp.md"
+unused_file_name="$santized_branch_name-unused.md"
+
+#!/bin/sh
+repo_name='web-questionnaire-form.wiki'
+repo_url='https://2fa70040e61b6d5faaf08f9c382587b707711051@github.com/GenomeOne/web-questionnaire-form.wiki.git'
+
+# Output Test results
+CI=true npm run test > $output_file_name 2>&1
+
+# Output Lint results
+node node_modules/eslint/bin/eslint.js --config node_modules/eslint-config-react-app/index.js src/ > $lint_output_file_name
+
+# Output Copy Paste Detector Results
+node_modules/jsinspect/bin/jsinspect -t 40 src/ > $cp_output_file_name
+
+# Ouput unused file results
+./detect-unused-files.sh > $unused_file_name
+# Clean up repo locally
+rm -rf $repo_name
+
+# Create a new repo
+git clone $repo_url
+
+# mv to wiku repo in order to clean up all at once
+mv $output_file_name $repo_name/
+mv $lint_output_file_name $repo_name/
+mv $cp_output_file_name $repo_name/
+mv $unused_file_name $repo_name/
+
+# Appending building SMS to wiki
+cd $repo_name
+
+echo $'\r' >> $output_file_name
+echo $'\r' >> $lint_output_file_name
+echo $'\r' >> $cp_output_file_name
+echo $'\r' >> $unused_file_name
+
+# Add all untracked files
+git add -A
+# Commit and push to the repo
+git commit -am 'Started buiding'
+
+git push origin master
+
+# Send Test Results
+if grep -q "FAIL" $output_file_name
+then
+  echo "Send Build starting to Github: Request"
+  curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data "{\"state\": \"failure\", \"description\": \"Tests failed. Click Details to check them out.\", \"target_url\": \"https://github.com/GenomeOne/web-questionnaire-form/wiki/$output_file_name\", \"context\": \"Tests\"}" https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+  echo "Send Build starting to Github: Success"
+else
+  echo "Send Build starting to Github: Request"
+  curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data "{\"state\": \"success\", \"description\": \"Tests passed! Hooray!\", \"target_url\": \"https://github.com/GenomeOne/web-questionnaire-form/wiki/$output_file_name\", \"context\": \"Tests\"}" https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+  echo "Send Build starting to Github: Success"
+fi
+
+# Send Linter Results
+if grep -q "✖" $lint_output_file_name
+then
+  echo "Send Build starting to Github: Request"
+  curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data "{\"state\": \"failure\", \"description\": \"Found errors or warnings. Click Details to check them out.\", \"target_url\": \"https://github.com/GenomeOne/web-questionnaire-form/wiki/$lint_output_file_name\", \"context\": \"Linter\"}" https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+  echo "Send Build starting to Github: Success".
+else
+  echo "Send Build starting to Github: Request"
+  curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data "{\"state\": \"success\", \"description\": \"No errors or warnings. YAY!\", \"target_url\": \"https://github.com/GenomeOne/web-questionnaire-form/wiki/$lint_output_file_name\", \"context\": \"Linter\"}" https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+  echo "Send Build starting to Github: Success"
+fi
+
+# Send the Copy paste detector results
+echo "Send CP starting to Github: Request"
+curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data "{\"state\": \"success\", \"description\": \"Duplicate Code Detected - Click Details to review.\", \"target_url\": \"https://github.com/GenomeOne/web-questionnaire-form/wiki/$cp_output_file_name\", \"context\": \"Duplicate Code Detector\"}" https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+echo "Send CP starting to Github: Success"
+
+# Send
+echo "Send Unused starting to Github: Request"
+curl -H "Authorization: token 2fa70040e61b6d5faaf08f9c382587b707711051" --request POST --data "{\"state\": \"success\", \"description\": \"List of Unused Files.\", \"target_url\": \"https://github.com/GenomeOne/web-questionnaire-form/wiki/$unused_file_name\", \"context\": \"Unused Files\"}" https://api.github.com/repos/GenomeOne/web-questionnaire-form/statuses/${bamboo_repository_revision_number} > /dev/null
+echo "Send Unused starting to Github: Success"

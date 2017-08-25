@@ -8,8 +8,8 @@ test('reducer exists', () => {
 describe('getVisibleQuestions', () => {
   it('gets responseElement + element for current question, and all past questions`', () => {
     // put test here
-  })
-})
+  });
+});
 
 describe('isLastQuestion', () => {
   it('is hidden when nothing is loaded', () => {
@@ -17,7 +17,25 @@ describe('isLastQuestion', () => {
       responses: {
         items: fromJS({})
       }
-    }
+    };
     expect(fromReducer.isLastQuestion(state)).toBe(false);
+  });
+});
+
+describe('getPreferNotToAnswerById', () => {
+  it('get PreferNotToAnswer', () => {
+    const id = '123asd';
+    const state = fromJS({
+      entities: {
+        responseElements: {
+          byId: {
+            [id]: {
+              preferNotToAnswer: false
+            }
+          }
+        }
+      }
+    });
+    expect(fromReducer.getPreferNotToAnswerById(state, id)).toBe(false);
   });
 });

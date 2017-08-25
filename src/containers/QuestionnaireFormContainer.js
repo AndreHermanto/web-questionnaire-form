@@ -1,206 +1,113 @@
 import React, { Component } from 'react';
+import toJS from '../components/toJS';
 import { connect } from 'react-redux';
-import { hashHistory } from 'react-router';
-import { fromJS } from 'immutable';
-import { scroller } from 'react-scroll';
-import {
-  setResponse,
-  setupQuestionnaire,
-  nextQuestion,
-  setQuestionnaireDebug,
-  setQuestionAnswer
-} from '../actions';
-import Question from '../components/Question';
-import TextInformation from '../components/TextInformation';
-import {
-  getVisibleQuestions,
-  isLastQuestion,
-  isFirstQuestion,
-  getCurrentResponse,
-  getCurrentVersion,
-  getAnsweredQuestions,
-  getQuestions,
-  getDebug
-} from '../reducers';
-import Heading from '../components/Heading';
-import ProgressBar from '../components/ProgressBar';
-
+import PropTypes from 'prop-types';
+import * as actions from '../actions';
+import * as selectors from '../reducers';
+import * as UIselectors from '../reducers/ui';
+import Form from '../components/Form';
+const propTypes = {
+  routeParams: PropTypes.shape({
+    userId: PropTypes.string.isRequired,
+    questionnaireId: PropTypes.string.isRequired
+  })
+};
 class QuestionnaireFormContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.handleQuestionAnswered = this.handleQuestionAnswered.bind(this);
-    this.handeSubmitQuestionnaire = this.handeSubmitQuestionnaire.bind(this);
-    this.setPageMode = this.setPageMode.bind(this);
-  }
+  static propTypes: propTypes;
 
-  setPageMode() {
-    if (this.props.location.query.showlogic === 'true') {
-      this.props.dispatch(setQuestionnaireDebug(true));
-    } else {
-      this.props.dispatch(setQuestionnaireDebug(false));
-    }
-  }
-
-  componentWillMount() {
-    this.setPageMode();
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.setPageMode = this.setPageMode.bind(this);
+  // }
+  //
+  // setPageMode() {
+  //   if (this.props.location.query.showlogic === 'true') {
+  //     this.props.dispatch(setQuestionnaireDebug(true));
+  //   } else {
+  //     this.props.dispatch(setQuestionnaireDebug(false));
+  //   }
+  // }
+  //
+  // componentWillMount() {
+  //   this.setPageMode();
+  // }
 
   componentDidMount() {
-    const { questionnaireId, userId } = this.props.params;
-    const resume = this.props.location.query.resume === 'true';
-    this.props.dispatch(
-      setupQuestionnaire({
-        questionnaireId,
-        userId,
-        resume
+    const { userId, consentTypeId, questionnaireId } = this.props.params;
+    const { timestamp } = this.props.location.query;
+    this.props
+      .dispatch(actions.decryptTokens(userId, consentTypeId, timestamp))
+      .then(() => {
+        this.props.dispatch(
+          actions.setupQuestionnaire({
+            questionnaireId
+          })
+        );
       })
-    );
+      .catch(error => {
+        console.log('Decryption failed', error);
+      });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.visibleQuestions.size !== this.props.visibleQuestions.size) {
-      scroller.scrollTo(
-        this.props.visibleQuestions.last().responseElement.get('id'),
-        {
-          duration: 500,
-          delay: 0,
-          smooth: true
-        }
-      );
-    }
-  }
-
-  handleQuestionAnswered(responseElement) {
-    this.props.dispatch(setQuestionAnswer({ responseElement }));
-  }
-
-  handeSubmitQuestionnaire() {
-    hashHistory.push(
-      `/users/${this.props.params.userId}/questionnaires/${this.props.params
-        .questionnaireId}/summary`
-    );
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevProps.visibleQuestions.size !== this.props.visibleQuestions.size) {
+  //     scroller.scrollTo(
+  //       this.props.visibleQuestions.last().responseElement.get('id'),
+  //       {
+  //         duration: 500,
+  //         delay: 0,
+  //         smooth: true
+  //       }
+  //     );
+  //   }
+  // }
 
   render() {
-    if (!this.props.version || !this.props.response) {
-      return <div className="container">Loading...</div>;
-    }
-    return (
-      <div className="container">
-        {this.props.visibleQuestions.map((visibleQuestion, index) => {
-          const { element, responseElement } = visibleQuestion;
-          if (!element || !responseElement) {
-            return <div>Loading question and reponse...</div>;
-          }
-          if (element.get('type') === 'textinformation') {
-            return (
-              <div key={responseElement.get('id')}>
-                <TextInformation
-                  name={responseElement.get('id')}
-                  text={element.get('text')}
-                />
-                {index === this.props.visibleQuestions.size - 1 &&
-                  !this.props.isShowingSubmit &&
-                  <button
-                    className="btn btn-primary btn-lg"
-                    onClick={() => this.props.dispatch(nextQuestion())}
-                  >
-                    {responseElement.get('answers').size ? 'Next' : 'Skip'}
-                  </button>}
-              </div>
-            );
-          }
-
-          // section heading
-          if (element.get('type') === 'section') {
-            return (
-              <div key={responseElement.get('id')}>
-                <Heading
-                  text={element.get('title')}
-                  size={element.get('size')}
-                  name={responseElement.get('id')}
-                />
-                {index === this.props.visibleQuestions.size - 1 &&
-                  !this.props.isShowingSubmit &&
-                  <div style={{ width: '100%', height: '80px' }}>
-                    <ProgressBar
-                      completed={this.props.answeredQuestions.size}
-                      total={this.props.questions.size}
-                    />
-                    <button
-                      className="btn btn-primary btn-lg"
-                      onClick={() => this.props.dispatch(nextQuestion())}
-                    >
-                      Okay
-                    </button>
-                  </div>}
-              </div>
-            );
-          }
-
-          return (
-            <div key={responseElement.get('id')}>
-              <Question
-                name={responseElement.get('id')}
-                key={visibleQuestion.responseElement.get('id')}
-                element={element}
-                number={index + 1}
-                responseElement={responseElement}
-                onAnswer={this.handleQuestionAnswered}
-                showlogic={this.props.debug}
-              />
-              {index === this.props.visibleQuestions.size - 1 &&
-                !this.props.isShowingSubmit &&
-                <div style={{ width: '100%', height: '80px' }}>
-                  <ProgressBar
-                    completed={this.props.answeredQuestions.size}
-                    total={this.props.questions.size}
-                  />
-                  <button
-                    className="btn btn-primary btn-lg"
-                    onClick={() => this.props.dispatch(nextQuestion())}
-                  >
-                    {responseElement.get('answers').size
-                      ? 'Next'
-                      : 'Prefer not to answer'}
-                  </button>
-                </div>}
-            </div>
-          );
-        })}
-
-        {this.props.isShowingSubmit &&
-          <div style={{ width: '100%', height: '80px' }}>
-            <ProgressBar
-              completed={this.props.answeredQuestions.size}
-              total={this.props.questions.size}
-            />
-            <button
-              className="btn btn-primary btn-lg"
-              onClick={this.handeSubmitQuestionnaire}
-            >
-              Submit
-            </button>
-          </div>}
-      </div>
-    );
+    return <Form {...this.props} />;
   }
 }
 
 function mapStateToProps(state, ownProps) {
-  const showSubmit = isLastQuestion(state);
-  const props = {
-    response: getCurrentResponse(state),
-    version: getCurrentVersion(state),
-    visibleQuestions: getVisibleQuestions(state),
-    answeredQuestions: getAnsweredQuestions(state),
-    questions: getQuestions(state),
-    isShowingSubmit: showSubmit,
-    isShowingNext: !showSubmit,
-    isShowingBack: isFirstQuestion(state),
-    debug: getDebug(state)
+  const progress = selectors.getProgress(state);
+  let alreadySubmitted = false;
+  const responseId = selectors.getResponseId(state);
+  if (responseId) {
+    alreadySubmitted = selectors
+      .getResponseById(state, responseId)
+      .get('completed');
+  }
+
+  return {
+    submitResponseFailure: selectors.getSubmitResponseFailure(state),
+    failedToDecrypt: selectors.getFailedToDecrypt(state),
+    responseElementIds: selectors.getVisibleResponseElementIds(state),
+    showModal: selectors.getIsShowingSubmitModal(state),
+    largeText: UIselectors.getLargeText(state.get('ui')),
+    progress,
+    showSubmit: progress === 100,
+    alreadySubmitted,
+    isLoading: selectors.getIsResponseLoading(state)
   };
-  return props;
 }
 
-export default connect(mapStateToProps)(QuestionnaireFormContainer);
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onShowSubmissionConfirmation: () =>
+      dispatch(actions.showSubmissionConfirmation()),
+    onCancelSubmit: () => dispatch(actions.hideSubmissionConfirmation()),
+    onSubmit: () =>
+      dispatch(
+        actions.submitResponse(
+          ownProps.params.userId,
+          ownProps.params.consentTypeId
+        )
+      ),
+    cycleFontSize: fontSize => dispatch(actions.cycleFontSize(fontSize)),
+
+    dispatch
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  toJS(QuestionnaireFormContainer)
+);
