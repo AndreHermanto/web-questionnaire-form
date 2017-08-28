@@ -35,7 +35,7 @@ class Questionnaire extends Component {
     buttonText: PropTypes.string.isRequired,
     link: PropTypes.string.isRequired,
     percentComplete: PropTypes.number.isRequred,
-    questionCount: PropTypes.number.isRequired,
+    timeInMinutes: PropTypes.number.isRequred,
     completed: PropTypes.bool.isRequired
   };
   render() {
@@ -62,9 +62,9 @@ class Questionnaire extends Component {
             <div>
               {!this.props.completed &&
                 <div style={{ marginBottom: '16' }}>
-                  Estimated Time:
+                  Estimated Time: Less than
                   {' '}
-                  {Math.floor(this.props.questionCount * 30 / 60)}
+                  {Math.floor(this.props.timeInMinutes)}
                   {' '}
                   minutes
                 </div>}

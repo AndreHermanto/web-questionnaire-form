@@ -28,8 +28,37 @@ class PatientHomeContainer extends Component {
   }
 }
 
+const calculateTimeInMinutes = size => {
+  if (size <= 1) {
+    return 1.25;
+  }
+  if (size <= 2) {
+    return size * 0.67;
+  }
+  if (size <= 10) {
+    return size * 0.5;
+  }
+  if (size <= 15) {
+    return size * 0.41;
+  }
+  if (size <= 25) {
+    return size * 0.35;
+  }
+  console.log(size * 0.31);
+  return size * 0.31;
+};
 function mapStateToProps(state, ownProps) {
-  const questionnaires = selectors.getHomepageQuestionnaires(state);
+  const questionnaires = selectors
+    .getHomepageQuestionnaires(state)
+    .map(
+      version =>
+        version
+          ? version.set(
+              'time',
+              calculateTimeInMinutes(version.get('body').size)
+            )
+          : version
+    );
   return {
     encryptedConsentTypeId: ownProps.params.consentTypeId,
     encryptedUserId: ownProps.params.userId,
