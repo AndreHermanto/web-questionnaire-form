@@ -44,8 +44,7 @@ const calculateTimeInMinutes = size => {
   if (size <= 25) {
     return size * 0.35;
   }
-  console.log(size * 0.31);
-  return size * 0.31;
+  return size * 0.16;
 };
 function mapStateToProps(state, ownProps) {
   const questionnaires = selectors
