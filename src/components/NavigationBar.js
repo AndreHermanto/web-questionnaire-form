@@ -1,6 +1,5 @@
 import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { Link } from 'react-router';
 import styled from 'styled-components';
 import logo from '../assets/images/sanford-logo.jpg';
 
@@ -18,9 +17,9 @@ export default class NavigationBar extends React.Component {
       <WhiteNavbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to="/" style={{ padding: 0 }}>
+            <div style={{ padding: 0 }}>
               <img src={logo} alt="logo" width="120px" />
-            </Link>
+            </div>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
