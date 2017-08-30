@@ -78,6 +78,7 @@ function mapStateToProps(state, ownProps) {
   }
 
   return {
+    isError: selectors.getIsResponseError(state),
     submitResponseFailure: selectors.getSubmitResponseFailure(state),
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     responseElementIds: selectors.getVisibleResponseElementIds(state),

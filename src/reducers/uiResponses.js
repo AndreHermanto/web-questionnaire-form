@@ -22,7 +22,7 @@ const uiResponses = (state = initialState, action) => {
       return state
         .set('isLoading', false)
         .set('isError', true)
-        .set('submitResponseFailure', action.payload.response);
+        .set('submitResponseFailure', action.payload);
     default:
       return state;
   }

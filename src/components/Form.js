@@ -39,15 +39,12 @@ class Form extends Component {
         </Grid>
       );
     }
-    if (this.props.submitResponseFailure) {
+    if (this.props.isError) {
       return (
         <Grid>
-          <p>Sorry your response couldnt be submitted. The error is below:</p>
-          <div>
-            <pre>
-              {JSON.stringify(this.props.submitResponseFailure, null, 2)}
-            </pre>
-          </div>
+          <p>
+            Sorry an error has occured and your response couldnt be submitted
+          </p>
         </Grid>
       );
     }
