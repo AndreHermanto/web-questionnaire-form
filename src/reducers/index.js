@@ -466,9 +466,11 @@ export const fetchQuestionnairesIsLoading = state => {
   return state.get('uiQuestionnaires').get('isLoading');
 };
 
-export const getIsResponseLoading = state => {
-  return state.get('uiResponses').get('isLoading');
-};
+export const getIsResponseLoading = state =>
+  state.get('uiResponses').get('isLoading');
+export const getIsResponseError = state =>
+  state.get('uiResponses').get('isError');
+
 export const getLargeText = state => fromUI.getLargeText(state.get('ui'));
 
 export const getSubmitResponseFailure = state =>

@@ -23,7 +23,7 @@ const uiResponses = (state = initialState, action) => {
       return state
         .set('isLoading', false)
         .set('isError', true)
-        .set('submitResponseFailure', action.payload.response);
+        .set('submitResponseFailure', action.payload);
     case types.OPEN_PREFER_NOT_TO_ANSWER_MODAL:
       return state.set('showPreferNotToAnswerModal', action.responseElementId);
     case types.CLOSE_PREFER_NOT_TO_ANSWER_MODAL:
