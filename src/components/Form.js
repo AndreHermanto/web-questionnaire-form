@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, ProgressBar, Grid, Col, Row } from 'react-bootstrap';
+import { Modal, ProgressBar, Grid, Col, Row, Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ElementContainer from '../containers/ElementContainer';
 import FailedToDecryptMessage from './FailedToDecryptMessage';
@@ -42,9 +42,18 @@ class Form extends Component {
     if (this.props.isError) {
       return (
         <Grid>
-          <p>
-            Sorry an error has occured and your response couldnt be submitted
-          </p>
+          <Alert bsStyle="danger">
+            <h4>Unable to save</h4>
+            <p>
+              Apologies, the platform has encountered an error and your last response could not be submitted.
+            </p>
+            <p>
+              All your previous responses have been recorded and you will be able to continue filling in the questionnaire from where you've left it.
+            </p>
+            <p>
+              Please return to MyChart and try again later.
+            </p>
+          </Alert>
         </Grid>
       );
     }
