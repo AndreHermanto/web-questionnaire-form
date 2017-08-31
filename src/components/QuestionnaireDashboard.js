@@ -59,7 +59,7 @@ function QuestionnaireDashboard(props) {
                 <Questionnaire
                   completed={version.response && version.response.completed}
                   title={version.title}
-                  questionCount={version.body.length}
+                  timeInMinutes={version.time}
                   percentComplete={
                     version.response
                       ? version.response.completed
