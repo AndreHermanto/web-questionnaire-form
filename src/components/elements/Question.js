@@ -29,10 +29,6 @@ class Question extends Component {
   constructor(props) {
     super(props);
     this.renderElement = this.renderElement.bind(this);
-    this.openPreferNotToAnswerModal = this.openPreferNotToAnswerModal.bind(
-      this
-    );
-    this.onPreferNotToAnswer = this.onPreferNotToAnswer.bind(this);
   }
   renderElement() {
     const { element } = this.props;
@@ -60,16 +56,6 @@ class Question extends Component {
           </div>
         );
     }
-  }
-  onPreferNotToAnswer() {
-    console.log(this.props.responseElement.preferNotToAnswer);
-    console.log('LANGSUNG JAWAB');
-    this.props.onPreferNotToAnswer();
-  }
-  openPreferNotToAnswerModal() {
-    console.log(this.props.responseElement.preferNotToAnswer);
-    console.log('BUKA');
-    this.props.openPreferNotToAnswerModal(this.props.responseElement.id);
   }
   render() {
     const isAnswered =
@@ -112,12 +98,14 @@ class Question extends Component {
                   checked={
                     this.props.responseElement.preferNotToAnswer === true
                   }
-                  onChange={
+                  onChange={() => {
                     this.props.responseElement.preferNotToAnswer ||
                     !this.props.responseElement.answers.length
-                      ? this.onPreferNotToAnswer
-                      : this.openPreferNotToAnswerModal
-                  }
+                      ? this.props.onPreferNotToAnswer()
+                      : this.props.openPreferNotToAnswerModal(
+                          this.props.responseElement.id
+                        );
+                  }}
                   style={{
                     marginTop: `${this.props.largeText === 0
                       ? ''
