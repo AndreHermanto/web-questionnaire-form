@@ -196,7 +196,9 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
   return dispatch(updateResponseOnServer())
     .then(() => {
       hashHistory.push(
-        `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
+        `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(
+          encryptedConsentTypeId
+        )}/${responseId}/end`
       );
     })
     .catch(() => {
@@ -673,5 +675,18 @@ export function cycleFontSize(fontSize) {
   return {
     type: types.CYCLE_FONT_SIZE,
     fontSize
+  };
+}
+
+export function openPreferNotToAnswerModal(responseElementId) {
+  return {
+    type: types.OPEN_PREFER_NOT_TO_ANSWER_MODAL,
+    responseElementId
+  };
+}
+
+export function closePreferNotToAnswerModal() {
+  return {
+    type: types.CLOSE_PREFER_NOT_TO_ANSWER_MODAL
   };
 }

@@ -3,7 +3,8 @@ import * as types from '../constants/ActionTypes';
 
 const initialState = fromJS({
   isLoading: false,
-  isError: false
+  isError: false,
+  showPreferNotToAnswerModal: null
 });
 
 const uiResponses = (state = initialState, action) => {
@@ -23,6 +24,10 @@ const uiResponses = (state = initialState, action) => {
         .set('isLoading', false)
         .set('isError', true)
         .set('submitResponseFailure', action.payload);
+    case types.OPEN_PREFER_NOT_TO_ANSWER_MODAL:
+      return state.set('showPreferNotToAnswerModal', action.responseElementId);
+    case types.CLOSE_PREFER_NOT_TO_ANSWER_MODAL:
+      return state.set('showPreferNotToAnswerModal', null);
     default:
       return state;
   }

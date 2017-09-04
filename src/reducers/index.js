@@ -475,3 +475,6 @@ export const getLargeText = state => fromUI.getLargeText(state.get('ui'));
 
 export const getSubmitResponseFailure = state =>
   state.get('ui').get('submitResponseFailure');
+
+export const getShowPreferNotToAnswerModal = state =>
+  state.get('uiResponses').get('showPreferNotToAnswerModal');
