@@ -13,6 +13,7 @@ const byId = (state = fromJS({}), action) => {
 
 const allIds = (state = List(), action) => {
   switch (action.type) {
+    case types.MARK_AS_NONE_OF_THE_ABOVE:
     case 'TOGGLE_ANSWER':
     case 'SELECT_ANSWER':
     case 'SET_ANSWER_VALUE':

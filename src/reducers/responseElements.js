@@ -22,8 +22,25 @@ const byId = (state = fromJS({}), action) => {
           if (index >= 0) {
             return answerIds.splice(index, 1);
           }
+
           // add it
           return answerIds.push(action.payload.result);
+        }
+      );
+    case types.MARK_AS_NONE_OF_THE_ABOVE:
+      return state.updateIn(
+        [action.responseElementId, 'answers'],
+        answerIds => {
+          // see if its there
+          const index = answerIds.findIndex(
+            answerId => answerId === action.payload.result
+          );
+          // remove it
+          if (index >= 0) {
+            return answerIds.splice(index, 1);
+          }
+          // Return None of the above only
+          return List().push(action.payload.result);
         }
       );
     case 'SELECT_ANSWER':

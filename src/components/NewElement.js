@@ -12,12 +12,12 @@ class NewElement extends Component {
     answers: PropTypes.array.isRequired,
     responseElementAnswers: PropTypes.object.isRequired,
     isInvalid: PropTypes.bool.isRequired,
-
     selectAnswer: PropTypes.func.isRequired,
     toggleAnswer: PropTypes.func.isRequired,
     setAnswerValue: PropTypes.func.isRequired,
     onPreferNotToAnswer: PropTypes.func.isRequired,
-    onFollowUpChanged: PropTypes.func.isRequired
+    onFollowUpChanged: PropTypes.func.isRequired,
+    onNoneOfTheAboveToAnswer: PropTypes.func.isRequired
   };
   constructor(props) {
     super(props);
@@ -43,11 +43,8 @@ class NewElement extends Component {
       default:
         return (
           <div>
-            Sorry, the element type
-            {' '}
-            {this.props.element.type}
-            {' '}
-            is not currently supported.
+            Sorry, the element type {this.props.element.type} is not currently
+            supported.
           </div>
         );
     }

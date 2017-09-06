@@ -24,7 +24,8 @@ class Question extends Component {
     onFollowUpChanged: PropTypes.func.isRequired,
     closePreferNotToAnswerModal: PropTypes.func.isRequired,
     openPreferNotToAnswerModal: PropTypes.func.isRequired,
-    showPreferNotToAnswerModal: PropTypes.bool.isRequired
+    showPreferNotToAnswerModal: PropTypes.bool.isRequired,
+    onNoneOfTheAboveToAnswer: PropTypes.func.isRequired
   };
   constructor(props) {
     super(props);

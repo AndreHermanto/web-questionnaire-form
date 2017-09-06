@@ -114,6 +114,25 @@ export const markAsPreferNotToAnswer = responseElementId => (
   dispatch(updateResponseOnServer());
 };
 
+export const markAsNoneOfTheAbove = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
+  dispatch({
+    type: types.MARK_AS_NONE_OF_THE_ABOVE,
+    payload: normalize(
+      {
+        id: answerId
+      },
+      schema.responseElementAnswer
+    ),
+    responseElementId
+  });
+  dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(clearPreferNotToAnswer(responseElementId));
+  dispatch(updateResponseOnServer());
+};
+
 export const checkForRepeats = (responseElementId, answerId) => (
   dispatch,
   getState
@@ -219,6 +238,7 @@ export const clearPreferNotToAnswer = responseElementId => (
     payload: normalize(responseElement.toJS(), schema.responseElement)
   });
 };
+
 export const selectAnswer = (responseElementId, answerId) => (
   dispatch,
   getState

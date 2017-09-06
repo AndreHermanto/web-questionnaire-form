@@ -93,6 +93,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   onPreferNotToAnswer: () => {
     dispatch(actions.markAsPreferNotToAnswer(ownProps.responseElementId));
   },
+  onNoneOfTheAboveToAnswer: answerId => {
+    dispatch(
+      actions.markAsNoneOfTheAbove(ownProps.responseElementId, answerId)
+    );
+  },
   openPreferNotToAnswerModal: responseElementId => {
     dispatch(actions.openPreferNotToAnswerModal(responseElementId));
   },
