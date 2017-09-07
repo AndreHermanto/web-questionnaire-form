@@ -710,3 +710,16 @@ export function closePreferNotToAnswerModal() {
     type: types.CLOSE_PREFER_NOT_TO_ANSWER_MODAL
   };
 }
+
+export function openNoneOfTheAboveAnswerModal(responseElementId) {
+  return {
+    type: types.OPEN_NONE_OF_THE_ABOVE_ANSWER_MODAL,
+    responseElementId
+  };
+}
+
+export function closeNoneOfTheAboveAnswerModal() {
+  return {
+    type: types.CLOSE_NONE_OF_THE_ABOVE_ANSWER_MODAL
+  };
+}

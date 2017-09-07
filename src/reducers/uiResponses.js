@@ -4,7 +4,8 @@ import * as types from '../constants/ActionTypes';
 const initialState = fromJS({
   isLoading: false,
   isError: false,
-  showPreferNotToAnswerModal: null
+  showPreferNotToAnswerModal: null,
+  showNoneOfTheAboveAnswerModal: null
 });
 
 const uiResponses = (state = initialState, action) => {
@@ -28,6 +29,13 @@ const uiResponses = (state = initialState, action) => {
       return state.set('showPreferNotToAnswerModal', action.responseElementId);
     case types.CLOSE_PREFER_NOT_TO_ANSWER_MODAL:
       return state.set('showPreferNotToAnswerModal', null);
+    case types.OPEN_NONE_OF_THE_ABOVE_ANSWER_MODAL:
+      return state.set(
+        'showNoneOfTheAboveAnswerModal',
+        action.responseElementId
+      );
+    case types.CLOSE_NONE_OF_THE_ABOVE_ANSWER_MODAL:
+      return state.set('showNoneOfTheAboveAnswerModal', null);
     default:
       return state;
   }

@@ -16,8 +16,7 @@ class NewElement extends Component {
     toggleAnswer: PropTypes.func.isRequired,
     setAnswerValue: PropTypes.func.isRequired,
     onPreferNotToAnswer: PropTypes.func.isRequired,
-    onFollowUpChanged: PropTypes.func.isRequired,
-    onNoneOfTheAboveToAnswer: PropTypes.func.isRequired
+    onFollowUpChanged: PropTypes.func.isRequired
   };
   constructor(props) {
     super(props);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Checkbox as CheckboxBootstrap } from 'react-bootstrap';
+import { Checkbox as CheckboxBootstrap, Modal, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import get from 'lodash.get';
 import Markdown from 'react-markdown';
@@ -14,11 +14,15 @@ class Checkbox extends Component {
   render() {
     const {
       answers,
+      responseElement,
       responseElementAnswers,
       toggleAnswer,
       onFollowUpChanged,
       largeText,
-      onNoneOfTheAboveToAnswer
+      onNoneOfTheAboveToAnswer,
+      openNoneOfTheAboveAnswerModal,
+      closeNoneOfTheAboveAnswerModal,
+      showNoneOfTheAboveAnswerModal
     } = this.props;
     const checkNoneOfTheAbove =
       answers[answers.length - 1].text.toLowerCase() === 'none of the above';
@@ -34,7 +38,14 @@ class Checkbox extends Component {
                       index === answers.length - 1 &&
                       answer.text.toLowerCase() === 'none of the above'
                     ) {
-                      onNoneOfTheAboveToAnswer(answer.id);
+                      if (
+                        responseElement.answers.length &&
+                        responseElement.answers[0] !== answer.id
+                      ) {
+                        openNoneOfTheAboveAnswerModal();
+                      } else {
+                        onNoneOfTheAboveToAnswer(answer.id);
+                      }
                     } else {
                       if (
                         get(
@@ -78,6 +89,40 @@ class Checkbox extends Component {
                     )}
                   />
                 </div>}
+              <Modal
+                show={showNoneOfTheAboveAnswerModal === responseElement.id}
+                onHide={closeNoneOfTheAboveAnswerModal}
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>
+                    Confirmation to answer 'None of the above'
+                  </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <p>
+                    You have selected 'None of the above' answer, which will
+                    delete your previous answer.
+                  </p>
+                  <p>
+                    If this was the action that you wanted to do, please confirm
+                    your choice, or cancel and return to the page
+                  </p>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button onClick={closeNoneOfTheAboveAnswerModal}>
+                    Close
+                  </Button>
+                  <Button
+                    bsStyle="danger"
+                    onClick={() => {
+                      onNoneOfTheAboveToAnswer(answer.id);
+                      closeNoneOfTheAboveAnswerModal();
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </li>
           )}
         </ul>

@@ -69,7 +69,10 @@ function mapStateToProps(state, ownProps) {
           responseElement.get('id') === ownProps.responseElementId
       ),
     largeText: selectors.getLargeText(state),
-    showPreferNotToAnswerModal: selectors.getShowPreferNotToAnswerModal(state)
+    showPreferNotToAnswerModal: selectors.getShowPreferNotToAnswerModal(state),
+    showNoneOfTheAboveAnswerModal: selectors.getShowNoneOfTheAboveAnswerModal(
+      state
+    )
   };
 }
 
@@ -103,6 +106,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   closePreferNotToAnswerModal: () => {
     dispatch(actions.closePreferNotToAnswerModal());
+  },
+  openNoneOfTheAboveAnswerModal: () => {
+    dispatch(actions.openNoneOfTheAboveAnswerModal(ownProps.responseElementId));
+  },
+  closeNoneOfTheAboveAnswerModal: () => {
+    dispatch(actions.closeNoneOfTheAboveAnswerModal());
   },
   onFollowUpChanged: (answerId, followUpText) => {
     dispatch(
