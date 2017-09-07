@@ -38,11 +38,15 @@ function QuestionnaireDashboard(props) {
       <div className="container" style={{ paddingBottom: 120 }}>
         <DashboardIntro>
           <Header color="#00437E">Welcome back</Header>
-          <Header color="#62A5DB">
-            Its time to complete your profile
-          </Header>
+          <Header color="#62A5DB">It is time to complete your profile</Header>
           <Description>
-            We are excited to help you build your health and exposure history profile. Each survey that you complete contributes to a profile that is specific to you. The information that you provide in the surveys will improve your diagnostic testing and risk prediction. Thank you for allowing us to be a part of your healthcare journey. We value your time and effort in taking steps to help us better care for you. Please begin your survey or complete your unfinished survey.
+            We are excited to help you build your health and exposure history
+            profile. Each survey that you complete contributes to a profile that
+            is specific to you. The information that you provide in the surveys
+            will improve your diagnostic testing and risk prediction. Thank you
+            for allowing us to be a part of your healthcare journey. We value
+            your time and effort in taking steps to help us better care for you.
+            Please begin your survey or complete your unfinished survey.
           </Description>
         </DashboardIntro>
 
@@ -63,8 +67,8 @@ function QuestionnaireDashboard(props) {
                   percentComplete={
                     version.response
                       ? version.response.completed
-                          ? 100
-                          : Math.random() * 20 + 10
+                        ? 100
+                        : Math.random() * 20 + 10
                       : 0
                   }
                   buttonText={
@@ -74,8 +78,16 @@ function QuestionnaireDashboard(props) {
                   }
                   link={
                     version.response && version.response.completed
-                      ? `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.response.id)}/end`
-                      : `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.questionnaireId)}`
+                      ? `#/users/${encodeURIComponent(
+                          props.encryptedUserId
+                        )}/${encodeURIComponent(
+                          props.encryptedConsentTypeId
+                        )}/${encodeURIComponent(version.response.id)}/end`
+                      : `#/users/${encodeURIComponent(
+                          props.encryptedUserId
+                        )}/${encodeURIComponent(
+                          props.encryptedConsentTypeId
+                        )}/${encodeURIComponent(version.questionnaireId)}`
                   }
                   status={
                     version.response
