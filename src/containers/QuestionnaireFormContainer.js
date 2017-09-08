@@ -6,6 +6,10 @@ import * as actions from '../actions';
 import * as selectors from '../reducers';
 import * as UIselectors from '../reducers/ui';
 import Form from '../components/Form';
+import { notify } from 'react-notify-toast';
+
+const TOAST_DURATION = 2000;
+
 const propTypes = {
   routeParams: PropTypes.shape({
     userId: PropTypes.string.isRequired,
@@ -31,7 +35,10 @@ class QuestionnaireFormContainer extends Component {
   // componentWillMount() {
   //   this.setPageMode();
   // }
-
+  constructor() {
+    super();
+    this.show = notify.createShowQueue();
+  }
   componentDidMount() {
     const { userId, consentTypeId, questionnaireId } = this.props.params;
     const { timestamp } = this.props.location.query;
@@ -47,6 +54,16 @@ class QuestionnaireFormContainer extends Component {
       .catch(error => {
         console.log('Decryption failed', error);
       });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.isResponseUpdating && !nextProps.isResponseUpdating) {
+      if (nextProps.isError) {
+        this.show('An error occured.', 'error', TOAST_DURATION);
+      } else {
+        this.show('Saved successfully.', 'success', TOAST_DURATION);
+      }
+    }
   }
 
   // componentDidUpdate(prevProps, prevState) {
@@ -79,6 +96,7 @@ function mapStateToProps(state, ownProps) {
 
   return {
     isError: selectors.getIsResponseError(state),
+    isResponseUpdating: selectors.getIsResponseUpdating(state),
     submitResponseFailure: selectors.getSubmitResponseFailure(state),
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     responseElementIds: selectors.getVisibleResponseElementIds(state),
