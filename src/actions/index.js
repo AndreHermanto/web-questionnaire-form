@@ -114,25 +114,6 @@ export const markAsPreferNotToAnswer = responseElementId => (
   dispatch(updateResponseOnServer());
 };
 
-export const markAsNoneOfTheAbove = (responseElementId, answerId) => (
-  dispatch,
-  getState
-) => {
-  dispatch({
-    type: types.MARK_AS_NONE_OF_THE_ABOVE,
-    payload: normalize(
-      {
-        id: answerId
-      },
-      schema.responseElementAnswer
-    ),
-    responseElementId
-  });
-  dispatch(checkForRepeats(responseElementId, answerId));
-  dispatch(clearPreferNotToAnswer(responseElementId));
-  dispatch(updateResponseOnServer());
-};
-
 export const checkForRepeats = (responseElementId, answerId) => (
   dispatch,
   getState
@@ -257,7 +238,7 @@ export const selectAnswer = (responseElementId, answerId) => (
   dispatch(clearPreferNotToAnswer(responseElementId));
   dispatch(updateResponseOnServer());
 };
-export const toggleAnswer = (responseElementId, answerId) => (
+export const toggleAnswerValue = (responseElementId, answerId) => (
   dispatch,
   getState
 ) => {
@@ -272,6 +253,89 @@ export const toggleAnswer = (responseElementId, answerId) => (
     responseElementId
   });
   dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(clearPreferNotToAnswer(responseElementId));
+  dispatch(updateResponseOnServer());
+};
+
+export const toggleAnswer = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+
+  //get response element
+  const responseElement = selectors.getResponseElementById(
+    state,
+    responseElementId
+  );
+
+  // get element
+  const element = selectors.getElementById(
+    state,
+    responseElement.get('elementId')
+  );
+
+  //get all question answers
+  const answers = element.get('answers')
+    ? element
+        .get('answers')
+        .map((answerId, index) => selectors.getAnswerById(state, answerId))
+    : Immutable.List();
+
+  //check if its none of the above question
+  const checkNoneOfTheAbove =
+    answers.getIn([answers.count() - 1, 'text']).toLowerCase() ===
+    'none of the above';
+
+  //get answer value
+  const answer = selectors.getAnswerById(state, answerId);
+
+  //get answered question id
+  const responseElementAnswers = responseElement.get('answers');
+
+  if (checkNoneOfTheAbove) {
+    if (answer.get('text').toLowerCase() === 'none of the above') {
+      if (
+        responseElementAnswers.count() &&
+        responseElementAnswers.get('0') !== answerId
+      ) {
+        dispatch(openNoneOfTheAboveAnswerModal(responseElementId));
+      } else {
+        dispatch(markAsNoneOfTheAbove(responseElementId, answerId));
+      }
+    } else {
+      if (
+        responseElementAnswers.get('0') ===
+        answers.getIn([answers.count() - 1, 'id'])
+      ) {
+        dispatch(
+          markAsNoneOfTheAbove(
+            responseElementId,
+            answers.get(answers.count() - 1).id
+          )
+        );
+      }
+      dispatch(toggleAnswerValue(responseElementId, answerId));
+    }
+  } else {
+    dispatch(toggleAnswerValue(responseElementId, answerId));
+  }
+};
+
+export const markAsNoneOfTheAbove = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
+  dispatch({
+    type: types.MARK_AS_NONE_OF_THE_ABOVE,
+    payload: normalize(
+      {
+        id: answerId
+      },
+      schema.responseElementAnswer
+    ),
+    responseElementId
+  });
   dispatch(clearPreferNotToAnswer(responseElementId));
   dispatch(updateResponseOnServer());
 };

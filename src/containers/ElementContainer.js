@@ -107,9 +107,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   closePreferNotToAnswerModal: () => {
     dispatch(actions.closePreferNotToAnswerModal());
   },
-  openNoneOfTheAboveAnswerModal: () => {
-    dispatch(actions.openNoneOfTheAboveAnswerModal(ownProps.responseElementId));
-  },
   closeNoneOfTheAboveAnswerModal: () => {
     dispatch(actions.closeNoneOfTheAboveAnswerModal());
   },
