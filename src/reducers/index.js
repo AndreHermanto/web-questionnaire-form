@@ -470,8 +470,13 @@ export const getIsResponseLoading = state =>
   state.get('uiResponses').get('isLoading');
 export const getIsResponseError = state =>
   state.get('uiResponses').get('isError');
+export const getIsResponseUpdating = state =>
+  state.get('uiResponses').get('isResponseUpdating');
 
 export const getLargeText = state => fromUI.getLargeText(state.get('ui'));
 
 export const getSubmitResponseFailure = state =>
   state.get('ui').get('submitResponseFailure');
+
+export const getShowPreferNotToAnswerModal = state =>
+  state.get('uiResponses').get('showPreferNotToAnswerModal');

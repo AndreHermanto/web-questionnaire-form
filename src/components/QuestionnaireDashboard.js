@@ -42,7 +42,13 @@ function QuestionnaireDashboard(props) {
             It is time to complete your profile
           </Header>
           <Description>
-            We are excited to help you build your health and exposure history profile. Each survey that you complete contributes to a profile that is specific to you. The information that you provide in the surveys will improve your diagnostic testing and risk prediction. Thank you for allowing us to be a part of your healthcare journey. We value your time and effort in taking steps to help us better care for you. Please begin your survey or complete your unfinished survey.
+            We are excited to help you build your health and exposure history
+            profile. Each survey that you complete contributes to a profile that
+            is specific to you. The information that you provide in the surveys
+            will improve your diagnostic testing and risk prediction. Thank you
+            for allowing us to be a part of your healthcare journey. We value
+            your time and effort in taking steps to help us better care for you.
+            Please begin your survey or complete your unfinished survey.
           </Description>
         </DashboardIntro>
 

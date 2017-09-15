@@ -12,6 +12,12 @@ class Date extends Component {
     };
     const dayValue = get(responseElementAnswers, `${answers[0].id}.day`, '');
     const yearValue = get(responseElementAnswers, `${answers[0].id}.year`, '');
+    const monthValue = get(
+      responseElementAnswers,
+      `${answers[0].id}.month`,
+      ''
+    );
+    const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     return (
       <div>
         <div className="row">
@@ -85,9 +91,10 @@ class Date extends Component {
           </div>
         </div>
         {!!dayValue.length &&
-          (dayValue < 1 || dayValue > 31) &&
+          (dayValue > monthLength[monthValue - 1] || dayValue < 1) &&
           <div className="text-danger">
-            Invalid Day: Day must be between 1 and 31
+            Invalid Day: Day must be between 1 and {monthLength[monthValue - 1]}{' '}
+            for that month
           </div>}
         {!!yearValue.length &&
           (yearValue < 1900 || yearValue > moment().year()) &&
