@@ -17,7 +17,7 @@ class Date extends Component {
       `${answers[0].id}.month`,
       ''
     );
-    const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const monthLength = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     return (
       <div>
         <div className="row">
@@ -93,7 +93,10 @@ class Date extends Component {
         {!!dayValue.length &&
           (dayValue > monthLength[monthValue - 1] || dayValue < 1) &&
           <div className="text-danger">
-            Invalid Day: Day must be between 1 and {monthLength[monthValue - 1]}{' '}
+            Invalid Day: Day must be between 1 and
+            {' '}
+            {monthLength[monthValue - 1]}
+            {' '}
             for that month
           </div>}
         {!!yearValue.length &&
