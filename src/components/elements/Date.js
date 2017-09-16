@@ -17,7 +17,33 @@ class Date extends Component {
       `${answers[0].id}.month`,
       ''
     );
-    const monthLength = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const monthLengthLeapYear = [
+      31,
+      29,
+      31,
+      30,
+      31,
+      30,
+      31,
+      31,
+      30,
+      31,
+      30,
+      31
+    ];
+
+    const maxDayValue = moment([yearValue]).isLeapYear()
+      ? monthLengthLeapYear[monthValue - 1] // larger than value for leap year
+      : monthLength[monthValue - 1]; // larger than value for regular year
+
+    console.log(moment([yearValue]).isLeapYear());
+    const invalidDay =
+      dayValue.length === 0 || // nothing entered
+      dayValue < 1 || // negative number
+      dayValue > maxDayValue; // larger than 28,29,30,31 depending on the month
+
     return (
       <div>
         <div className="row">
@@ -91,11 +117,11 @@ class Date extends Component {
           </div>
         </div>
         {!!dayValue.length &&
-          (dayValue > monthLength[monthValue - 1] || dayValue < 1) &&
+          invalidDay &&
           <div className="text-danger">
             Invalid Day: Day must be between 1 and
             {' '}
-            {monthLength[monthValue - 1]}
+            {maxDayValue}
             {' '}
             for that month
           </div>}
