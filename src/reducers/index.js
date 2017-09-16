@@ -393,7 +393,11 @@ export const getResponseElementsWithInvalidAnswers = state => {
         !responseElementAnswer.get('month') ||
         responseElementAnswer.get('month').length === 0 ||
         responseElementAnswer.get('day') > 31 ||
-        responseElementAnswer.get('day') <= 0
+        responseElementAnswer.get('day') <= 0 ||
+        !moment(
+          `${responseElementAnswer.get('year')}-${responseElementAnswer.get('month')}-${responseElementAnswer.get('day')}`,
+          'YYYY-MM-DD'
+        ).isValid()
       );
     });
 };
