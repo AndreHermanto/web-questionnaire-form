@@ -28,20 +28,9 @@ const byId = (state = fromJS({}), action) => {
         }
       );
     case types.MARK_AS_NONE_OF_THE_ABOVE:
-      return state.updateIn(
+      return state.setIn(
         [action.responseElementId, 'answers'],
-        answerIds => {
-          // see if its there
-          const index = answerIds.findIndex(
-            answerId => answerId === action.payload.result
-          );
-          // remove it
-          if (index >= 0) {
-            return answerIds.splice(index, 1);
-          }
-          // Return None of the above only
-          return List().push(action.payload.result);
-        }
+        fromJS([action.payload.result])
       );
     case 'SELECT_ANSWER':
     case 'SET_ANSWER_VALUE':

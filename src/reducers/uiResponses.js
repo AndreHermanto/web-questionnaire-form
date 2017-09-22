@@ -30,10 +30,7 @@ const uiResponses = (state = initialState, action) => {
     case types.CLOSE_PREFER_NOT_TO_ANSWER_MODAL:
       return state.set('showPreferNotToAnswerModal', null);
     case types.OPEN_NONE_OF_THE_ABOVE_ANSWER_MODAL:
-      return state.set(
-        'showNoneOfTheAboveAnswerModal',
-        action.responseElementId
-      );
+      return state.set('showNoneOfTheAboveAnswerModal', action.answerId);
     case types.CLOSE_NONE_OF_THE_ABOVE_ANSWER_MODAL:
       return state.set('showNoneOfTheAboveAnswerModal', null);
     default:

@@ -6,15 +6,13 @@ import Markdown from 'react-markdown';
 
 const CheckboxContainer = styled.div`
   input[type="checkbox"] {
-    margin-top: ${props =>
-      props.largeText === 0 ? '' : props.largeText > 1 ? '20px' : '10px'};
+    margin-top: ${props => (props.largeText === 0 ? '' : props.largeText > 1 ? '20px' : '10px')};
   }
 `;
 class Checkbox extends Component {
   render() {
     const {
       answers,
-      responseElement,
       responseElementAnswers,
       toggleAnswer,
       onFollowUpChanged,
@@ -26,7 +24,7 @@ class Checkbox extends Component {
     return (
       <CheckboxContainer largeText={largeText}>
         <ul className="list-unstyled">
-          {answers.map((answer, index) =>
+          {answers.map((answer, index) => (
             <li key={answer.id}>
               <CheckboxBootstrap
                 onChange={() => toggleAnswer(answer.id)}
@@ -56,7 +54,7 @@ class Checkbox extends Component {
                   />
                 </div>}
               <Modal
-                show={showNoneOfTheAboveAnswerModal === responseElement.id}
+                show={showNoneOfTheAboveAnswerModal === answer.id}
                 onHide={closeNoneOfTheAboveAnswerModal}
               >
                 <Modal.Header closeButton>
@@ -90,7 +88,7 @@ class Checkbox extends Component {
                 </Modal.Footer>
               </Modal>
             </li>
-          )}
+          ))}
         </ul>
       </CheckboxContainer>
     );

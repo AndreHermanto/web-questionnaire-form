@@ -196,9 +196,7 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
   return dispatch(updateResponseOnServer())
     .then(() => {
       hashHistory.push(
-        `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(
-          encryptedConsentTypeId
-        )}/${responseId}/end`
+        `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
       );
     })
     .catch(() => {
@@ -220,30 +218,45 @@ export const clearPreferNotToAnswer = responseElementId => (
   });
 };
 
+export const clearNoneOfTheAboveAnswer = responseElementId => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const responseElement = selectors.getResponseElementById(
+    state,
+    responseElementId
+  );
+  const noneOfTheAboveAnswers = responseElement
+    .get('answers')
+    .map(answerId => selectors.getAnswerById(state, answerId))
+    .filter(answer => answer.get('text').toLowerCase() === 'none of the above');
+
+  // this question doesnt even have a none of the above answer, so do nothing
+  if (!noneOfTheAboveAnswers.size) {
+    return;
+  }
+  const index = responseElement
+    .get('answers')
+    .indexOf(noneOfTheAboveAnswers.get(0).get('id'));
+  // just remove the none of the above answer from the list of answers
+  dispatch({
+    type: 'CLEAR_NONE_OF_THE_ABOVE_ANSWER',
+    payload: normalize(
+      responseElement
+        .update('answers', answers => answers.splice(index, 1))
+        .toJS(),
+      schema.responseElement
+    )
+  });
+};
+
 export const selectAnswer = (responseElementId, answerId) => (
   dispatch,
   getState
 ) => {
   dispatch({
     type: 'SELECT_ANSWER',
-    payload: normalize(
-      {
-        id: answerId
-      },
-      schema.responseElementAnswer
-    ),
-    responseElementId
-  });
-  dispatch(checkForRepeats(responseElementId, answerId));
-  dispatch(clearPreferNotToAnswer(responseElementId));
-  dispatch(updateResponseOnServer());
-};
-export const toggleAnswerValue = (responseElementId, answerId) => (
-  dispatch,
-  getState
-) => {
-  dispatch({
-    type: 'TOGGLE_ANSWER',
     payload: normalize(
       {
         id: answerId
@@ -263,63 +276,36 @@ export const toggleAnswer = (responseElementId, answerId) => (
 ) => {
   const state = getState();
 
-  //get response element
+  const answer = selectors.getAnswerById(state, answerId);
   const responseElement = selectors.getResponseElementById(
     state,
     responseElementId
   );
 
-  // get element
-  const element = selectors.getElementById(
-    state,
-    responseElement.get('elementId')
-  );
-
-  //get all question answers
-  const answers = element.get('answers')
-    ? element
-        .get('answers')
-        .map((answerId, index) => selectors.getAnswerById(state, answerId))
-    : Immutable.List();
-
-  //check if its none of the above question
-  const checkNoneOfTheAbove =
-    answers.getIn([answers.count() - 1, 'text']).toLowerCase() ===
-    'none of the above';
-
-  //get answer value
-  const answer = selectors.getAnswerById(state, answerId);
-
-  //get answered question id
-  const responseElementAnswers = responseElement.get('answers');
-
-  if (checkNoneOfTheAbove) {
-    if (answer.get('text').toLowerCase() === 'none of the above') {
-      if (
-        responseElementAnswers.count() &&
-        responseElementAnswers.get('0') !== answerId
-      ) {
-        dispatch(openNoneOfTheAboveAnswerModal(responseElementId));
-      } else {
-        dispatch(markAsNoneOfTheAbove(responseElementId, answerId));
-      }
-    } else {
-      if (
-        responseElementAnswers.get('0') ===
-        answers.getIn([answers.count() - 1, 'id'])
-      ) {
-        dispatch(
-          markAsNoneOfTheAbove(
-            responseElementId,
-            answers.get(answers.count() - 1).id
-          )
-        );
-      }
-      dispatch(toggleAnswerValue(responseElementId, answerId));
-    }
-  } else {
-    dispatch(toggleAnswerValue(responseElementId, answerId));
+  // this this answer none of the above, and are we setting it to be selected (e.g. its not already selected)
+  if (
+    answer.get('text').toLowerCase() === 'none of the above' &&
+    !responseElement.get('answers').contains(answerId)
+  ) {
+    // show the modal
+    dispatch(openNoneOfTheAboveAnswerModal(answerId));
+    return;
   }
+
+  dispatch({
+    type: 'TOGGLE_ANSWER',
+    payload: normalize(
+      {
+        id: answerId
+      },
+      schema.responseElementAnswer
+    ),
+    responseElementId
+  });
+  dispatch(clearNoneOfTheAboveAnswer(responseElementId));
+  dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(clearPreferNotToAnswer(responseElementId));
+  dispatch(updateResponseOnServer());
 };
 
 export const markAsNoneOfTheAbove = (responseElementId, answerId) => (
@@ -775,10 +761,10 @@ export function closePreferNotToAnswerModal() {
   };
 }
 
-export function openNoneOfTheAboveAnswerModal(responseElementId) {
+export function openNoneOfTheAboveAnswerModal(answerId) {
   return {
     type: types.OPEN_NONE_OF_THE_ABOVE_ANSWER_MODAL,
-    responseElementId
+    answerId
   };
 }
 
