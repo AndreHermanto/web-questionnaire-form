@@ -7,6 +7,7 @@ import * as types from '../constants/ActionTypes';
 import * as api from '../api';
 import * as schema from './schema';
 import * as selectors from '../reducers';
+import { fetchConsentTypeMappings } from './consents';
 
 export * from './consents';
 export * from './security';
@@ -196,9 +197,7 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
   return dispatch(updateResponseOnServer())
     .then(() => {
       hashHistory.push(
-        `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(
-          encryptedConsentTypeId
-        )}/${responseId}/end`
+        `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
       );
     })
     .catch(() => {
@@ -562,10 +561,11 @@ export const resumeQuestionnaire = (
 //     .catch(e => dispatch(updateResponseFailure(e)));
 // };
 
-export const setupQuestionnaire = ({ questionnaireId, resume }) => (
-  dispatch,
-  getState
-) => {
+export const setupQuestionnaire = ({
+  questionnaireId,
+  consentTypeId,
+  resume
+}) => (dispatch, getState) => {
   const state = getState();
   const userId = selectors.getUserId(state);
   // get the responses
@@ -591,12 +591,15 @@ export const setupQuestionnaire = ({ questionnaireId, resume }) => (
       }
       // no responses
       // find out what the current version is
-      return dispatch(fetchQuestionnaire(questionnaireId))
-        .then(questionnaire =>
-          dispatch(
-            fetchVersion(questionnaireId, questionnaire.currentVersionId)
-          )
-        )
+      // return dispatch()
+      return dispatch(fetchConsentTypeMappings(consentTypeId))
+        .then(consentTypeMappings => {
+          const versionId = consentTypeMappings[0].questionnaires.filter(
+            mappedQuestionnaire =>
+              mappedQuestionnaire.questionnaireId === questionnaireId
+          )[0].versionPublished;
+          return dispatch(fetchVersion(questionnaireId, versionId));
+        })
         .then(version => {
           return dispatch(
             createResponse(questionnaireId, userId, version)
