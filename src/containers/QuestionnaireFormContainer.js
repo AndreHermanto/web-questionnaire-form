@@ -47,7 +47,8 @@ class QuestionnaireFormContainer extends Component {
       .then(() => {
         this.props.dispatch(
           actions.setupQuestionnaire({
-            questionnaireId
+            questionnaireId,
+            consentTypeId
           })
         );
       })
