@@ -561,11 +561,10 @@ export const resumeQuestionnaire = (
 //     .catch(e => dispatch(updateResponseFailure(e)));
 // };
 
-export const setupQuestionnaire = ({
-  questionnaireId,
-  consentTypeId,
-  resume
-}) => (dispatch, getState) => {
+export const setupQuestionnaire = ({ questionnaireId, resume }) => (
+  dispatch,
+  getState
+) => {
   const state = getState();
   const userId = selectors.getUserId(state);
   // get the responses
@@ -592,6 +591,8 @@ export const setupQuestionnaire = ({
       // no responses
       // find out what the current version is
       // return dispatch()
+      const consentTypeId = state.get('ui').get('consentTypeId');
+
       return dispatch(fetchConsentTypeMappings(consentTypeId))
         .then(consentTypeMappings => {
           const versionId = consentTypeMappings[0].questionnaires.filter(
