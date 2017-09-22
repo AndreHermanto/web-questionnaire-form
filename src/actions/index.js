@@ -591,31 +591,54 @@ export const setupQuestionnaire = ({ questionnaireId, resume }) => (
       // no responses
       // find out what the current version is
       // return dispatch()
-      const consentTypeId = state.get('ui').get('consentTypeId');
 
-      return dispatch(fetchConsentTypeMappings(consentTypeId))
-        .then(consentTypeMappings => {
-          const versionId = consentTypeMappings[0].questionnaires.filter(
-            mappedQuestionnaire =>
-              mappedQuestionnaire.questionnaireId === questionnaireId
-          )[0].versionPublished;
-          return dispatch(fetchVersion(questionnaireId, versionId));
-        })
-        .then(version => {
+      return new Promise((resolve, reject) => {
+        if (window.location.href.indexOf('/preview') >= 0) {
+          // its preview, load the latest version
+          dispatch(fetchQuestionnaire(questionnaireId)).then(questionnaire =>
+            dispatch(
+              fetchVersion(questionnaireId, questionnaire.currentVersionId)
+            ).then(version => resolve(version))
+          );
+        } else {
+          // its not a preview, load the real deal
+          const consentTypeId = state.get('ui').get('consentTypeId');
           return dispatch(
-            createResponse(questionnaireId, userId, version)
-          ).then(response => {
-            dispatch({
-              type: 'SET_CURRENT_QUESTIONNAIRE',
-              payload: {
-                responseId: response.id,
-                versionId: response.versionId,
-                questionnaireId
-              }
-            });
-            return response;
+            fetchConsentTypeMappings(consentTypeId)
+          ).then(consentTypeMappings => {
+            if (!consentTypeMappings.length) {
+              window.alert(
+                'An error has occured, there is no questionnaire for that consent. Please contact the system administrator.'
+              );
+              reject(
+                'An error has occured, there is no questionnaire for that consent. Please contact the system administrator.'
+              );
+            }
+            const versionId = consentTypeMappings[0].questionnaires.filter(
+              mappedQuestionnaire =>
+                mappedQuestionnaire.questionnaireId === questionnaireId
+            )[0].versionPublished;
+
+            dispatch(fetchVersion(questionnaireId, versionId)).then(version =>
+              resolve(version)
+            );
           });
+        }
+      }).then(version => {
+        return dispatch(
+          createResponse(questionnaireId, userId, version)
+        ).then(response => {
+          dispatch({
+            type: 'SET_CURRENT_QUESTIONNAIRE',
+            payload: {
+              responseId: response.id,
+              versionId: response.versionId,
+              questionnaireId
+            }
+          });
+          return response;
         });
+      });
     })
     .then(() => {
       // resumse
