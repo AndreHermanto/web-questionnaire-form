@@ -68,6 +68,8 @@ class Form extends Component {
           fontSize: `${100 + this.props.largeText * 75}%`
         }}
       >
+        {window.location.href.indexOf('/preview') >= 0 &&
+          <div className="alert alert-info">This is a preview</div>}
         <button
           className="btn btn-default"
           onClick={() =>
