@@ -3,9 +3,12 @@ import { schema } from 'normalizr';
 // consent types
 export const consentType = new schema.Entity('consentTypes');
 export const arrayOfConsentTypes = new schema.Array(consentType);
-// consent type mappings
-export const consentTypeMapping = new schema.Entity('consentTypeMappings');
-export const arrayOfConsentTypeMappings = new schema.Array(consentTypeMapping);
+
+// releases
+
+export const releases = new schema.Entity('releases');
+export const arrayOfReleases = new schema.Array(releases);
+
 // questionnaires
 export const questionnaire = new schema.Entity('questionnaires');
 export const arrayOfQuestionnaires = new schema.Array(questionnaire);

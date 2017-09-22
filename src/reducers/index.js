@@ -11,7 +11,7 @@ import * as fromAnswers from './answers';
 import ui, * as fromUI from './ui';
 import uiQuestionnaires from './uiQuestionnaires';
 import uiResponses from './uiResponses';
-import * as fromConsentTypeMappings from './consentTypeMappings';
+import * as fromReleases from './releases';
 import entities from './entities';
 import questionTypes from '../constants/QuestionTypes';
 
@@ -87,15 +87,15 @@ export const getDebug = state => {
 export const getHomepageQuestionnaires = state => {
   const consentTypeId = state.get('ui').get('consentTypeId');
   const userId = state.get('ui').get('userId');
-  const consentTypeMapping = fromConsentTypeMappings.getByConsentTypeId(
-    state.getIn(['entities', 'consentTypeMappings']),
+  const release = fromReleases.getByConsentTypeId(
+    state.getIn(['entities', 'releases']),
     consentTypeId
   );
-  if (!consentTypeMapping) {
+  if (!release) {
     return List();
   }
 
-  return consentTypeMapping.get('questionnaires').map(mappedQuestionnaire => {
+  return release.get('questionnaires').map(mappedQuestionnaire => {
     // get the version for that questionnaire
     const responses = fromResponses
       .getAllResponse(state.get('entities').get('responses'))
@@ -395,7 +395,9 @@ export const getResponseElementsWithInvalidAnswers = state => {
         responseElementAnswer.get('day') > 31 ||
         responseElementAnswer.get('day') <= 0 ||
         !moment(
-          `${responseElementAnswer.get('year')}-${responseElementAnswer.get('month')}-${responseElementAnswer.get('day')}`,
+          `${responseElementAnswer.get('year')}-${responseElementAnswer.get(
+            'month'
+          )}-${responseElementAnswer.get('day')}`,
           'YYYY-MM-DD'
         ).isValid()
       );

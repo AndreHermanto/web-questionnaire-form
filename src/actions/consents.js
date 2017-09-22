@@ -5,61 +5,56 @@ import * as api from '../api';
 import { List } from 'immutable';
 import { fetchResponses, fetchVersion } from './index';
 
-export const fetchConsentTypeMappingRequest = () => ({
-  type: types.FETCH_CONSENT_TYPE_MAPPINGS_REQUEST
+export const fetchReleasesRequest = () => ({
+  type: types.FETCH_RELEASES_REQUEST
 });
 
-export const fetchConsentTypeMappingsSuccess = ({ payload }) => ({
-  type: types.FETCH_CONSENT_TYPE_MAPPINGS_SUCCESS,
+export const fetchReleasesSuccess = ({ payload }) => ({
+  type: types.FETCH_RELEASES_SUCCESS,
   payload
 });
 
-export const fetchConsentTypeMappingsFailure = ({ payload }) => ({
-  type: types.FETCH_CONSENT_TYPE_MAPPINGS_FAILURE,
+export const fetchReleasesFailure = ({ payload }) => ({
+  type: types.FETCH_RELEASES_FAILURE,
   payload
 });
 
-export const fetchConsentTypeMappings = consentTypeId => (
-  dispatch,
-  getState
-) => {
-  dispatch(fetchConsentTypeMappingRequest());
+export const fetchReleases = consentTypeId => (dispatch, getState) => {
+  dispatch(fetchReleasesRequest());
   return api
-    .getConsentTypeMappings(consentTypeId)
+    .getReleases(consentTypeId)
     .then(response => response.json())
     .then(json => json.data)
-    .then(consentTypeMappings => {
+    .then(releases => {
       dispatch(
-        fetchConsentTypeMappingsSuccess({
-          payload: normalize(
-            consentTypeMappings,
-            schema.arrayOfConsentTypeMappings
-          )
+        fetchReleasesSuccess({
+          payload: normalize(releases[releases.length - 1], schema.releases)
         })
       );
-      return consentTypeMappings;
-    });
+      return releases;
+    })
+    .catch(ex => dispatch(fetchReleasesFailure(ex)));
 };
 
 export const fetchDataForHomepage = () => (dispatch, getState) => {
   const state = getState();
   const consentTypeId = state.get('ui').get('consentTypeId');
   const userId = state.get('ui').get('userId');
-  return dispatch(fetchConsentTypeMappings(consentTypeId)).then(() => {
+  return dispatch(fetchReleases(consentTypeId)).then(() => {
     const state = getState();
 
     // get out all the questionnaires for the consent types
     // TODO: change to a selector
     const mappedQuestionnaires = state
       .get('entities')
-      .get('consentTypeMappings')
+      .get('releases')
       .get('byId')
       .toSeq()
       .reduce(
-        (acc, consentTypeMapping) =>
-          acc.concat(consentTypeMapping.get('questionnaires')),
+        (acc, release) => acc.concat(release.get('questionnaires')),
         List()
       );
+
     // now, with the questionnaire ids, load the responses
     mappedQuestionnaires.forEach(mappedQuestionnaires => {
       dispatch(

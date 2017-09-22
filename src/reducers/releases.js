@@ -5,28 +5,28 @@ import { dedup } from '../helpers';
 import get from 'lodash.get';
 
 const byId = (state = fromJS({}), action) => {
-  if (get(action, 'payload.entities.consentTypeMappings', false)) {
-    return state.merge(fromJS(action.payload.entities.consentTypeMappings));
+  if (get(action, 'payload.entities.releases', false)) {
+    return state.merge(fromJS(action.payload.entities.releases));
   }
   return state;
 };
 
 const allIds = (state = List(), action) => {
   switch (action.type) {
-    case types.FETCH_CONSENT_TYPE_MAPPINGS_SUCCESS:
+    case types.FETCH_RELEASES_SUCCESS:
       return dedup(state.concat(fromJS(action.payload.result)));
     default:
       return state;
   }
 };
 
-const consentTypeMappings = combineReducers({
+const releases = combineReducers({
   byId,
   allIds
 });
-export default consentTypeMappings;
+export default releases;
 
-export const getAllConsentTypeMappings = state => {
+export const getAllReleases = state => {
   return state.get('allIds').map(id => state.get('byId').get(id + ''));
 };
 
@@ -34,8 +34,5 @@ export const getByConsentTypeId = (state, consentTypeId) => {
   console.log(state, consentTypeId);
   return state
     .get('byId')
-    .find(
-      consentTypeMapping =>
-        String(consentTypeMapping.get('consentTypeId')) === consentTypeId
-    );
+    .find(release => String(release.get('consentTypeId')) === consentTypeId);
 };

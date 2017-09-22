@@ -7,10 +7,10 @@ import responseElementAnswers from './responseElementAnswers';
 import responses from './responses';
 import questionnaires from './questionnaires';
 import answers from './answers';
-import consentTypeMappings from './consentTypeMappings';
+import releases from './releases';
 
 const entities = combineReducers({
-  consentTypeMappings,
+  releases,
   questionnaires,
   versions, // a version of a questionnaire
   answers, // answers to questions
