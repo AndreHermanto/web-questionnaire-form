@@ -38,9 +38,7 @@ function QuestionnaireDashboard(props) {
       <div className="container" style={{ paddingBottom: 120 }}>
         <DashboardIntro>
           <Header color="#00437E">Welcome back</Header>
-          <Header color="#62A5DB">
-            It is time to complete your profile
-          </Header>
+          <Header color="#62A5DB">It is time to complete your profile</Header>
           <Description>
             We are excited to help you build your health and exposure history
             profile. Each survey that you complete contributes to a profile that
@@ -56,12 +54,12 @@ function QuestionnaireDashboard(props) {
           Questionnaires
         </h2>
         <Row>
-          {props.questionnaires.map(version => {
+          {props.questionnaires.map((version, i) => {
             if (!version) {
-              return <div>loading</div>;
+              return <div key={i}>loading</div>;
             }
             return (
-              <Col sm={'4'} style={{ marginBottom: 32 }}>
+              <Col sm={4} style={{ marginBottom: 32 }} key={i}>
                 <Questionnaire
                   completed={version.response && version.response.completed}
                   title={version.title}
@@ -69,8 +67,8 @@ function QuestionnaireDashboard(props) {
                   percentComplete={
                     version.response
                       ? version.response.completed
-                          ? 100
-                          : Math.random() * 20 + 10
+                        ? 100
+                        : Math.random() * 20 + 10
                       : 0
                   }
                   buttonText={
@@ -80,8 +78,16 @@ function QuestionnaireDashboard(props) {
                   }
                   link={
                     version.response && version.response.completed
-                      ? `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.response.id)}/end`
-                      : `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.questionnaireId)}`
+                      ? `#/users/${encodeURIComponent(
+                          props.encryptedUserId
+                        )}/${encodeURIComponent(
+                          props.encryptedConsentTypeId
+                        )}/${encodeURIComponent(version.response.id)}/end`
+                      : `#/users/${encodeURIComponent(
+                          props.encryptedUserId
+                        )}/${encodeURIComponent(
+                          props.encryptedConsentTypeId
+                        )}/${encodeURIComponent(version.questionnaireId)}`
                   }
                   status={
                     version.response

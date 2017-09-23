@@ -28,7 +28,10 @@ export const fetchReleases = consentTypeId => (dispatch, getState) => {
     .then(releases => {
       dispatch(
         fetchReleasesSuccess({
-          payload: normalize(releases[releases.length - 1], schema.releases)
+          payload: normalize(
+            releases[Math.max(0, releases.length - 1)],
+            schema.releases
+          )
         })
       );
       return releases;
