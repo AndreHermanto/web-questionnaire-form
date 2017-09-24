@@ -12,7 +12,6 @@ class NewElement extends Component {
     answers: PropTypes.array.isRequired,
     responseElementAnswers: PropTypes.object.isRequired,
     isInvalid: PropTypes.bool.isRequired,
-
     selectAnswer: PropTypes.func.isRequired,
     toggleAnswer: PropTypes.func.isRequired,
     setAnswerValue: PropTypes.func.isRequired,
@@ -43,11 +42,8 @@ class NewElement extends Component {
       default:
         return (
           <div>
-            Sorry, the element type
-            {' '}
-            {this.props.element.type}
-            {' '}
-            is not currently supported.
+            Sorry, the element type {this.props.element.type} is not currently
+            supported.
           </div>
         );
     }

@@ -484,3 +484,6 @@ export const getSubmitResponseFailure = state =>
 
 export const getShowPreferNotToAnswerModal = state =>
   state.get('uiResponses').get('showPreferNotToAnswerModal');
+
+export const getShowNoneOfTheAboveAnswerModal = state =>
+  state.get('uiResponses').get('showNoneOfTheAboveAnswerModal');

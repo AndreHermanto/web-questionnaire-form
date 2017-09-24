@@ -22,9 +22,15 @@ const byId = (state = fromJS({}), action) => {
           if (index >= 0) {
             return answerIds.splice(index, 1);
           }
+
           // add it
           return answerIds.push(action.payload.result);
         }
+      );
+    case types.MARK_AS_NONE_OF_THE_ABOVE:
+      return state.setIn(
+        [action.responseElementId, 'answers'],
+        fromJS([action.payload.result])
       );
     case 'SELECT_ANSWER':
     case 'SET_ANSWER_VALUE':

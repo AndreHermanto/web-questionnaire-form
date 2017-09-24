@@ -218,6 +218,40 @@ export const clearPreferNotToAnswer = responseElementId => (
     payload: normalize(responseElement.toJS(), schema.responseElement)
   });
 };
+
+export const clearNoneOfTheAboveAnswer = responseElementId => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const responseElement = selectors.getResponseElementById(
+    state,
+    responseElementId
+  );
+  const noneOfTheAboveAnswers = responseElement
+    .get('answers')
+    .map(answerId => selectors.getAnswerById(state, answerId))
+    .filter(answer => answer.get('text').toLowerCase() === 'none of the above');
+
+  // this question doesnt even have a none of the above answer, so do nothing
+  if (!noneOfTheAboveAnswers.size) {
+    return;
+  }
+  const index = responseElement
+    .get('answers')
+    .indexOf(noneOfTheAboveAnswers.get(0).get('id'));
+  // just remove the none of the above answer from the list of answers
+  dispatch({
+    type: 'CLEAR_NONE_OF_THE_ABOVE_ANSWER',
+    payload: normalize(
+      responseElement
+        .update('answers', answers => answers.splice(index, 1))
+        .toJS(),
+      schema.responseElement
+    )
+  });
+};
+
 export const selectAnswer = (responseElementId, answerId) => (
   dispatch,
   getState
@@ -236,10 +270,29 @@ export const selectAnswer = (responseElementId, answerId) => (
   dispatch(clearPreferNotToAnswer(responseElementId));
   dispatch(updateResponseOnServer());
 };
+
 export const toggleAnswer = (responseElementId, answerId) => (
   dispatch,
   getState
 ) => {
+  const state = getState();
+
+  const answer = selectors.getAnswerById(state, answerId);
+  const responseElement = selectors.getResponseElementById(
+    state,
+    responseElementId
+  );
+
+  // this this answer none of the above, and are we setting it to be selected (e.g. its not already selected)
+  if (
+    answer.get('text').toLowerCase() === 'none of the above' &&
+    !responseElement.get('answers').contains(answerId)
+  ) {
+    // show the modal
+    dispatch(openNoneOfTheAboveAnswerModal(answerId));
+    return;
+  }
+
   dispatch({
     type: 'TOGGLE_ANSWER',
     payload: normalize(
@@ -250,7 +303,26 @@ export const toggleAnswer = (responseElementId, answerId) => (
     ),
     responseElementId
   });
+  dispatch(clearNoneOfTheAboveAnswer(responseElementId));
   dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(clearPreferNotToAnswer(responseElementId));
+  dispatch(updateResponseOnServer());
+};
+
+export const markAsNoneOfTheAbove = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
+  dispatch({
+    type: types.MARK_AS_NONE_OF_THE_ABOVE,
+    payload: normalize(
+      {
+        id: answerId
+      },
+      schema.responseElementAnswer
+    ),
+    responseElementId
+  });
   dispatch(clearPreferNotToAnswer(responseElementId));
   dispatch(updateResponseOnServer());
 };
@@ -715,5 +787,18 @@ export function openPreferNotToAnswerModal(responseElementId) {
 export function closePreferNotToAnswerModal() {
   return {
     type: types.CLOSE_PREFER_NOT_TO_ANSWER_MODAL
+  };
+}
+
+export function openNoneOfTheAboveAnswerModal(answerId) {
+  return {
+    type: types.OPEN_NONE_OF_THE_ABOVE_ANSWER_MODAL,
+    answerId
+  };
+}
+
+export function closeNoneOfTheAboveAnswerModal() {
+  return {
+    type: types.CLOSE_NONE_OF_THE_ABOVE_ANSWER_MODAL
   };
 }
