@@ -14,7 +14,7 @@ describe('fetching the consent type mapping', () => {
     fetchMock.reset();
   });
   it('grabs the data from the server', () => {
-    const consentTypeMappingId = '1';
+    const releaseId = '1';
     const consentTypeId = '1';
     const questionnaireId = '1';
     const versionId = '1';
@@ -46,34 +46,32 @@ describe('fetching the consent type mapping', () => {
         type: types.FETCH_CONSENT_TYPE_MAPPINGS_SUCCESS,
         payload: {
           entities: {
-            consentTypeMappings: {
-              [consentTypeMappingId]: {
-                id: consentTypeMappingId,
+            releases: {
+              [releaseId]: {
+                id: releaseId,
                 questionnaires: [
                   { questionnaireId, versionPublished: versionId }
                 ]
               }
             }
           },
-          result: [consentTypeMappingId]
+          result: [releaseId]
         }
       }
     ];
     const store = mockStore(
       fromJS({
         entities: {
-          consentTypeMappings: {
+          releases: {
             byId: {}
           }
         }
       })
     );
 
-    return store
-      .dispatch(actions.fetchConsentTypeMappings(consentTypeId))
-      .then(() => {
-        // return of async actions
-        expect(store.getActions()).toEqual(expectedActions);
-      });
+    return store.dispatch(actions.fetchReleases(consentTypeId)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 });

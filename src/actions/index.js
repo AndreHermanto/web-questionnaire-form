@@ -7,7 +7,7 @@ import * as types from '../constants/ActionTypes';
 import * as api from '../api';
 import * as schema from './schema';
 import * as selectors from '../reducers';
-import { fetchConsentTypeMappings } from './consents';
+import { fetchReleases } from './consents';
 
 export * from './consents';
 export * from './security';
@@ -660,9 +660,6 @@ export const setupQuestionnaire = ({ questionnaireId, resume }) => (
           return response;
         });
       }
-      // no responses
-      // find out what the current version is
-      // return dispatch()
 
       return new Promise((resolve, reject) => {
         if (window.location.href.indexOf('/preview') >= 0) {
@@ -675,25 +672,25 @@ export const setupQuestionnaire = ({ questionnaireId, resume }) => (
         } else {
           // its not a preview, load the real deal
           const consentTypeId = state.get('ui').get('consentTypeId');
-          return dispatch(
-            fetchConsentTypeMappings(consentTypeId)
-          ).then(consentTypeMappings => {
-            if (!consentTypeMappings.length) {
+          return dispatch(fetchReleases(consentTypeId)).then(releases => {
+            if (!releases.length) {
               window.alert(
                 'An error has occured, there is no questionnaire for that consent. Please contact the system administrator.'
               );
-              reject(
+              return reject(
                 'An error has occured, there is no questionnaire for that consent. Please contact the system administrator.'
               );
             }
-            const versionId = consentTypeMappings[0].questionnaires.filter(
+
+            const mostRecentRelease = releases[releases.length - 1];
+            const releasedVersionIdForQuestionnaire = mostRecentRelease.questionnaires.filter(
               mappedQuestionnaire =>
                 mappedQuestionnaire.questionnaireId === questionnaireId
             )[0].versionPublished;
 
-            dispatch(fetchVersion(questionnaireId, versionId)).then(version =>
-              resolve(version)
-            );
+            dispatch(
+              fetchVersion(questionnaireId, releasedVersionIdForQuestionnaire)
+            ).then(version => resolve(version));
           });
         }
       }).then(version => {

@@ -1,6 +1,6 @@
 import * as rest from './rest';
 
-export const getConsentTypeMappings = consentTypeId =>
+export const getReleases = consentTypeId =>
   rest.get(
-    `${process.env.REACT_APP_BASE_URL}/consent-type-mappings?consentTypeId=${consentTypeId}`
+    `${process.env.REACT_APP_BASE_URL}/releases?consentTypeId=${consentTypeId}`
   );
