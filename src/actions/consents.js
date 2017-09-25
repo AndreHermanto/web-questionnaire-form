@@ -26,6 +26,9 @@ export const fetchReleases = consentTypeId => (dispatch, getState) => {
     .then(response => response.json())
     .then(json => json.data)
     .then(releases => {
+      if (releases.length === 0) {
+        return Promise.reject('no release');
+      }
       dispatch(
         fetchReleasesSuccess({
           payload: normalize(
@@ -59,22 +62,22 @@ export const fetchDataForHomepage = () => (dispatch, getState) => {
       );
 
     // now, with the questionnaire ids, load the responses
-    mappedQuestionnaires.forEach(mappedQuestionnaires => {
+    mappedQuestionnaires.forEach(mappedQuestionnaire => {
       dispatch(
-        fetchResponses(mappedQuestionnaires.get('questionnaireId'), userId)
+        fetchResponses(mappedQuestionnaire.get('questionnaireId'), userId)
       ).then(responses => {
         if (responses.length) {
           dispatch(
             fetchVersion(
-              mappedQuestionnaires.get('questionnaireId'),
+              mappedQuestionnaire.get('questionnaireId'),
               responses[0].versionId
             )
           );
         } else {
           dispatch(
             fetchVersion(
-              mappedQuestionnaires.get('questionnaireId'),
-              mappedQuestionnaires.get('versionPublished')
+              mappedQuestionnaire.get('questionnaireId'),
+              mappedQuestionnaire.get('versionPublished')
             )
           );
         }
