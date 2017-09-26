@@ -33,6 +33,15 @@ function QuestionnaireDashboard(props) {
       </Grid>
     );
   }
+  const hasCompletedAllQuestionnaires = props.questionnaires.reduce(
+    (completed, version) => {
+      return (
+        completed && version && version.response && version.response.completed
+      );
+    },
+    true
+  );
+
   return (
     <div style={{ position: 'relative', minHeight: '100%' }}>
       <div className="container" style={{ paddingBottom: 120 }}>
@@ -53,6 +62,10 @@ function QuestionnaireDashboard(props) {
         <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
           Questionnaires
         </h2>
+        {hasCompletedAllQuestionnaires &&
+          <h3 style={{ fontSize: 16, marginBottom: '32', color: '#666' }}>
+            Congratulations! You have completed all your assigned surveys.
+          </h3>}
         <Row>
           {props.questionnaires.map((version, i) => {
             if (!version) {
@@ -67,8 +80,8 @@ function QuestionnaireDashboard(props) {
                   percentComplete={
                     version.response
                       ? version.response.completed
-                        ? 100
-                        : Math.random() * 20 + 10
+                          ? 100
+                          : Math.random() * 20 + 10
                       : 0
                   }
                   buttonText={
@@ -78,16 +91,8 @@ function QuestionnaireDashboard(props) {
                   }
                   link={
                     version.response && version.response.completed
-                      ? `#/users/${encodeURIComponent(
-                          props.encryptedUserId
-                        )}/${encodeURIComponent(
-                          props.encryptedConsentTypeId
-                        )}/${encodeURIComponent(version.response.id)}/end`
-                      : `#/users/${encodeURIComponent(
-                          props.encryptedUserId
-                        )}/${encodeURIComponent(
-                          props.encryptedConsentTypeId
-                        )}/${encodeURIComponent(version.questionnaireId)}`
+                      ? `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.response.id)}/end`
+                      : `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.questionnaireId)}`
                   }
                   status={
                     version.response
