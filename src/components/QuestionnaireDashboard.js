@@ -4,6 +4,7 @@ import { Grid, Col, Row } from 'react-bootstrap';
 import FailedToDecryptMessage from './FailedToDecryptMessage';
 import Questionnaire from './Questionnaire';
 import Footer from './Footer';
+import Payment from './Payment';
 
 const DashboardIntro = styled.div`margin: 60px 0px 0px 0px;`;
 
@@ -62,10 +63,11 @@ function QuestionnaireDashboard(props) {
         <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
           Questionnaires
         </h2>
-        {hasCompletedAllQuestionnaires &&
+        {hasCompletedAllQuestionnaires && (
           <h3 style={{ fontSize: 16, marginBottom: '32', color: '#666' }}>
             Congratulations! You have completed all your assigned surveys.
-          </h3>}
+          </h3>
+        )}
         <Row>
           {props.questionnaires.map((version, i) => {
             if (!version) {
@@ -78,32 +80,59 @@ function QuestionnaireDashboard(props) {
                   title={version.title}
                   timeInMinutes={version.time}
                   percentComplete={
-                    version.response
-                      ? version.response.completed
-                          ? 100
-                          : Math.random() * 20 + 10
-                      : 0
+                    version.response ? version.response.completed ? (
+                      100
+                    ) : (
+                      Math.random() * 20 + 10
+                    ) : (
+                      0
+                    )
                   }
                   buttonText={
-                    version.response
-                      ? version.response.completed ? 'Completed' : 'Resume'
-                      : 'Start'
+                    version.response ? version.response.completed ? (
+                      'Completed'
+                    ) : (
+                      'Resume'
+                    ) : (
+                      'Start'
+                    )
                   }
                   link={
-                    version.response && version.response.completed
-                      ? `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.response.id)}/end`
-                      : `#/users/${encodeURIComponent(props.encryptedUserId)}/${encodeURIComponent(props.encryptedConsentTypeId)}/${encodeURIComponent(version.questionnaireId)}`
+                    version.response && version.response.completed ? (
+                      `#/users/${encodeURIComponent(
+                        props.encryptedUserId
+                      )}/${encodeURIComponent(
+                        props.encryptedConsentTypeId
+                      )}/${encodeURIComponent(version.response.id)}/end`
+                    ) : (
+                      `#/users/${encodeURIComponent(
+                        props.encryptedUserId
+                      )}/${encodeURIComponent(
+                        props.encryptedConsentTypeId
+                      )}/${encodeURIComponent(version.questionnaireId)}`
+                    )
                   }
                   status={
-                    version.response
-                      ? version.response.completed ? 'Completed' : 'In Progress'
-                      : 'New'
+                    version.response ? version.response.completed ? (
+                      'Completed'
+                    ) : (
+                      'In Progress'
+                    ) : (
+                      'New'
+                    )
                   }
                 />
               </Col>
             );
           })}
         </Row>
+
+        {hasCompletedAllQuestionnaires && (
+          <Payment
+            payment={props.payment}
+            consentTypeId={props.encryptedConsentTypeId}
+          />
+        )}
       </div>
       <Footer />
     </div>
