@@ -6,7 +6,7 @@ import * as rest from './rest';
  */
 export function getPricePlansMapping() {
   return rest
-    .get(`${process.env.REACT_APP_BASE_URL}/price-plans-mappings`)
+    .get(`${process.env.REACT_APP_BASE_URL}/price-plan-mappings`)
     .then(response => response.json())
     .then(json => json.data);
 }

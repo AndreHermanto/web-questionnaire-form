@@ -60,19 +60,18 @@ const calculateTimeInMinutes = size => {
 };
 
 const getPayment = (state, ownProps) => {
-  // console.log('questionnaires', ownProps.params.consentTypeId);
-  // console.log('getPricePlansMap', getPricePlansMap(state.getIn(['entities', 'pricePlans'])));
-  // console.log('getAllPricePlansMapping', getAllPricePlansMapping(state.getIn(['entities', 'pricePlansMapping'])));
-
   const pricePlanMap = getPricePlansMap(
     state.getIn(['entities', 'pricePlans'])
   );
   const pricePlanId = getAllPricePlansMapping(
     state.getIn(['entities', 'pricePlansMapping'])
-  ).reduce((res, item, index) => {
-    if (item.get('consentTypeId') === ownProps.params.consentTypeId)
-      return item.get('pricePlanId');
-  }, '');
+  ).reduce(
+    (res, item, index) =>
+      item.get('consentTypeId') === ownProps.params.consentTypeId
+        ? item.get('pricePlanId')
+        : res,
+    ''
+  );
 
   return pricePlanMap.get(pricePlanId);
 };
