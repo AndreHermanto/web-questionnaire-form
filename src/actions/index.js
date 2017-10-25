@@ -11,6 +11,8 @@ import { fetchReleases } from './consents';
 
 export * from './consents';
 export * from './security';
+export * from './landingPage';
+
 /*
 *action: addQuestionnaires to the form builder
 */
@@ -197,7 +199,9 @@ export const submitResponse = (encryptedUserId, encryptedConsentTypeId) => (
   return dispatch(updateResponseOnServer())
     .then(() => {
       hashHistory.push(
-        `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(encryptedConsentTypeId)}/${responseId}/end`
+        `/users/${encodeURIComponent(encryptedUserId)}/${encodeURIComponent(
+          encryptedConsentTypeId
+        )}/${responseId}/end`
       );
     })
     .catch(() => {

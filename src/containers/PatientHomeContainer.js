@@ -5,6 +5,7 @@ import { decryptTokens } from '../actions/security';
 import toJS from '../components/toJS';
 import QuestionnaireDashboard from '../components/QuestionnaireDashboard';
 import * as selectors from '../reducers';
+import * as actions from '../actions';
 
 class PatientHomeContainer extends Component {
   componentDidMount() {
@@ -18,6 +19,7 @@ class PatientHomeContainer extends Component {
       .catch(error => {
         console.log('Decryption Failed', error);
       });
+    this.props.dispatch(actions.fetchLandingPage(consentTypeId));
   }
   render() {
     return (
@@ -62,7 +64,8 @@ function mapStateToProps(state, ownProps) {
     encryptedConsentTypeId: ownProps.params.consentTypeId,
     encryptedUserId: ownProps.params.userId,
     failedToDecrypt: selectors.getFailedToDecrypt(state),
-    questionnaires
+    questionnaires,
+    landingPage: selectors.getLandingPage(state)
   };
 }
 
