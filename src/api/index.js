@@ -1,6 +1,7 @@
 import * as rest from './rest';
 
 export * from './consents';
+export * from './payments';
 export * from './pricePlansMapping';
 export * from './pricePlans';
 

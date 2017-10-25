@@ -8,6 +8,7 @@ import responses from './responses';
 import questionnaires from './questionnaires';
 import answers from './answers';
 import releases from './releases';
+import payments from './payments';
 import pricePlans from './pricePlans';
 import pricePlansMapping from './pricePlansMapping';
 
@@ -20,6 +21,7 @@ const entities = combineReducers({
   responseElementAnswers, // responses to questions
   responseElements, // responses to questions
   responses, // responses to whole version,
+  payments,
   pricePlans,
   pricePlansMapping
 });

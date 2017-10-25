@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import {
   fetchDataForHomepage,
   fetchPricePlans,
-  fetchPricePlansMapping
+  fetchPricePlansMapping,
+  fetchPayments
 } from '../actions';
 import { decryptTokens } from '../actions/security';
 import toJS from '../components/toJS';
 import QuestionnaireDashboard from '../components/QuestionnaireDashboard';
 import * as selectors from '../reducers';
+import { getAllPayments } from '../reducers/payments';
 import { getPricePlansMap } from '../reducers/pricePlans';
 import { getAllPricePlansMapping } from '../reducers/pricePlansMapping';
 
@@ -24,6 +26,9 @@ class PatientHomeContainer extends Component {
       .catch(error => {
         console.log('Decryption Failed', error);
       });
+
+    // fetch payments
+    this.props.dispatch(fetchPayments());
 
     // fetch price plans
     this.props.dispatch(fetchPricePlans());
@@ -88,12 +93,14 @@ function mapStateToProps(state, ownProps) {
             )
           : version
     );
+
   return {
     encryptedConsentTypeId: ownProps.params.consentTypeId,
     encryptedUserId: ownProps.params.userId,
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     questionnaires,
-    payment: getPayment(state, ownProps)
+    payment: getPayment(state, ownProps),
+    isPaid: getAllPayments(state.getIn(['entities', 'payments'])).size > 0
   };
 }
 

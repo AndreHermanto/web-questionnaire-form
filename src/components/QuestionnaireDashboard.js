@@ -130,6 +130,7 @@ function QuestionnaireDashboard(props) {
         {hasCompletedAllQuestionnaires && (
           <Payment
             payment={props.payment}
+            isPaid={props.isPaid}
             consentTypeId={props.encryptedConsentTypeId}
           />
         )}

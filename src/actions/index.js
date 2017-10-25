@@ -11,6 +11,7 @@ import { fetchReleases } from './consents';
 
 export * from './consents';
 export * from './security';
+export * from './payments';
 export * from './pricePlans';
 export * from './pricePlansMapping';
 
