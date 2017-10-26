@@ -11,6 +11,7 @@ import * as fromAnswers from './answers';
 import ui, * as fromUI from './ui';
 import uiQuestionnaires from './uiQuestionnaires';
 import uiResponses from './uiResponses';
+import uiLandingPage from './uiLandingPage';
 import * as fromReleases from './releases';
 import entities from './entities';
 import questionTypes from '../constants/QuestionTypes';
@@ -27,6 +28,7 @@ export default combineReducers({
   ui,
   uiQuestionnaires,
   uiResponses,
+  uiLandingPage,
   entities
 });
 
@@ -489,3 +491,7 @@ export const getShowPreferNotToAnswerModal = state =>
 
 export const getShowNoneOfTheAboveAnswerModal = state =>
   state.get('uiResponses').get('showNoneOfTheAboveAnswerModal');
+
+export const getLandingPage = state => {
+  return state.get('uiLandingPage').get('selectedConsentType');
+};

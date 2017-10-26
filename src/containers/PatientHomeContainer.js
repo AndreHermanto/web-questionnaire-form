@@ -13,6 +13,7 @@ import * as selectors from '../reducers';
 import { getAllPayments } from '../reducers/payments';
 import { getPricePlansMap } from '../reducers/pricePlans';
 import { getAllPricePlansMapping } from '../reducers/pricePlansMapping';
+import * as actions from '../actions';
 
 class PatientHomeContainer extends Component {
   componentDidMount() {
@@ -35,6 +36,9 @@ class PatientHomeContainer extends Component {
 
     // fetch price plan mapping
     this.props.dispatch(fetchPricePlansMapping());
+
+    // fetch LandingPage
+    this.props.dispatch(actions.fetchLandingPage(consentTypeId));
   }
   render() {
     return (
@@ -100,7 +104,8 @@ function mapStateToProps(state, ownProps) {
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     questionnaires,
     payment: getPayment(state, ownProps),
-    isPaid: getAllPayments(state.getIn(['entities', 'payments'])).size > 0
+    isPaid: getAllPayments(state.getIn(['entities', 'payments'])).size > 0,
+    landingPage: selectors.getLandingPage(state)
   };
 }
 

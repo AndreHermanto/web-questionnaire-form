@@ -14,6 +14,7 @@ export * from './security';
 export * from './payments';
 export * from './pricePlans';
 export * from './pricePlansMapping';
+export * from './landingPage';
 
 /*
 *action: addQuestionnaires to the form builder

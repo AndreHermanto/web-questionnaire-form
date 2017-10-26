@@ -33,11 +33,7 @@ class Form extends Component {
       );
     }
     if (this.props.alreadySubmitted) {
-      return (
-        <Grid>
-          This questionnaire has been submitted.
-        </Grid>
-      );
+      return <Grid>This questionnaire has been submitted.</Grid>;
     }
     if (this.props.isError) {
       return (
@@ -45,14 +41,15 @@ class Form extends Component {
           <Alert bsStyle="danger">
             <h4>Unable to save</h4>
             <p>
-              Apologies, the platform has encountered an error and your last response could not be submitted.
+              Apologies, the platform has encountered an error and your last
+              response could not be submitted.
             </p>
             <p>
-              All your previous responses have been recorded and you will be able to continue filling in the questionnaire from where you've left it.
+              All your previous responses have been recorded and you will be
+              able to continue filling in the questionnaire from where you've
+              left it.
             </p>
-            <p>
-              Please return to MyChart and try again later.
-            </p>
+            <p>Please return to MyChart and try again later.</p>
           </Alert>
         </Grid>
       );
@@ -68,8 +65,9 @@ class Form extends Component {
           fontSize: `${100 + this.props.largeText * 75}%`
         }}
       >
-        {window.location.href.indexOf('/preview') >= 0 &&
-          <div className="alert alert-info">This is a preview</div>}
+        {window.location.href.indexOf('/preview') >= 0 && (
+          <div className="alert alert-info">This is a preview</div>
+        )}
         <button
           className="btn btn-default"
           onClick={() =>

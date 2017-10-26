@@ -5,21 +5,15 @@ import FailedToDecryptMessage from './FailedToDecryptMessage';
 import Questionnaire from './Questionnaire';
 import Footer from './Footer';
 import Payment from './Payment';
+import Markdown from 'react-markdown';
 
 const DashboardIntro = styled.div`margin: 60px 0px 0px 0px;`;
 
 const Header = styled.h2`
   font-size: 24px;
-  font-weight: 700;
-  margin: 5px 0px 0px 0px;
+  margin: 10px 0px 0px 0px;
   color: ${props => props.color};
-`;
-
-const Description = styled.p`
-  font-weight: 400;
-  color: #767676;
-  margin-top: 25px;
-  max-width: 500px;
+  word-break: break-all;
 `;
 
 function QuestionnaireDashboard(props) {
@@ -46,25 +40,37 @@ function QuestionnaireDashboard(props) {
   return (
     <div style={{ position: 'relative', minHeight: '100%' }}>
       <div className="container" style={{ paddingBottom: 120 }}>
-        <DashboardIntro>
-          <Header color="#00437E">Welcome back</Header>
-          <Header color="#62A5DB">It is time to complete your profile</Header>
-          <Description>
-            We are excited to help you build your health and exposure history
-            profile. Each survey that you complete contributes to a profile that
-            is specific to you. The information that you provide in the surveys
-            will improve your diagnostic testing and risk prediction. Thank you
-            for allowing us to be a part of your healthcare journey. We value
-            your time and effort in taking steps to help us better care for you.
-            Please begin your survey or complete your unfinished survey.
-          </Description>
-        </DashboardIntro>
+        {props.landingPage.title && (
+          <DashboardIntro>
+            <Header color="#00437E">
+              <Markdown
+                source={props.landingPage.title}
+                escapeHtml={true}
+                skipHtml={true}
+              />
+            </Header>
+            <Header color="#62A5DB">
+              <Markdown
+                source={props.landingPage.heading}
+                escapeHtml={true}
+                skipHtml={true}
+              />
+            </Header>
+            <div style={{ wordBreak: 'break-all' }}>
+              <Markdown
+                source={props.landingPage.text}
+                escapeHtml={true}
+                skipHtml={true}
+              />
+            </div>
+          </DashboardIntro>
+        )}
 
         <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
           Questionnaires
         </h2>
         {hasCompletedAllQuestionnaires && (
-          <h3 style={{ fontSize: 16, marginBottom: '32', color: '#666' }}>
+          <h3 style={{ fontSize: 16, marginBottom: 32, color: '#666' }}>
             Congratulations! You have completed all your assigned surveys.
           </h3>
         )}
