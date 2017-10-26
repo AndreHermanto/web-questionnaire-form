@@ -31,7 +31,6 @@ export const getAllReleases = state => {
 };
 
 export const getByConsentTypeId = (state, consentTypeId) => {
-  console.log(state, consentTypeId);
   return state
     .get('byId')
     .find(release => String(release.get('consentTypeId')) === consentTypeId);

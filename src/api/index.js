@@ -1,6 +1,9 @@
 import * as rest from './rest';
 
 export * from './consents';
+export * from './payments';
+export * from './pricePlansMapping';
+export * from './pricePlans';
 
 export const fetchQuestionnaire = questionnaireId =>
   rest.get(
@@ -9,7 +12,8 @@ export const fetchQuestionnaire = questionnaireId =>
 
 export const fetchResponses = (questionnaireId, userId) =>
   rest.get(
-    `${process.env.REACT_APP_BASE_URL}/responses?questionnaireId=${questionnaireId}&userId=${userId}`
+    `${process.env
+      .REACT_APP_BASE_URL}/responses?questionnaireId=${questionnaireId}&userId=${userId}`
   );
 export const fetchResponse = responseId =>
   rest.get(`${process.env.REACT_APP_BASE_URL}/responses/${responseId}`);
@@ -19,7 +23,8 @@ export const createResponse = response =>
 
 export const fetchVersion = (questionnaireId, versionId) =>
   rest.get(
-    `${process.env.REACT_APP_BASE_URL}/questionnaires/${questionnaireId}/versions/${versionId}`
+    `${process.env
+      .REACT_APP_BASE_URL}/questionnaires/${questionnaireId}/versions/${versionId}`
   );
 
 export const updateResponse = (responseId, response) =>

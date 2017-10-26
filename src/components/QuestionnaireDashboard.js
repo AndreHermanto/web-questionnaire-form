@@ -4,11 +4,10 @@ import { Grid, Col, Row } from 'react-bootstrap';
 import FailedToDecryptMessage from './FailedToDecryptMessage';
 import Questionnaire from './Questionnaire';
 import Footer from './Footer';
+import Payment from './Payment';
 import Markdown from 'react-markdown';
 
-const DashboardIntro = styled.div`
-  margin: 60px 0px 0px 0px;
-`;
+const DashboardIntro = styled.div`margin: 60px 0px 0px 0px;`;
 
 const Header = styled.h2`
   font-size: 24px;
@@ -87,40 +86,60 @@ function QuestionnaireDashboard(props) {
                   title={version.title}
                   timeInMinutes={version.time}
                   percentComplete={
-                    version.response
-                      ? version.response.completed
-                        ? 100
-                        : Math.random() * 20 + 10
-                      : 0
+                    version.response ? version.response.completed ? (
+                      100
+                    ) : (
+                      Math.random() * 20 + 10
+                    ) : (
+                      0
+                    )
                   }
                   buttonText={
-                    version.response
-                      ? version.response.completed ? 'Completed' : 'Resume'
-                      : 'Start'
+                    version.response ? version.response.completed ? (
+                      'Completed'
+                    ) : (
+                      'Resume'
+                    ) : (
+                      'Start'
+                    )
                   }
                   link={
-                    version.response && version.response.completed
-                      ? `#/users/${encodeURIComponent(
-                          props.encryptedUserId
-                        )}/${encodeURIComponent(
-                          props.encryptedConsentTypeId
-                        )}/${encodeURIComponent(version.response.id)}/end`
-                      : `#/users/${encodeURIComponent(
-                          props.encryptedUserId
-                        )}/${encodeURIComponent(
-                          props.encryptedConsentTypeId
-                        )}/${encodeURIComponent(version.questionnaireId)}`
+                    version.response && version.response.completed ? (
+                      `#/users/${encodeURIComponent(
+                        props.encryptedUserId
+                      )}/${encodeURIComponent(
+                        props.encryptedConsentTypeId
+                      )}/${encodeURIComponent(version.response.id)}/end`
+                    ) : (
+                      `#/users/${encodeURIComponent(
+                        props.encryptedUserId
+                      )}/${encodeURIComponent(
+                        props.encryptedConsentTypeId
+                      )}/${encodeURIComponent(version.questionnaireId)}`
+                    )
                   }
                   status={
-                    version.response
-                      ? version.response.completed ? 'Completed' : 'In Progress'
-                      : 'New'
+                    version.response ? version.response.completed ? (
+                      'Completed'
+                    ) : (
+                      'In Progress'
+                    ) : (
+                      'New'
+                    )
                   }
                 />
               </Col>
             );
           })}
         </Row>
+
+        {hasCompletedAllQuestionnaires && (
+          <Payment
+            payment={props.payment}
+            isPaid={props.isPaid}
+            consentTypeId={props.encryptedConsentTypeId}
+          />
+        )}
       </div>
       <Footer />
     </div>

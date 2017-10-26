@@ -410,35 +410,36 @@ export const getFullResponse = state => {
   const responseId = getResponseId(state);
   const visibleResponseElementIds = getVisibleResponseElementIds(state);
 
-  return getResponseById(state, responseId).update(
-    'answeredQuestions',
-    answeredQuestions =>
-      answeredQuestions
-        .map(responseElementId =>
-          getResponseElementById(state, responseElementId)
-        )
-        .map(responseElement => {
-          if (!responseElement.get('answers')) {
-            return responseElement;
-          }
+  return getResponseById(
+    state,
+    responseId
+  ).update('answeredQuestions', answeredQuestions =>
+    answeredQuestions
+      .map(responseElementId =>
+        getResponseElementById(state, responseElementId)
+      )
+      .map(responseElement => {
+        if (!responseElement.get('answers')) {
+          return responseElement;
+        }
 
-          // Clear up invalid answers and flag it as invisible when element is not hidden
-          if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
-            return responseElement
-              .set('visible', false)
-              .update('answers', responseElementAnswerIds =>
-                responseElementAnswerIds.clear()
-              );
-          }
-
+        // Clear up invalid answers and flag it as invisible when element is not hidden
+        if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
           return responseElement
-            .set('visible', true)
-            .update('answers', responseElementAnswerIds => {
-              return responseElementAnswerIds.map(responseElementAnswerId =>
-                getResponseElementAnswersById(state, responseElementAnswerId)
-              );
-            });
-        })
+            .set('visible', false)
+            .update('answers', responseElementAnswerIds =>
+              responseElementAnswerIds.clear()
+            );
+        }
+
+        return responseElement
+          .set('visible', true)
+          .update('answers', responseElementAnswerIds => {
+            return responseElementAnswerIds.map(responseElementAnswerId =>
+              getResponseElementAnswersById(state, responseElementAnswerId)
+            );
+          });
+      })
   );
 };
 
