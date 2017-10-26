@@ -1,19 +1,20 @@
 import React from 'react';
 import { Button, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { getAccessToken } from '../cookies';
 
 const propTypes = {
-  payment: PropTypes.object.isRequired,
+  payment: PropTypes.object,
   consentTypeId: PropTypes.string.isRequired,
   isPaid: PropTypes.bool.isRequired
 };
 
 const handlePayment = (consentTypeId, pricePlanId) => () => {
   window.location.assign(
-    `${process.env
-      .REACT_APP_PATIENT_PORTAL_URL}/payments/consent-type/${encodeURIComponent(
-      consentTypeId
-    )}/price-plan/${encodeURIComponent(pricePlanId)}/`
+    `${process.env.REACT_APP_PAYMENTS_URL}:${process.env
+      .REACT_APP_PAYMENTS_PORT}/payments/${encodeURIComponent(
+      pricePlanId
+    )}?jwt=${getAccessToken()}`
   );
 };
 
