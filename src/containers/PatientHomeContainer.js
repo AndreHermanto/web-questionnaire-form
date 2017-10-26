@@ -22,23 +22,23 @@ class PatientHomeContainer extends Component {
     this.props
       .dispatch(decryptTokens(userId, consentTypeId, timestamp))
       .then(() => {
+        //if we got a jwt
         this.props.dispatch(fetchDataForHomepage());
+        // fetch payments
+        this.props.dispatch(fetchPayments());
+
+        // fetch price plans
+        this.props.dispatch(fetchPricePlans());
+
+        // fetch price plan mapping
+        this.props.dispatch(fetchPricePlansMapping());
+
+        // fetch LandingPage
+        this.props.dispatch(actions.fetchLandingPage(consentTypeId));
       })
       .catch(error => {
         console.log('Decryption Failed', error);
       });
-
-    // fetch payments
-    this.props.dispatch(fetchPayments());
-
-    // fetch price plans
-    this.props.dispatch(fetchPricePlans());
-
-    // fetch price plan mapping
-    this.props.dispatch(fetchPricePlansMapping());
-
-    // fetch LandingPage
-    this.props.dispatch(actions.fetchLandingPage(consentTypeId));
   }
   render() {
     return (
