@@ -1,5 +1,6 @@
 #!/bin/bash
-# Note: This requires test.sh to have run first 
+# Note: This requires test.sh to have run first
+
 
 branch_name="$bamboo_repository_git_branch"
 app_name="$bamboo_planRepository_name"

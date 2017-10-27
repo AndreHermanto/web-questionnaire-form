@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 branch_name="$bamboo_repository_git_branch"
 app_name="$bamboo_planRepository_name"
 # replace / with - i.e. feature/branch_name to feature-branch-name
