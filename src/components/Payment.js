@@ -11,7 +11,8 @@ const propTypes = {
 
 const handlePayment = (consentTypeId, pricePlanId) => () => {
   window.location.assign(
-    `${process.env.REACT_APP_PAYMENTS_URL}/payments/${encodeURIComponent(
+    `${process.env
+      .REACT_APP_PAYMENTS_URL}/users/price-plans/${encodeURIComponent(
       pricePlanId
     )}?jwt=${getAccessToken()}`
   );
