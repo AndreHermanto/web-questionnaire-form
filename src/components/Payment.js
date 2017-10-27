@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { getAccessToken } from '../cookies';
+import get from 'lodash.get';
 
 const propTypes = {
   payment: PropTypes.object,
@@ -35,19 +36,19 @@ function unPaid(payment, consentTypeId) {
         <tbody>
           <tr>
             <td>Title</td>
-            <td>{payment.title}</td>
+            <td>{get(payment, 'title', '')}</td>
           </tr>
           <tr>
             <td>Description</td>
-            <td>{payment.description}</td>
+            <td>{get(payment, 'description', '')}</td>
           </tr>
           <tr>
             <td>Coupons</td>
-            <td>{payment.coupons.title}</td>
+            <td>{get(payment, 'coupons.title', '')}</td>
           </tr>
           <tr>
             <td>Currency</td>
-            <td>{payment.currency.currencyName}</td>
+            <td>{get(payment, 'currency.currencyName', '')}</td>
           </tr>
         </tbody>
       </Table>
