@@ -25,6 +25,7 @@ EOF
 # Copy the files over
 scp -i ~/.ssh/sandbox.pem -r $branch_name/. ec2-user@13.55.2.207:/mnt/demo/$app_name/$branch_name/
 
+
 # UAT!
 # Build for sandbox, but pointing to UAT
 rm -rf build
@@ -32,9 +33,11 @@ rm -rf build
 #sed -i 's#"homepage": "/'$clean_app_name'"#"homepage": "/demo/uat/'$bamboo_planRepository_name'/'"$branch_name"'"#g' package.json
 #cat package.json
 
+
 REACT_APP_BUILD_TIME=`date` REACT_APP_PAYMENTS_URL=/demo/uat/web-payments/develop/# REACT_APP_BASE_URL=https://uat.genome.one/api/gw-questionnaire/v1 CI=true npm run build
 mkdir -p $branch_name
 cp -R build/* $branch_name
+
 
 # SSH to sandbox
 echo "Creating folder on Sandbox - /mnt/demo/uat/$app_name/$branch_name"
