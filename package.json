@@ -58,6 +58,6 @@
   "lint-staged": {
     "src/**/*.js": ["prettier --single-quote --write", "git add"]
   },
-  "homepage": "/questionnaire-form",
+  "homepage": ".",
   "proxy": "http://localhost:4000"
 }
