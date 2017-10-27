@@ -16,10 +16,10 @@ export const fetchLandingPageFailure = error => ({
   payload: error
 });
 
-export const fetchLandingPage = consentTypeId => dispatch => {
+export const fetchLandingPage = () => dispatch => {
   dispatch(fetchLandingPageRequest());
   return api
-    .getConsentTypeLandingPage(consentTypeId)
+    .getConsentTypeLandingPage()
     .then(response => response.json())
     .then(json => {
       if (get(json.data, 0)) {

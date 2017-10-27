@@ -34,7 +34,7 @@ class PatientHomeContainer extends Component {
         this.props.dispatch(fetchPricePlansMapping());
 
         // fetch LandingPage
-        this.props.dispatch(actions.fetchLandingPage(consentTypeId));
+        this.props.dispatch(actions.fetchLandingPage());
       })
       .catch(error => {
         console.log('Decryption Failed', error);
