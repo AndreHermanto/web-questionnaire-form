@@ -69,6 +69,7 @@ const calculateTimeInMinutes = size => {
 };
 
 const getPayment = (state, ownProps) => {
+  const consentTypeId = state.getIn(['ui', 'consentTypeId']);
   const pricePlanMap = getPricePlansMap(
     state.getIn(['entities', 'pricePlans'])
   );
@@ -76,7 +77,7 @@ const getPayment = (state, ownProps) => {
     state.getIn(['entities', 'pricePlansMapping'])
   ).reduce(
     (res, item, index) =>
-      item.get('consentTypeId') === ownProps.params.consentTypeId
+      item.get('consentTypeId') === consentTypeId
         ? item.get('pricePlanId')
         : res,
     ''
