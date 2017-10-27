@@ -27,6 +27,8 @@ function Paid() {
 }
 
 function unPaid(payment, consentTypeId) {
+  if (!payment) return <div />;
+
   return (
     <div>
       <Table striped bordered condensed hover>
@@ -62,8 +64,6 @@ function unPaid(payment, consentTypeId) {
 
 function Payment(props) {
   const { payment, consentTypeId, isPaid } = props;
-
-  if (!payment) return <div />;
 
   return (
     <div>
