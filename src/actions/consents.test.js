@@ -3,7 +3,6 @@ import fetchMock from 'fetch-mock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as actions from '../actions/consents';
-import * as types from '../constants/ConsentTypes';
 
 // setup a fake store - https://github.com/reactjs/redux/blob/master/docs/recipes/WritingTests.md#async-action-creators
 const middlewares = [thunk];
@@ -14,7 +13,6 @@ describe('fetching the consent type mapping', () => {
     fetchMock.reset();
   });
   it('grabs the data from the server', () => {
-    const releaseId = '1';
     const consentTypeId = '1';
     const questionnaireId = '1';
     const versionId = '1';
