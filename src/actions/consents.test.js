@@ -21,12 +21,12 @@ describe('fetching the consent type mapping', () => {
 
     process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
     fetchMock
-      .get(`http://localhost:5000/consent-type-mappings?consentTypeId=1`, {
+      .get(`http://localhost:5000/releases?consentTypeId=1`, {
         body: {
           status: 200,
           data: [
             {
-              id: consentTypeMappingId,
+              id: consentTypeId,
               questionnaires: [{ questionnaireId, versionPublished: versionId }]
             }
           ]
@@ -39,24 +39,22 @@ describe('fetching the consent type mapping', () => {
       });
 
     const expectedActions = [
+      { type: 'FETCH_RELEASES_REQUEST' },
       {
-        type: types.FETCH_CONSENT_TYPE_MAPPINGS_REQUEST
-      },
-      {
-        type: types.FETCH_CONSENT_TYPE_MAPPINGS_SUCCESS,
         payload: {
           entities: {
             releases: {
-              [releaseId]: {
-                id: releaseId,
+              1: {
+                id: '1',
                 questionnaires: [
-                  { questionnaireId, versionPublished: versionId }
+                  { questionnaireId: '1', versionPublished: '1' }
                 ]
               }
             }
           },
-          result: [releaseId]
-        }
+          result: '1'
+        },
+        type: 'FETCH_RELEASES_SUCCESS'
       }
     ];
     const store = mockStore(
