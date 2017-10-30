@@ -33,7 +33,7 @@ rm -rf build
 #sed -i 's#"homepage": "/'$clean_app_name'"#"homepage": "/demo/uat/'$bamboo_planRepository_name'/'"$branch_name"'"#g' package.json
 #cat package.json
 
-REACT_APP_BUILD_TIME=`date` REACT_APP_PAYMENTS_URL=https://uat.genome.one/payments/# REACT_APP_BASE_URL=https://uat.genome.one/api/gw-questionnaire/v1 CI=true npm run build
+REACT_APP_BUILD_TIME=`date` REACT_APP_PAYMENTS_URL=/demo/uat/web-payments/develop/# REACT_APP_BASE_URL=https://uat.genome.one/api/gw-questionnaire/v1 CI=true npm run build
 mkdir -p $branch_name
 cp -R build/* $branch_name
 
