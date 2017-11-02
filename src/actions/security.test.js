@@ -22,6 +22,7 @@ describe('decryptTokens', () => {
     const consentTypeId = '1';
     const timestamp = '1';
     const jwt = '1000';
+    const largeText = 0;
 
     process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
     fetchMock
@@ -46,6 +47,7 @@ describe('decryptTokens', () => {
         // return of async actions
         expect(store.getState().get('ui')).toEqual(
           fromJS({
+            largeText,
             failedToDecrypt: false,
             userId,
             consentTypeId,
@@ -57,6 +59,7 @@ describe('decryptTokens', () => {
   });
 
   it('handles an invalid timestamp', () => {
+    const largeText = 0;
     process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
     fetchMock
       .post(`http://localhost:5000/secure/`, {
@@ -73,6 +76,7 @@ describe('decryptTokens', () => {
       .catch(e => {
         expect(store.getState().get('ui')).toEqual(
           fromJS({
+            largeText,
             failedToDecrypt: true
           })
         );

@@ -218,7 +218,7 @@ describe('persisting a response on the server', () => {
 
     process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
     fetchMock
-      .put(`http://localhost:5000/responses/${responseId}`, {
+      .put(`http://localhost:5000/responses/${responseId}/`, {
         body: {
           status: 200,
           data: { id: responseId }
@@ -231,20 +231,8 @@ describe('persisting a response on the server', () => {
       });
 
     const expectedActions = [
-      { type: types.UPDATE_RESPONSE_REQUEST },
-      {
-        type: types.UPDATE_RESPONSE_SUCCESS,
-        payload: {
-          entities: {
-            responses: {
-              [responseId]: {
-                id: responseId
-              }
-            }
-          },
-          result: responseId
-        }
-      }
+      { type: 'UPDATE_RESPONSE_REQUEST' },
+      { type: 'UPDATE_RESPONSE_SUCCESS' }
     ];
     const store = mockStore(
       fromJS({
@@ -273,6 +261,7 @@ describe('toggleAnswer', () => {
     const answerId = '1';
     const responseId = '1';
     const responseElementAnswerId = '1';
+    const elementId = '1';
     const store = mockStore(
       fromJS({
         entities: {
@@ -280,7 +269,8 @@ describe('toggleAnswer', () => {
             allIds: [answerId],
             byId: {
               [answerId]: {
-                id: answerId
+                id: answerId,
+                text: 'Test'
               }
             }
           },
@@ -288,7 +278,8 @@ describe('toggleAnswer', () => {
             byId: {
               [responseElementId]: {
                 id: responseElementId,
-                answers: [answerId]
+                answers: [answerId],
+                elementId: elementId
               }
             }
           },
@@ -305,6 +296,14 @@ describe('toggleAnswer', () => {
               [responseId]: {
                 id: responseId,
                 answeredQuestions: [responseElementId]
+              }
+            }
+          },
+          elements: {
+            allIds: [elementId],
+            byId: {
+              [elementId]: {
+                id: elementId
               }
             }
           }
@@ -337,7 +336,8 @@ describe('toggleAnswer', () => {
               [responseElementId]: {
                 id: responseElementId,
                 answers: [answerId],
-                preferNotToAnswer: false
+                preferNotToAnswer: false,
+                elementId: '1'
               }
             }
           },
@@ -357,6 +357,7 @@ describe('selectAnswer', () => {
     const answerId = '1';
     const responseId = '1';
     const responseElementAnswerId = '1';
+    const elementId = '1';
     const store = mockStore(
       fromJS({
         entities: {
@@ -372,7 +373,8 @@ describe('selectAnswer', () => {
             byId: {
               [responseElementId]: {
                 id: responseElementId,
-                answers: [answerId]
+                answers: [answerId],
+                elementId: elementId
               }
             }
           },
@@ -389,6 +391,14 @@ describe('selectAnswer', () => {
               [responseId]: {
                 id: responseId,
                 answeredQuestions: [responseElementId]
+              }
+            }
+          },
+          elements: {
+            allIds: [elementId],
+            byId: {
+              [elementId]: {
+                id: elementId
               }
             }
           }
@@ -421,7 +431,8 @@ describe('selectAnswer', () => {
               [responseElementId]: {
                 id: responseElementId,
                 answers: [answerId],
-                preferNotToAnswer: false
+                preferNotToAnswer: false,
+                elementId: '1'
               }
             }
           },
