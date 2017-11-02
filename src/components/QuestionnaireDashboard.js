@@ -6,8 +6,11 @@ import Questionnaire from './Questionnaire';
 import Footer from './Footer';
 import Payment from './Payment';
 import Markdown from 'react-markdown';
+import { Dimmer, Loader } from 'semantic-ui-react';
 
-const DashboardIntro = styled.div`margin: 60px 0px 0px 0px;`;
+const DashboardIntro = styled.div`
+  margin: 60px 0px 20px 0px;
+`;
 
 const Header = styled.h2`
   font-size: 24px;
@@ -36,9 +39,14 @@ function QuestionnaireDashboard(props) {
     },
     true
   );
-
   return (
     <div style={{ position: 'relative', minHeight: '100%' }}>
+      {props.isLoadingReponses && (
+        <Dimmer active>
+          <Loader indeterminate>Preparing Questionnaires</Loader>
+        </Dimmer>
+      )}
+
       <div className="container" style={{ paddingBottom: 120 }}>
         {props.landingPage.title && (
           <DashboardIntro>
@@ -56,7 +64,7 @@ function QuestionnaireDashboard(props) {
                 skipHtml={true}
               />
             </Header>
-            <div style={{ wordBreak: 'break-all' }}>
+            <div style={{ wordBreak: 'break-all', marginTop: 10 }}>
               <Markdown
                 source={props.landingPage.text}
                 escapeHtml={true}
@@ -66,14 +74,6 @@ function QuestionnaireDashboard(props) {
           </DashboardIntro>
         )}
 
-        <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
-          Questionnaires
-        </h2>
-        {hasCompletedAllQuestionnaires && (
-          <h3 style={{ fontSize: 16, marginBottom: 32, color: '#666' }}>
-            Congratulations! You have completed all your assigned surveys.
-          </h3>
-        )}
         <Row>
           {props.questionnaires.map((version, i) => {
             if (!version) {
@@ -81,51 +81,55 @@ function QuestionnaireDashboard(props) {
             }
             return (
               <Col sm={4} style={{ marginBottom: 32 }} key={i}>
+                {hasCompletedAllQuestionnaires && (
+                  <h3 style={{ fontSize: 16, marginBottom: 32, color: '#666' }}>
+                    Congratulations! You have completed all your assigned
+                    surveys.
+                  </h3>
+                )}
+
+                <h2
+                  style={{
+                    fontSize: 16,
+                    padding: '24px 0 24px 0',
+                    color: '#666'
+                  }}
+                >
+                  Questionnaires
+                </h2>
                 <Questionnaire
                   completed={version.response && version.response.completed}
                   title={version.title}
                   timeInMinutes={version.time}
                   percentComplete={
-                    version.response ? version.response.completed ? (
-                      100
-                    ) : (
-                      Math.random() * 20 + 10
-                    ) : (
-                      0
-                    )
+                    version.response
+                      ? version.response.completed
+                        ? 100
+                        : Math.random() * 20 + 10
+                      : 0
                   }
                   buttonText={
-                    version.response ? version.response.completed ? (
-                      'Completed'
-                    ) : (
-                      'Resume'
-                    ) : (
-                      'Start'
-                    )
+                    version.response
+                      ? version.response.completed ? 'Completed' : 'Resume'
+                      : 'Start'
                   }
                   link={
-                    version.response && version.response.completed ? (
-                      `#/users/${encodeURIComponent(
-                        props.encryptedUserId
-                      )}/${encodeURIComponent(
-                        props.encryptedConsentTypeId
-                      )}/${encodeURIComponent(version.response.id)}/end`
-                    ) : (
-                      `#/users/${encodeURIComponent(
-                        props.encryptedUserId
-                      )}/${encodeURIComponent(
-                        props.encryptedConsentTypeId
-                      )}/${encodeURIComponent(version.questionnaireId)}`
-                    )
+                    version.response && version.response.completed
+                      ? `#/users/${encodeURIComponent(
+                          props.encryptedUserId
+                        )}/${encodeURIComponent(
+                          props.encryptedConsentTypeId
+                        )}/${encodeURIComponent(version.response.id)}/end`
+                      : `#/users/${encodeURIComponent(
+                          props.encryptedUserId
+                        )}/${encodeURIComponent(
+                          props.encryptedConsentTypeId
+                        )}/${encodeURIComponent(version.questionnaireId)}`
                   }
                   status={
-                    version.response ? version.response.completed ? (
-                      'Completed'
-                    ) : (
-                      'In Progress'
-                    ) : (
-                      'New'
-                    )
+                    version.response
+                      ? version.response.completed ? 'Completed' : 'In Progress'
+                      : 'New'
                   }
                 />
               </Col>
