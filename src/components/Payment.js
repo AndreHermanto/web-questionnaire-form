@@ -22,6 +22,9 @@ const handlePayment = (consentTypeId, pricePlanId) => () => {
 function Paid() {
   return (
     <div>
+      <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
+        Payment
+      </h2>
       <div> Congratulations! Your payment has been completed </div>
     </div>
   );
@@ -32,6 +35,9 @@ function unPaid(payment, consentTypeId) {
 
   return (
     <div>
+      <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
+        Payment
+      </h2>
       <Table striped bordered condensed hover>
         <tbody>
           <tr>
@@ -66,14 +72,7 @@ function unPaid(payment, consentTypeId) {
 function Payment(props) {
   const { payment, consentTypeId, isPaid } = props;
 
-  return (
-    <div>
-      <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
-        Payment
-      </h2>
-      {isPaid ? Paid() : unPaid(payment, consentTypeId)}
-    </div>
-  );
+  return <div>{isPaid ? Paid() : unPaid(payment, consentTypeId)}</div>;
 }
 
 Payment.propTypes = propTypes;

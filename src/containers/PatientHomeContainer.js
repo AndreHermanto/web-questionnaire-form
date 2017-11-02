@@ -106,7 +106,8 @@ function mapStateToProps(state, ownProps) {
     questionnaires,
     payment: getPayment(state, ownProps),
     isPaid: getAllPayments(state.getIn(['entities', 'payments'])).size > 0,
-    landingPage: selectors.getLandingPage(state)
+    landingPage: selectors.getLandingPage(state),
+    isLoadingReponses: selectors.isLoadingReponses(state)
   };
 }
 
