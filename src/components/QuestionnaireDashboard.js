@@ -39,14 +39,17 @@ function QuestionnaireDashboard(props) {
     },
     true
   );
+  if (props.isLoadingReponses) {
+    return (
+      <Dimmer active inverted>
+        <Loader indeterminate size="large">
+          Preparing Questionnaires
+        </Loader>
+      </Dimmer>
+    );
+  }
   return (
     <div style={{ position: 'relative', minHeight: '100%' }}>
-      {props.isLoadingReponses && (
-        <Dimmer active>
-          <Loader indeterminate>Preparing Questionnaires</Loader>
-        </Dimmer>
-      )}
-
       <div className="container" style={{ paddingBottom: 120 }}>
         {props.landingPage.title && (
           <DashboardIntro>
