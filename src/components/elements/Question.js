@@ -74,12 +74,13 @@ class Question extends Component {
           position: 'relative'
         }}
       >
-        {isAnswered &&
+        {isAnswered && (
           <div style={{ float: 'right' }}>
             <Checkmark />
-          </div>}
+          </div>
+        )}
 
-        <div style={{ whiteSpace: 'pre-wrap' }}>
+        <div style={{ whiteSpace: 'pre-wrap', marginBottom: 10 }}>
           <Markdown
             source={`${this.props.questionNumber}\\. ${this.props.element
               .question}`}
@@ -89,7 +90,7 @@ class Question extends Component {
         </div>
         {this.renderElement()}
 
-        {!this.props.element.required &&
+        {!this.props.element.required && (
           <div>
             <div className="checkbox">
               <label style={{ color: 'black' }}>
@@ -105,11 +106,6 @@ class Question extends Component {
                       : this.props.openPreferNotToAnswerModal(
                           this.props.responseElement.id
                         );
-                  }}
-                  style={{
-                    marginTop: `${this.props.largeText === 0
-                      ? ''
-                      : this.props.largeText > 1 ? '20px' : '10px'}`
                   }}
                 />{' '}
                 Prefer not to answer
@@ -150,11 +146,13 @@ class Question extends Component {
                 </Button>
               </Modal.Footer>
             </Modal>
-          </div>}
-        {this.props.element.required &&
+          </div>
+        )}
+        {this.props.element.required && (
           <div className="text-muted text-uppercase" style={{ fontSize: 10 }}>
             This question is required.
-          </div>}
+          </div>
+        )}
       </div>
     );
   }
