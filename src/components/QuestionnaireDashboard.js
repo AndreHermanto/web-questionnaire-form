@@ -20,10 +20,16 @@ const Header = styled.h2`
 `;
 
 function QuestionnaireDashboard(props) {
-  // let props.questionnaires;
-  if (!props.questionnaires) {
-    return <div>Loading...</div>;
-  }
+  const loading = key => {
+    return (
+      <Dimmer key={key} active inverted>
+        <Loader indeterminate size="large">
+          Preparing Questionnaires
+        </Loader>
+      </Dimmer>
+    );
+  };
+
   if (props.failedToDecrypt) {
     return (
       <Grid>
@@ -39,14 +45,8 @@ function QuestionnaireDashboard(props) {
     },
     true
   );
-  if (props.isLoadingReponses) {
-    return (
-      <Dimmer active inverted>
-        <Loader indeterminate size="large">
-          Preparing Questionnaires
-        </Loader>
-      </Dimmer>
-    );
+  if (props.isLoadingReponses && !props.questionnaires) {
+    return loading();
   }
   return (
     <div style={{ position: 'relative', minHeight: '100%' }}>
@@ -78,28 +78,24 @@ function QuestionnaireDashboard(props) {
         )}
 
         <Row>
+          {props.questionnaires.length > 0 && (
+            <h2
+              style={{
+                fontSize: 16,
+                padding: '24px 0 24px 0',
+                color: '#666'
+              }}
+            >
+              Questionnaires
+            </h2>
+          )}
+
           {props.questionnaires.map((version, i) => {
             if (!version) {
-              return <div key={i}>loading</div>;
+              return loading(i);
             }
             return (
               <Col sm={4} style={{ marginBottom: 32 }} key={i}>
-                {hasCompletedAllQuestionnaires && (
-                  <h3 style={{ fontSize: 16, marginBottom: 32, color: '#666' }}>
-                    Congratulations! You have completed all your assigned
-                    surveys.
-                  </h3>
-                )}
-
-                <h2
-                  style={{
-                    fontSize: 16,
-                    padding: '24px 0 24px 0',
-                    color: '#666'
-                  }}
-                >
-                  Questionnaires
-                </h2>
                 <Questionnaire
                   completed={version.response && version.response.completed}
                   title={version.title}
@@ -134,12 +130,19 @@ function QuestionnaireDashboard(props) {
                       ? version.response.completed ? 'Completed' : 'In Progress'
                       : 'New'
                   }
+                  isDisabled={version.body.length > 0 ? false : true}
                 />
               </Col>
             );
           })}
         </Row>
 
+        {hasCompletedAllQuestionnaires &&
+          props.questionnaires.length > 0 && (
+            <h3 style={{ fontSize: 16, marginBottom: 32, color: '#666' }}>
+              Congratulations! You have completed all your assigned surveys.
+            </h3>
+          )}
         {hasCompletedAllQuestionnaires && (
           <Payment
             payment={props.payment}
