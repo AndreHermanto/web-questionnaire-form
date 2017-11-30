@@ -63,7 +63,7 @@ function unPaid(payment, consentTypeId) {
         className="btn btn-primary btn-lg"
         onClick={handlePayment(consentTypeId, payment.id)}
       >
-        Go to pay
+        Proceed to payment
       </Button>
     </div>
   );
