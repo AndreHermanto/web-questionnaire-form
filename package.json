@@ -36,15 +36,18 @@
     "react-redux": "^5.0.4",
     "react-router": "^3.0.5",
     "react-scroll": "^1.5.4",
+    "react-textarea-autosize": "^5.1.0",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-immutable": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.75.1",
     "styled-components": "^2.1.1"
   },
   "scripts": {
-    "start": "REACT_APP_BASE_URL= PORT=3001 react-scripts start",
+    "start": "REACT_APP_BASE_URL= PORT=3001 REACT_APP_PAYMENTS_URL=http://localhost:3010/# react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
@@ -56,8 +59,11 @@
     "extends": "react-app"
   },
   "lint-staged": {
-    "src/**/*.js": ["prettier --single-quote --write", "git add"]
+    "src/**/*.js": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   },
-  "homepage": "/questionnaire-form",
+  "homepage": ".",
   "proxy": "http://localhost:4000"
 }

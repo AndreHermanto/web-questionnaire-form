@@ -66,7 +66,7 @@ export const fetchDataForHomepage = () => (dispatch, getState) => {
       dispatch(
         fetchResponses(mappedQuestionnaire.get('questionnaireId'), userId)
       ).then(responses => {
-        if (responses.length) {
+        if (responses.length > 0) {
           dispatch(
             fetchVersion(
               mappedQuestionnaire.get('questionnaireId'),

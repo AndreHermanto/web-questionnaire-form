@@ -254,7 +254,8 @@ describe('getFullResponse', () => {
           byId: {
             '1': {
               id: '1',
-              answers: ['1']
+              answers: ['1'],
+              elementId: '1'
             }
           }
         },
@@ -265,6 +266,13 @@ describe('getFullResponse', () => {
               text: 'hello'
             }
           }
+        },
+        elements: {
+          byId: {
+            '1': {
+              id: '1'
+            }
+          }
         }
       }
     });
@@ -272,7 +280,14 @@ describe('getFullResponse', () => {
     expect(result).toEqual(
       fromJS({
         id: responseId,
-        answeredQuestions: [{ id: '1', answers: [{ id: '1', text: 'hello' }] }]
+        answeredQuestions: [
+          {
+            id: '1',
+            answers: [{ id: '1', text: 'hello' }],
+            elementId: '1',
+            visible: true
+          }
+        ]
       })
     );
   });

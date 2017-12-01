@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchDataForHomepage } from '../actions';
+import {
+  fetchDataForHomepage,
+  fetchPricePlans,
+  fetchPricePlansMapping,
+  fetchPayments
+} from '../actions';
 import { decryptTokens } from '../actions/security';
 import toJS from '../components/toJS';
 import QuestionnaireDashboard from '../components/QuestionnaireDashboard';
 import * as selectors from '../reducers';
+import { getAllPayments } from '../reducers/payments';
+import { getPricePlansMap } from '../reducers/pricePlans';
+import { getAllPricePlansMapping } from '../reducers/pricePlansMapping';
+import * as actions from '../actions';
 
 class PatientHomeContainer extends Component {
   componentDidMount() {
@@ -13,7 +22,19 @@ class PatientHomeContainer extends Component {
     this.props
       .dispatch(decryptTokens(userId, consentTypeId, timestamp))
       .then(() => {
+        //if we got a jwt
         this.props.dispatch(fetchDataForHomepage());
+        // fetch payments
+        this.props.dispatch(fetchPayments());
+
+        // fetch price plans
+        this.props.dispatch(fetchPricePlans());
+
+        // fetch price plan mapping
+        this.props.dispatch(fetchPricePlansMapping());
+
+        // fetch LandingPage
+        this.props.dispatch(actions.fetchLandingPage());
       })
       .catch(error => {
         console.log('Decryption Failed', error);
@@ -46,6 +67,25 @@ const calculateTimeInMinutes = size => {
   }
   return size * 0.16;
 };
+
+const getPayment = (state, ownProps) => {
+  const consentTypeId = state.getIn(['ui', 'consentTypeId']);
+  const pricePlanMap = getPricePlansMap(
+    state.getIn(['entities', 'pricePlans'])
+  );
+  const pricePlanId = getAllPricePlansMapping(
+    state.getIn(['entities', 'pricePlansMapping'])
+  ).reduce(
+    (res, item, index) =>
+      item.get('consentTypeId') === consentTypeId
+        ? item.get('pricePlanId')
+        : res,
+    ''
+  );
+
+  return pricePlanMap.get(pricePlanId);
+};
+
 function mapStateToProps(state, ownProps) {
   const questionnaires = selectors
     .getHomepageQuestionnaires(state)
@@ -58,11 +98,16 @@ function mapStateToProps(state, ownProps) {
             )
           : version
     );
+
   return {
     encryptedConsentTypeId: ownProps.params.consentTypeId,
     encryptedUserId: ownProps.params.userId,
     failedToDecrypt: selectors.getFailedToDecrypt(state),
-    questionnaires
+    questionnaires,
+    payment: getPayment(state, ownProps),
+    isPaid: getAllPayments(state.getIn(['entities', 'payments'])).size > 0,
+    landingPage: selectors.getLandingPage(state),
+    isLoadingReponses: selectors.isLoadingReponses(state)
   };
 }
 

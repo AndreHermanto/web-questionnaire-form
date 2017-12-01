@@ -12,6 +12,7 @@ import App from './App';
 import reducer from './reducers';
 import './index.css';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
+import 'semantic-ui-css/semantic.min.css';
 // logger
 // extra stuff for logging immutanle
 

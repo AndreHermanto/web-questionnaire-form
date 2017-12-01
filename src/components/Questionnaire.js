@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
+import { Message } from 'semantic-ui-react';
 const OuterBox = styled.div`
   -webkit-box-shadow: 2px 10px 38px -6px rgba(223, 234, 248, 1);
   -moz-box-shadow: 2px 10px 38px -6px rgba(223, 234, 248, 1);
@@ -36,12 +36,13 @@ class Questionnaire extends Component {
     link: PropTypes.string.isRequired,
     percentComplete: PropTypes.number.isRequred,
     timeInMinutes: PropTypes.number.isRequred,
-    completed: PropTypes.bool.isRequired
+    completed: PropTypes.bool.isRequired,
+    isDisabled: PropTypes.bool.isRequred
   };
   render() {
     return (
       <OuterBox>
-        <ColoredSection completed={this.props.completed} href={this.props.link}>
+        <ColoredSection completed={this.props.completed}>
           {this.props.title}
         </ColoredSection>
         {true && (
@@ -69,20 +70,27 @@ class Questionnaire extends Component {
                 </div>
               )}
               <div>
-                <a
-                  href={this.props.link}
-                  className="btn btn-primary btn-block"
-                  style={{
-                    backgroundColor: this.props.completed
-                      ? 'rgb(82, 88, 93)'
-                      : '#192229',
-                    border: 'none',
-                    borderRadius: 3,
-                    padding: '12px 16px'
-                  }}
-                >
-                  {this.props.buttonText}
-                </a>
+                {!this.props.isDisabled ? (
+                  <a
+                    href={this.props.link}
+                    className="btn btn-primary btn-block"
+                    style={{
+                      backgroundColor: this.props.completed
+                        ? 'rgb(82, 88, 93)'
+                        : '#192229',
+                      border: 'none',
+                      borderRadius: 3,
+                      padding: '12px 16px'
+                    }}
+                  >
+                    {this.props.buttonText}
+                  </a>
+                ) : (
+                  <Message negative>
+                    <Message.Header>Error</Message.Header>
+                    <p>This questionnaire has no questions</p>
+                  </Message>
+                )}
               </div>
             </div>
           )}

@@ -6,7 +6,11 @@ import { dedup } from '../helpers';
 const byId = (state = fromJS({}), action) => {
   switch (action.type) {
     case types.FETCH_VERSION_SUCCESS:
-      return state.merge(fromJS(action.payload.entities.answers));
+      return state.merge(
+        fromJS(
+          action.payload.entities.answers ? action.payload.entities.answers : {}
+        )
+      );
     default:
       return state;
   }
@@ -15,7 +19,15 @@ const byId = (state = fromJS({}), action) => {
 const allIds = (state = List(), action) => {
   switch (action.type) {
     case types.FETCH_VERSION_SUCCESS:
-      return dedup(state.concat(Object.keys(action.payload.entities.answers)));
+      return dedup(
+        state.concat(
+          Object.keys(
+            action.payload.entities.answers
+              ? action.payload.entities.answers
+              : {}
+          )
+        )
+      );
     default:
       return state;
   }

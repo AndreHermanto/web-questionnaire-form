@@ -40,3 +40,15 @@ export const response = new schema.Entity('responses', {
   answeredQuestions: [responseElement]
 });
 export const arrayOfResponses = new schema.Array(response);
+
+// payments
+export const payments = new schema.Entity('payments');
+export const arrayOfPayments = new schema.Array(payments);
+
+// price Plans
+export const pricePlans = new schema.Entity('pricePlans');
+export const arrayOfPricePlans = new schema.Array(pricePlans);
+
+// price Plans Mapping
+export const pricePlansMapping = new schema.Entity('pricePlansMapping');
+export const arrayOfPricePlansMapping = new schema.Array(pricePlansMapping);

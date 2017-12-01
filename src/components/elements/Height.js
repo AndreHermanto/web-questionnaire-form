@@ -11,6 +11,7 @@ class Height extends Component {
           className="form-control"
           value={get(responseElementAnswers, `${answers[0].id}.feet`, '')}
           onChange={e => setAnswerValue(answers[0].id, 'feet', e.target.value)}
+          style={{ marginBottom: 10 }}
         />
         <input
           type="text"

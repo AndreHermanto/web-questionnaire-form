@@ -11,6 +11,7 @@ import * as fromAnswers from './answers';
 import ui, * as fromUI from './ui';
 import uiQuestionnaires from './uiQuestionnaires';
 import uiResponses from './uiResponses';
+import uiLandingPage from './uiLandingPage';
 import * as fromReleases from './releases';
 import entities from './entities';
 import questionTypes from '../constants/QuestionTypes';
@@ -27,6 +28,7 @@ export default combineReducers({
   ui,
   uiQuestionnaires,
   uiResponses,
+  uiLandingPage,
   entities
 });
 
@@ -408,36 +410,35 @@ export const getFullResponse = state => {
   const responseId = getResponseId(state);
   const visibleResponseElementIds = getVisibleResponseElementIds(state);
 
-  return getResponseById(
-    state,
-    responseId
-  ).update('answeredQuestions', answeredQuestions =>
-    answeredQuestions
-      .map(responseElementId =>
-        getResponseElementById(state, responseElementId)
-      )
-      .map(responseElement => {
-        if (!responseElement.get('answers')) {
-          return responseElement;
-        }
+  return getResponseById(state, responseId).update(
+    'answeredQuestions',
+    answeredQuestions =>
+      answeredQuestions
+        .map(responseElementId =>
+          getResponseElementById(state, responseElementId)
+        )
+        .map(responseElement => {
+          if (!responseElement.get('answers')) {
+            return responseElement;
+          }
 
-        // Clear up invalid answers and flag it as invisible when element is not hidden
-        if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
+          // Clear up invalid answers and flag it as invisible when element is not hidden
+          if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
+            return responseElement
+              .set('visible', false)
+              .update('answers', responseElementAnswerIds =>
+                responseElementAnswerIds.clear()
+              );
+          }
+
           return responseElement
-            .set('visible', false)
-            .update('answers', responseElementAnswerIds =>
-              responseElementAnswerIds.clear()
-            );
-        }
-
-        return responseElement
-          .set('visible', true)
-          .update('answers', responseElementAnswerIds => {
-            return responseElementAnswerIds.map(responseElementAnswerId =>
-              getResponseElementAnswersById(state, responseElementAnswerId)
-            );
-          });
-      })
+            .set('visible', true)
+            .update('answers', responseElementAnswerIds => {
+              return responseElementAnswerIds.map(responseElementAnswerId =>
+                getResponseElementAnswersById(state, responseElementAnswerId)
+              );
+            });
+        })
   );
 };
 
@@ -489,3 +490,11 @@ export const getShowPreferNotToAnswerModal = state =>
 
 export const getShowNoneOfTheAboveAnswerModal = state =>
   state.get('uiResponses').get('showNoneOfTheAboveAnswerModal');
+
+export const getLandingPage = state => {
+  return state.get('uiLandingPage').get('selectedConsentType');
+};
+
+export const isLoadingReponses = state => {
+  return state.getIn(['uiResponses', 'isLoading']);
+};
