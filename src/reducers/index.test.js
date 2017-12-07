@@ -347,3 +347,25 @@ describe('get question number', () => {
     expect(selectors.getQuestionNumber(state, '3')).toBe(null);
   });
 });
+
+describe('getAllPricePlans', () => {
+  it('should work', () => {
+    const state = fromJS({
+      entities: {
+        pricePlans: {
+          byId: {
+            '1': {
+              id: '1',
+              title: 'P1'
+            }
+          },
+          allIds: ['1']
+        }
+      }
+    });
+
+    expect(selectors.getAllPricePlans(state)).toEqual(
+      fromJS([{ id: '1', title: 'P1' }])
+    );
+  });
+});

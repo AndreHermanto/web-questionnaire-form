@@ -1,13 +1,15 @@
 import * as rest from './rest';
 
 /**
- * [getPricePlans description]
- * @param  {[type]}        [description]
+ * [getPricePlan description]
+ * @param  {[string]}      [id]
  * @return {[type]}        [description]
  */
-export function getPricePlans() {
+export function getPricePlan(id) {
   return rest
-    .get(`${process.env.REACT_APP_BASE_URL}/price-plans`)
+    .get(
+      `${process.env.REACT_APP_BASE_URL}/price-plans/${encodeURIComponent(id)}`
+    )
     .then(response => response.json())
     .then(json => json.data);
 }
