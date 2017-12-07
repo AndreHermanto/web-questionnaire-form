@@ -446,6 +446,108 @@ describe('selectAnswer', () => {
   });
 });
 
+describe('selectAnswerMatrix', () => {
+  it('works', () => {
+    const responseElementId = '1';
+    const answerId = '1';
+    const responseId = '1';
+    const responseElementAnswerId = '1';
+    const elementId = '1';
+    const matrixId = '2';
+    const store = mockStore(
+      fromJS({
+        entities: {
+          answers: {
+            allIds: [answerId],
+            byId: {
+              [answerId]: {
+                id: answerId
+              }
+            }
+          },
+          responseElements: {
+            byId: {
+              [responseElementId]: {
+                id: responseElementId,
+                answers: [answerId],
+                elementId: elementId
+              }
+            }
+          },
+          responseElementAnswers: {
+            allIds: [responseElementAnswerId],
+            byId: {
+              [responseElementAnswerId]: {
+                id: responseElementAnswerId
+              }
+            }
+          },
+          responses: {
+            byId: {
+              [responseId]: {
+                id: responseId,
+                answeredQuestions: [responseElementId]
+              }
+            }
+          },
+          elements: {
+            allIds: [elementId],
+            byId: {
+              [elementId]: {
+                id: elementId,
+                matrix: [matrixId]
+              },
+              [matrixId]: {
+                id: matrixId,
+                answers: [answerId]
+              }
+            }
+          }
+        },
+        ui: {
+          responseId: responseId
+        }
+      })
+    );
+    const expectedActions = [
+      {
+        type: 'SELECT_ANSWER_MATRIX',
+        payload: {
+          entities: {
+            responseElementAnswers: {
+              [answerId]: {
+                id: answerId
+              }
+            }
+          },
+          result: '1'
+        },
+        responseElementId: responseElementId,
+        matrixAnswers: fromJS(['1'])
+      },
+      {
+        type: 'CLEAR_PREFER_NOT_TO_ANSWER',
+        payload: {
+          entities: {
+            responseElements: {
+              [responseElementId]: {
+                id: responseElementId,
+                answers: [answerId],
+                preferNotToAnswer: false,
+                elementId: '1'
+              }
+            }
+          },
+          result: responseElementId
+        }
+      },
+      { type: 'UPDATE_RESPONSE_REQUEST' }
+    ];
+    store.dispatch(actions.selectAnswerMatrix(responseElementId, answerId));
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+});
+
 describe('setAnswerValue', () => {
   it('works', () => {
     const responseElementId = '1';

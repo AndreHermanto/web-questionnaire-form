@@ -5,6 +5,16 @@ export const HEIGHT = 'height';
 export const WEIGHT = 'weight';
 export const DATE = 'date';
 export const NUMBER = 'number';
+export const MATRIX = 'matrix';
 
-const questionTypes = [RADIO, CHECKBOX, TEXT, HEIGHT, WEIGHT, DATE, NUMBER];
+const questionTypes = [
+  RADIO,
+  CHECKBOX,
+  TEXT,
+  HEIGHT,
+  WEIGHT,
+  DATE,
+  NUMBER,
+  MATRIX
+];
 export default questionTypes;
