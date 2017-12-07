@@ -15,6 +15,7 @@ import uiLandingPage from './uiLandingPage';
 import * as fromReleases from './releases';
 import entities from './entities';
 import questionTypes from '../constants/QuestionTypes';
+import * as fromPricePlans from './pricePlans';
 
 export default combineReducers({
   debug: (state = { value: true }, action) => {
@@ -397,9 +398,7 @@ export const getResponseElementsWithInvalidAnswers = state => {
         responseElementAnswer.get('day') > 31 ||
         responseElementAnswer.get('day') <= 0 ||
         !moment(
-          `${responseElementAnswer.get('year')}-${responseElementAnswer.get(
-            'month'
-          )}-${responseElementAnswer.get('day')}`,
+          `${responseElementAnswer.get('year')}-${responseElementAnswer.get('month')}-${responseElementAnswer.get('day')}`,
           'YYYY-MM-DD'
         ).isValid()
       );
@@ -410,35 +409,36 @@ export const getFullResponse = state => {
   const responseId = getResponseId(state);
   const visibleResponseElementIds = getVisibleResponseElementIds(state);
 
-  return getResponseById(state, responseId).update(
-    'answeredQuestions',
-    answeredQuestions =>
-      answeredQuestions
-        .map(responseElementId =>
-          getResponseElementById(state, responseElementId)
-        )
-        .map(responseElement => {
-          if (!responseElement.get('answers')) {
-            return responseElement;
-          }
+  return getResponseById(
+    state,
+    responseId
+  ).update('answeredQuestions', answeredQuestions =>
+    answeredQuestions
+      .map(responseElementId =>
+        getResponseElementById(state, responseElementId)
+      )
+      .map(responseElement => {
+        if (!responseElement.get('answers')) {
+          return responseElement;
+        }
 
-          // Clear up invalid answers and flag it as invisible when element is not hidden
-          if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
-            return responseElement
-              .set('visible', false)
-              .update('answers', responseElementAnswerIds =>
-                responseElementAnswerIds.clear()
-              );
-          }
-
+        // Clear up invalid answers and flag it as invisible when element is not hidden
+        if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
           return responseElement
-            .set('visible', true)
-            .update('answers', responseElementAnswerIds => {
-              return responseElementAnswerIds.map(responseElementAnswerId =>
-                getResponseElementAnswersById(state, responseElementAnswerId)
-              );
-            });
-        })
+            .set('visible', false)
+            .update('answers', responseElementAnswerIds =>
+              responseElementAnswerIds.clear()
+            );
+        }
+
+        return responseElement
+          .set('visible', true)
+          .update('answers', responseElementAnswerIds => {
+            return responseElementAnswerIds.map(responseElementAnswerId =>
+              getResponseElementAnswersById(state, responseElementAnswerId)
+            );
+          });
+      })
   );
 };
 
@@ -497,4 +497,10 @@ export const getLandingPage = state => {
 
 export const isLoadingReponses = state => {
   return state.getIn(['uiResponses', 'isLoading']);
+};
+
+export const getAllPricePlans = state => {
+  return fromPricePlans.getAllPricePlans(
+    state.getIn(['entities', 'pricePlans'])
+  );
 };

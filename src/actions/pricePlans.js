@@ -21,10 +21,10 @@ export const fetchPricePlansFailure = ex => {
   };
 };
 
-export const fetchPricePlans = () => dispatch => {
+export const fetchPricePlan = pricePlanId => dispatch => {
   dispatch(fetchPricePlansRequest());
   return api
-    .getPricePlans()
+    .getPricePlan(pricePlanId)
     .then(res => dispatch(fetchPricePlansSuccess(res)))
     .catch(ex => dispatch(fetchPricePlansFailure(ex)));
 };

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   fetchDataForHomepage,
-  fetchPricePlans,
+  fetchPricePlan,
   fetchPricePlansMapping,
   fetchPayments
 } from '../actions';
@@ -11,7 +11,6 @@ import toJS from '../components/toJS';
 import QuestionnaireDashboard from '../components/QuestionnaireDashboard';
 import * as selectors from '../reducers';
 import { getAllPayments } from '../reducers/payments';
-import { getPricePlansMap } from '../reducers/pricePlans';
 import { getAllPricePlansMapping } from '../reducers/pricePlansMapping';
 import * as actions from '../actions';
 
@@ -26,9 +25,6 @@ class PatientHomeContainer extends Component {
         this.props.dispatch(fetchDataForHomepage());
         // fetch payments
         this.props.dispatch(fetchPayments());
-
-        // fetch price plans
-        this.props.dispatch(fetchPricePlans());
 
         // fetch price plan mapping
         this.props.dispatch(fetchPricePlansMapping());
@@ -68,11 +64,9 @@ const calculateTimeInMinutes = size => {
   return size * 0.16;
 };
 
-const getPayment = (state, ownProps) => {
+const getPricePlanId = state => {
   const consentTypeId = state.getIn(['ui', 'consentTypeId']);
-  const pricePlanMap = getPricePlansMap(
-    state.getIn(['entities', 'pricePlans'])
-  );
+
   const pricePlanId = getAllPricePlansMapping(
     state.getIn(['entities', 'pricePlansMapping'])
   ).reduce(
@@ -83,7 +77,7 @@ const getPayment = (state, ownProps) => {
     ''
   );
 
-  return pricePlanMap.get(pricePlanId);
+  return pricePlanId;
 };
 
 function mapStateToProps(state, ownProps) {
@@ -104,11 +98,23 @@ function mapStateToProps(state, ownProps) {
     encryptedUserId: ownProps.params.userId,
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     questionnaires,
-    payment: getPayment(state, ownProps),
+    pricePlanId: getPricePlanId(state, ownProps),
     isPaid: getAllPayments(state.getIn(['entities', 'payments'])).size > 0,
     landingPage: selectors.getLandingPage(state),
-    isLoadingReponses: selectors.isLoadingReponses(state)
+    isLoadingReponses: selectors.isLoadingReponses(state),
+    pricePlans: selectors.getAllPricePlans(state)
   };
 }
 
-export default connect(mapStateToProps)(toJS(PatientHomeContainer));
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    fetchPricePlan: pricePlanId => {
+      dispatch(fetchPricePlan(pricePlanId));
+    },
+    dispatch
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  toJS(PatientHomeContainer)
+);
