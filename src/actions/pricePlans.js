@@ -9,10 +9,13 @@ export function fetchPricePlansRequest() {
   };
 }
 
-export const fetchPricePlansSuccess = pricePlans => ({
-  type: types.FETCH_PRICEPLANS_SUCCESS,
-  payload: normalize(pricePlans, schema.arrayOfPricePlans)
-});
+export const fetchPricePlansSuccess = pricePlans => {
+  const pricePlansArray = Array.isArray(pricePlans) ? pricePlans : [pricePlans];
+  return {
+    type: types.FETCH_PRICEPLANS_SUCCESS,
+    payload: normalize(pricePlansArray, schema.arrayOfPricePlans)
+  };
+};
 
 export const fetchPricePlansFailure = ex => {
   return {
