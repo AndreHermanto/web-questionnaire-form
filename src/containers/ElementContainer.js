@@ -39,6 +39,20 @@ function mapStateToProps(state, ownProps) {
         .map((answerId, index) => selectors.getAnswerById(state, answerId))
     : Immutable.List();
 
+  // get matrix elements
+  const matrixElements = element.get('matrix')
+    ? element
+        .get('matrix')
+        .map(matrixId => selectors.getElementById(state, matrixId))
+    : Immutable.List();
+
+  // get matrix answers
+  const matrixAnswers = matrixElements.map(matrix => {
+    return matrix
+      .get('answers')
+      .map(answerId => selectors.getAnswerById(state, answerId));
+  });
+
   const responseElementAnswers = responseElement
     .get('answers')
     .reduce(
@@ -57,6 +71,8 @@ function mapStateToProps(state, ownProps) {
     element,
     responseElement,
     answers,
+    matrixElements,
+    matrixAnswers,
     responseElementAnswers,
     questionNumber: selectors.getQuestionNumber(
       state,
@@ -79,6 +95,9 @@ function mapStateToProps(state, ownProps) {
 const mapDispatchToProps = (dispatch, ownProps) => ({
   selectAnswer: answerId => {
     dispatch(actions.selectAnswer(ownProps.responseElementId, answerId));
+  },
+  selectAnswerMatrix: answerId => {
+    dispatch(actions.selectAnswerMatrix(ownProps.responseElementId, answerId));
   },
   toggleAnswer: answerId => {
     dispatch(actions.toggleAnswer(ownProps.responseElementId, answerId));

@@ -9,6 +9,7 @@ import Weight from './Weight';
 import Number from './Number';
 import Checkmark from '../Checkmark';
 import Markdown from 'react-markdown';
+import Matrix from './Matrix';
 import { Modal, Button } from 'react-bootstrap';
 
 class Question extends Component {
@@ -47,7 +48,8 @@ class Question extends Component {
         return <Weight {...this.props} />;
       case 'number':
         return <Number {...this.props} />;
-
+      case 'matrix':
+        return <Matrix {...this.props} />;
       default:
         return (
           <div>
