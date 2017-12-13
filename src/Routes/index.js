@@ -10,15 +10,6 @@ import { EnsureLoggedInContainer } from 'web-component-authentication';
 const EnsureLoggedInContainerWithRouter = withRouter(EnsureLoggedInContainer);
 
 class Routes extends Component {
-  redirectToBuilder = () => {
-    const location = process.env.REACT_APP_ADMIN_PORTAL_URL + '/auth';
-    window.location.assign(
-      `${process.env
-        .REACT_APP_PASSPORT_URL}/#/login?redirectTo=${encodeURIComponent(
-        location
-      )}`
-    );
-  };
   render() {
     // How this is structured https://medium.com/@dabit3/beginner-s-guide-to-react-router-53094349669#.eak1uik49
     return (
@@ -31,9 +22,11 @@ class Routes extends Component {
               </Dimmer>
             </div>
           )}
-          onNoAuthToken={() => {
-            this.redirectToBuilder();
-          }}
+          onNoAuthToken={() => (
+            <div style={{ textAlign: 'center' }}>
+              Sorry, you are not logged in.
+            </div>
+          )}
         >
           <Route exact path="/" component={QuestionnaireAdminContainer} />
           <Route

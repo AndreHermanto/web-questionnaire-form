@@ -51,7 +51,7 @@
   },
   "scripts": {
     "start":
-      "REACT_APP_BASE_URL= PORT=3001 REACT_APP_ADMIN_PORTAL_URL=http://localhost:3000/# REACT_APP_PAYMENTS_URL=http://localhost:3010/# REACT_APP_PASSPORT_URL=http://localhost:3002 react-scripts start",
+      "REACT_APP_BASE_URL= PORT=3001  REACT_APP_PAYMENTS_URL=http://localhost:3010/# REACT_APP_PASSPORT_URL=http://localhost:3002 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
