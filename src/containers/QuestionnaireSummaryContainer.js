@@ -19,28 +19,33 @@ class QuestionnaireSummaryContainer extends Component {
   render() {
     return (
       <div className="container">
-        {this.props.endPage &&
+        {this.props.endPage && (
           <div style={{ whiteSpace: 'pre-wrap' }}>
             <Markdown
               source={this.props.endPage.text}
               escapeHtml={true}
               skipHtml={true}
             />
-          </div>}
-        {!this.props.endPage &&
+          </div>
+        )}
+        {!this.props.endPage && (
           <div style={{ whiteSpace: 'pre-wrap' }}>
             Thank you for submitting.
-          </div>}
+          </div>
+        )}
         {this.props.endPage &&
-          this.props.endPage.image &&
-          <img
-            src={this.props.endPage.image}
-            alt="introduction"
-            className="img-responsive"
-          />}
+          this.props.endPage.image && (
+            <img
+              src={this.props.endPage.image}
+              alt="introduction"
+              className="img-responsive"
+            />
+          )}
         <a
           className="btn btn-primary btn-lg"
-          href={`#/home/${encodeURIComponent(this.props.encryptedUserId)}/${encodeURIComponent(this.props.encryptedConsentTypeId)}`}
+          href={`#/home/${encodeURIComponent(
+            this.props.encryptedUserId
+          )}/${encodeURIComponent(this.props.encryptedConsentTypeId)}`}
         >
           Return Home
         </a>
@@ -52,12 +57,12 @@ class QuestionnaireSummaryContainer extends Component {
 function mapStateToProps(state, ownProps) {
   const endPage = selectors.getEndPageMessage(
     state,
-    ownProps.params.responseId
+    ownProps.match.params.responseId
   );
   return {
     endPage,
-    encryptedUserId: ownProps.params.encryptedUserId,
-    encryptedConsentTypeId: ownProps.params.encryptedConsentTypeId
+    encryptedUserId: ownProps.match.params.encryptedUserId,
+    encryptedConsentTypeId: ownProps.match.params.encryptedConsentTypeId
   };
 }
 

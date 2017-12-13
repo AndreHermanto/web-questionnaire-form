@@ -40,20 +40,13 @@ class QuestionnaireFormContainer extends Component {
     this.show = notify.createShowQueue();
   }
   componentDidMount() {
-    const { userId, consentTypeId, questionnaireId } = this.props.params;
-    const { timestamp } = this.props.location.query;
-    this.props
-      .dispatch(actions.decryptTokens(userId, consentTypeId, timestamp))
-      .then(() => {
-        this.props.dispatch(
-          actions.setupQuestionnaire({
-            questionnaireId
-          })
-        );
+    const { questionnaireId } = this.props.match.params;
+
+    this.props.dispatch(
+      actions.setupQuestionnaire({
+        questionnaireId
       })
-      .catch(error => {
-        console.log('Decryption failed', error);
-      });
+    );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -117,8 +110,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onSubmit: () =>
       dispatch(
         actions.submitResponse(
-          ownProps.params.userId,
-          ownProps.params.consentTypeId
+          ownProps.match.params.userId,
+          ownProps.match.params.consentTypeId
         )
       ),
     cycleFontSize: fontSize => dispatch(actions.cycleFontSize(fontSize)),

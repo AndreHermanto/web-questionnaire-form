@@ -13,11 +13,14 @@ import * as selectors from '../reducers';
 import { getAllPayments } from '../reducers/payments';
 import { getAllPricePlansMapping } from '../reducers/pricePlansMapping';
 import * as actions from '../actions';
+import QueryString from 'query-string';
 
 class PatientHomeContainer extends Component {
   componentDidMount() {
-    const { userId, consentTypeId } = this.props.params;
-    const { timestamp } = this.props.location.query;
+    const { userId, consentTypeId } = this.props.match.params;
+    const parsed = QueryString.parse(this.props.location.search);
+    const { timestamp } = parsed;
+
     this.props
       .dispatch(decryptTokens(userId, consentTypeId, timestamp))
       .then(() => {
@@ -94,8 +97,8 @@ function mapStateToProps(state, ownProps) {
     );
 
   return {
-    encryptedConsentTypeId: ownProps.params.consentTypeId,
-    encryptedUserId: ownProps.params.userId,
+    encryptedConsentTypeId: ownProps.match.params.consentTypeId,
+    encryptedUserId: ownProps.match.params.userId,
     failedToDecrypt: selectors.getFailedToDecrypt(state),
     questionnaires,
     pricePlanId: getPricePlanId(state, ownProps),

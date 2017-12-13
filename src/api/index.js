@@ -1,4 +1,4 @@
-import * as rest from './rest';
+import { rest } from 'web-component-authentication';
 
 export * from './consents';
 export * from './payments';

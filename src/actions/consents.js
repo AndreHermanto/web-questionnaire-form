@@ -44,17 +44,15 @@ export const fetchReleases = consentTypeId => (dispatch, getState) => {
 
 export const fetchDataForHomepage = () => (dispatch, getState) => {
   const state = getState();
-  const consentTypeId = state.get('ui').get('consentTypeId');
-  const userId = state.get('ui').get('userId');
+  const consentTypeId = state.getIn(['ui', 'consentTypeId']);
+  const userId = state.getIn(['ui', 'userId']);
   return dispatch(fetchReleases(consentTypeId)).then(() => {
     const state = getState();
 
     // get out all the questionnaires for the consent types
     // TODO: change to a selector
     const mappedQuestionnaires = state
-      .get('entities')
-      .get('releases')
-      .get('byId')
+      .getIn(['entities', 'releases', 'byId'])
       .toSeq()
       .reduce(
         (acc, release) => acc.concat(release.get('questionnaires')),
