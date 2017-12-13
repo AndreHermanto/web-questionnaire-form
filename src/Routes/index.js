@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, HashRouter, withRouter } from 'react-router-dom';
+import { Route, HashRouter, withRouter, Switch } from 'react-router-dom';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import PatientHomeContainer from '../containers/PatientHomeContainer';
 import QuestionnaireAdminContainer from '../containers/QuestionnaireAdminContainer';
@@ -28,27 +28,29 @@ class Routes extends Component {
             </div>
           )}
         >
-          <Route exact path="/" component={QuestionnaireAdminContainer} />
-          <Route
-            path="/users/:userId/:consentTypeId/:questionnaireId"
-            component={QuestionnaireForm}
-          />
-          <Route
-            path="/users/:userId/:consentTypeId/:questionnaireId/preview"
-            component={QuestionnaireForm}
-          />
-          <Route
-            path="/users/:encryptedUserId/:encryptedConsentTypeId/:responseId/end"
-            component={QuestionnaireSummaryContainer}
-          />
-          <Route
-            path="/submitted"
-            component={QuestionnaireFormSubmittedContainer}
-          />
-          <Route
-            path="/home/:userId/:consentTypeId"
-            component={PatientHomeContainer}
-          />
+          <Switch>
+            <Route exact path="/" component={QuestionnaireAdminContainer} />
+            <Route
+              path="/users/:userId/:consentTypeId/:questionnaireId"
+              component={QuestionnaireForm}
+            />
+            <Route
+              path="/users/:userId/:consentTypeId/:questionnaireId/preview"
+              component={QuestionnaireForm}
+            />
+            <Route
+              path="/users/:encryptedUserId/:encryptedConsentTypeId/:responseId/end"
+              component={QuestionnaireSummaryContainer}
+            />
+            <Route
+              path="/submitted"
+              component={QuestionnaireFormSubmittedContainer}
+            />
+            <Route
+              path="/home/:userId/:consentTypeId"
+              component={PatientHomeContainer}
+            />
+          </Switch>
         </EnsureLoggedInContainerWithRouter>
       </HashRouter>
     );
