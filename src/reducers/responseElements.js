@@ -4,7 +4,7 @@ import * as types from '../constants/ActionTypes';
 import { dedup } from '../helpers';
 import get from 'lodash.get';
 
-const byId = (state = fromJS({}), action) => {
+export const byId = (state = fromJS({}), action) => {
   if (get(action, 'payload.entities.responseElements', false)) {
     return state.merge(fromJS(action.payload.entities.responseElements));
   }
@@ -37,6 +37,46 @@ const byId = (state = fromJS({}), action) => {
       return state.setIn(
         [action.responseElementId, 'answers'],
         fromJS([action.payload.result])
+      );
+    case 'SELECT_ANSWER_MATRIX':
+      return state.updateIn(
+        [action.responseElementId, 'answers'],
+        answerIds => {
+          // see if its there
+          const index = answerIds.findIndex(
+            answerId => answerId === action.payload.result
+          );
+          //if found do nothing
+          if (index >= 0) {
+            return answerIds;
+          }
+          //if not found
+          if (index < 1) {
+            //remove other matrix answer that has been selected
+            let answerIdsRemoved = answerIds;
+            let answerIdsResult;
+            let indexMatrixAnswer = i => {
+              return answerIds.findIndex(
+                answerId => answerId === action.matrixAnswers.get(i)
+              );
+            };
+            for (var i = action.matrixAnswers.size; i >= 0; i--) {
+              if (
+                action.matrixAnswers.get(i) !== action.payload.result &&
+                answerIds.includes(action.matrixAnswers.get(i))
+              ) {
+                answerIdsRemoved = answerIdsRemoved.splice(
+                  indexMatrixAnswer(i),
+                  1
+                );
+              }
+            }
+            //add matrix answer which is being selected
+            answerIdsResult = answerIdsRemoved.push(action.payload.result);
+
+            return answerIdsResult;
+          }
+        }
       );
     default:
       return state;

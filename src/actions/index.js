@@ -278,6 +278,47 @@ export const selectAnswer = (responseElementId, answerId) => (
   dispatch(updateResponseOnServer());
 };
 
+export const selectAnswerMatrix = (responseElementId, answerId) => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+
+  const responseElement = selectors.getResponseElementById(
+    state,
+    responseElementId
+  );
+
+  const element = selectors.getElementById(
+    state,
+    responseElement.get('elementId')
+  );
+  const matrixIds = element.get('matrix');
+  const matrixElements = matrixIds.map(id =>
+    selectors.getElementById(state, id)
+  );
+
+  //check which matrix element contain the answer
+  const matrixElement = matrixElements.filter(element => {
+    return element.get('answers').includes(answerId);
+  });
+
+  dispatch({
+    type: 'SELECT_ANSWER_MATRIX',
+    payload: normalize(
+      {
+        id: answerId
+      },
+      schema.responseElementAnswer
+    ),
+    responseElementId,
+    matrixAnswers: matrixElement.getIn([0, 'answers'])
+  });
+  dispatch(checkForRepeats(responseElementId, answerId));
+  dispatch(clearPreferNotToAnswer(responseElementId));
+  dispatch(updateResponseOnServer());
+};
+
 export const toggleAnswer = (responseElementId, answerId) => (
   dispatch,
   getState
@@ -652,20 +693,20 @@ export const setupQuestionnaire = ({ questionnaireId, resume }) => (
       if (responses.length) {
         const response = responses[responses.length - 1];
         // there are responses
-        return dispatch(
-          fetchVersion(questionnaireId, response.versionId)
-        ).then(() => {
-          dispatch({
-            type: 'SET_CURRENT_QUESTIONNAIRE',
-            payload: {
-              responseId: response.id,
-              versionId: response.versionId,
-              userId: response.userId,
-              questionnaireId
-            }
-          });
-          return response;
-        });
+        return dispatch(fetchVersion(questionnaireId, response.versionId)).then(
+          () => {
+            dispatch({
+              type: 'SET_CURRENT_QUESTIONNAIRE',
+              payload: {
+                responseId: response.id,
+                versionId: response.versionId,
+                userId: response.userId,
+                questionnaireId
+              }
+            });
+            return response;
+          }
+        );
       }
 
       return new Promise((resolve, reject) => {
@@ -701,19 +742,19 @@ export const setupQuestionnaire = ({ questionnaireId, resume }) => (
           });
         }
       }).then(version => {
-        return dispatch(
-          createResponse(questionnaireId, userId, version)
-        ).then(response => {
-          dispatch({
-            type: 'SET_CURRENT_QUESTIONNAIRE',
-            payload: {
-              responseId: response.id,
-              versionId: response.versionId,
-              questionnaireId
-            }
-          });
-          return response;
-        });
+        return dispatch(createResponse(questionnaireId, userId, version)).then(
+          response => {
+            dispatch({
+              type: 'SET_CURRENT_QUESTIONNAIRE',
+              payload: {
+                responseId: response.id,
+                versionId: response.versionId,
+                questionnaireId
+              }
+            });
+            return response;
+          }
+        );
       });
     })
     .then(() => {

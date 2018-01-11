@@ -17,9 +17,12 @@ export const arrayOfQuestionnaires = new schema.Array(questionnaire);
 export const answer = new schema.Entity('answers');
 export const arrayofAnswers = new schema.Array(answer);
 // elements
+const matrixElement = new schema.Entity('elements', { answers: [answer] });
 export const element = new schema.Entity('elements', {
-  answers: [answer]
+  answers: [answer],
+  matrix: [matrixElement]
 });
+
 export const arrayOfElements = new schema.Array(element);
 // version
 export const version = new schema.Entity('versions', {

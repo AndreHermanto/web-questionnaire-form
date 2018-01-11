@@ -38,6 +38,7 @@ class NewElement extends Component {
       case 'height':
       case 'weight':
       case 'number':
+      case 'matrix':
         return <Question {...this.props} />;
       default:
         return (
@@ -49,11 +50,7 @@ class NewElement extends Component {
     }
   }
   render() {
-    return (
-      <div>
-        {this.renderElement()}
-      </div>
-    );
+    return <div>{this.renderElement()}</div>;
   }
 }
 

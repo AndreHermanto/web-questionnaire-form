@@ -73,14 +73,15 @@ class Form extends Component {
           onClick={() =>
             this.props.cycleFontSize(
               this.props.largeText < 2 ? this.props.largeText + 1 : 0
-            )}
+            )
+          }
         >
           <img alt="icon" src={fontSizeLogo} />
         </button>
         <div style={{ marginTop: '30px' }} id="section-to-print">
-          {this.props.responseElementIds.map(id => (
-            <ElementContainer key={id} responseElementId={id} />
-          ))}
+          {this.props.responseElementIds.map(id => {
+            return <ElementContainer key={id} responseElementId={id} />;
+          })}
         </div>
         <div className="text-muted">
           Built at: {process.env.REACT_APP_BUILD_TIME}

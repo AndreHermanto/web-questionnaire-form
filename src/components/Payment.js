@@ -16,7 +16,13 @@ class Payment extends Component {
 
   handlePayment = (consentTypeId, pricePlanId) => () => {
     window.location.assign(
-      `${process.env.REACT_APP_PAYMENTS_URL}/users/price-plans/${encodeURIComponent(pricePlanId)}?jwt=${getAccessToken()}`
+      `${
+        process.env.REACT_APP_PAYMENTS_URL
+      }/users/price-plans/${encodeURIComponent(
+        pricePlanId
+      )}?jwt=${getAccessToken()}&returnTo=${encodeURIComponent(
+        window.location.href
+      )}`
     );
   };
 
