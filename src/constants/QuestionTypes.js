@@ -6,8 +6,6 @@ export const WEIGHT = 'weight';
 export const DATE = 'date';
 export const NUMBER = 'number';
 export const MATRIX = 'matrix';
-export const UOM = 'uom';
-export const UOMS = 'uoms';
 
 const questionTypes = [
   RADIO,
@@ -17,8 +15,6 @@ const questionTypes = [
   WEIGHT,
   DATE,
   NUMBER,
-  MATRIX,
-  UOM,
-  UOMS
+  MATRIX
 ];
 export default questionTypes;

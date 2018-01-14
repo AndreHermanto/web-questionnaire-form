@@ -7,8 +7,6 @@ import Date from './Date';
 import Height from './Height';
 import Weight from './Weight';
 import Number from './Number';
-import Uom from './Uom';
-import Uoms from './Uoms';
 import Checkmark from '../Checkmark';
 import Markdown from 'react-markdown';
 import Matrix from './Matrix';
@@ -52,10 +50,6 @@ class Question extends Component {
         return <Number {...this.props} />;
       case 'matrix':
         return <Matrix {...this.props} />;
-      case 'uom':
-        return <Uom {...this.props} />;
-      case 'uoms':
-        return <Uoms {...this.props} />;
       default:
         return (
           <div>
