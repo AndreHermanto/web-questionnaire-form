@@ -29,7 +29,7 @@ class Uoms extends Component {
             }
           />
           <span className="input-group-addon" id="basic-addon2">
-            {answers[0].value1.uom.label}
+            {answers[0].value2.uom.label}
           </span>
         </div>
       </div>
