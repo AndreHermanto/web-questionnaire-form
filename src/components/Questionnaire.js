@@ -58,7 +58,7 @@ class Questionnaire extends Component {
         <WhiteSection>
           {this.props.completed && (
             <div style={{ marginBottom: 16 }}>
-              Thank you for completing this questionnaire.
+              Thank you for completing this survey.
             </div>
           )}
           {true && (
