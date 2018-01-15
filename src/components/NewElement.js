@@ -39,6 +39,8 @@ class NewElement extends Component {
       case 'weight':
       case 'number':
       case 'matrix':
+      case 'uom':
+      case 'uoms':
         return <Question {...this.props} />;
       default:
         return (
