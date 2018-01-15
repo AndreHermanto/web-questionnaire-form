@@ -3,6 +3,7 @@ import { Button, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { getAccessToken } from '../cookies';
 import get from 'lodash.get';
+import { Segment } from 'semantic-ui-react';
 
 class Payment extends Component {
   static propTypes = {
@@ -29,10 +30,39 @@ class Payment extends Component {
   paid = () => {
     return (
       <div>
-        <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
-          Payment
-        </h2>
-        <div> Congratulations! Your payment has been completed </div>
+        <div>
+          <p>
+            You are now enrolled in the Sanford Chip. A message will be sent to
+            your doctor letting them know that you have completed the enrollment
+            process.
+          </p>
+          <h3>Genetic Testing Process</h3>
+          <ul>
+            <li>
+              Please wait 2 business days before going to any Sanford Lab to
+              have your blood drawn.
+            </li>
+            <li>
+              After your blood sample is drawn, it will be sent to a Sanford lab
+              for genetic testing.
+            </li>
+            <li>
+              When the genetic testing is done, the results will be sent to your
+              doctor.
+            </li>
+          </ul>
+
+          <h3>From this page you may either:</h3>
+          <ul>
+            <li> Close the browser</li>
+            <li>Complete any other surveys you may have at this time.</li>
+          </ul>
+
+          <p>
+            Thank-you for partnering with our team! You are a valued member of
+            our Sanford Health Family!
+          </p>
+        </div>
       </div>
     );
   };
@@ -40,9 +70,12 @@ class Payment extends Component {
   unPaid = (consentTypeId, pricePlan) => {
     return (
       <div>
-        <h2 style={{ fontSize: 16, padding: '24px 0 24px 0', color: '#666' }}>
-          Payment
-        </h2>
+        <p>
+          Thank you for completing the Sanford Chip Self-Assessment. Our records
+          tell us that you still need to provide payment for the Sanford Chip.
+          You can provide payment by clicking on the "Go to Pay" button located
+          below.
+        </p>
 
         <Table striped bordered condensed hover>
           <tbody>
@@ -65,7 +98,7 @@ class Payment extends Component {
           className="btn btn-primary btn-lg"
           onClick={this.handlePayment(consentTypeId, pricePlan.id)}
         >
-          Proceed to payment
+          Go to Pay
         </Button>
       </div>
     );
@@ -82,9 +115,9 @@ class Payment extends Component {
     }
 
     return (
-      <div>
+      <Segment padded style={{ marginBottom: 24 }}>
         {isPaid ? this.paid() : this.unPaid(consentTypeId, pricePlans[0])}
-      </div>
+      </Segment>
     );
   }
 }
