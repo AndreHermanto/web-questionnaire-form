@@ -99,7 +99,8 @@ export const getHomepageQuestionnaires = state => {
   }
 
   return release.get('questionnaires').map(mappedQuestionnaire => {
-    // get the version for that questionnaire
+    // get the version for that questionnaire along with afterPayment flag
+    const afterPayment = mappedQuestionnaire.get('afterPayment') || false;
     const responses = fromResponses
       .getAllResponse(state.get('entities').get('responses'))
       .filter(
@@ -116,14 +117,19 @@ export const getHomepageQuestionnaires = state => {
       if (!version) {
         return undefined;
       }
-      return version.set('response', firstResponse);
+      return version
+        .set('response', firstResponse)
+        .set('afterPayment', afterPayment);
     } else {
       // there are no responses, use the version id from the mapping
       const version = getVersionById(
         state,
         mappedQuestionnaire.get('versionPublished')
       );
-      return version;
+      if (!version) {
+        return undefined;
+      }
+      return version.set('afterPayment', afterPayment);
     }
   });
 };
@@ -398,7 +404,9 @@ export const getResponseElementsWithInvalidAnswers = state => {
         responseElementAnswer.get('day') > 31 ||
         responseElementAnswer.get('day') <= 0 ||
         !moment(
-          `${responseElementAnswer.get('year')}-${responseElementAnswer.get('month')}-${responseElementAnswer.get('day')}`,
+          `${responseElementAnswer.get('year')}-${responseElementAnswer.get(
+            'month'
+          )}-${responseElementAnswer.get('day')}`,
           'YYYY-MM-DD'
         ).isValid()
       );
@@ -409,36 +417,35 @@ export const getFullResponse = state => {
   const responseId = getResponseId(state);
   const visibleResponseElementIds = getVisibleResponseElementIds(state);
 
-  return getResponseById(
-    state,
-    responseId
-  ).update('answeredQuestions', answeredQuestions =>
-    answeredQuestions
-      .map(responseElementId =>
-        getResponseElementById(state, responseElementId)
-      )
-      .map(responseElement => {
-        if (!responseElement.get('answers')) {
-          return responseElement;
-        }
+  return getResponseById(state, responseId).update(
+    'answeredQuestions',
+    answeredQuestions =>
+      answeredQuestions
+        .map(responseElementId =>
+          getResponseElementById(state, responseElementId)
+        )
+        .map(responseElement => {
+          if (!responseElement.get('answers')) {
+            return responseElement;
+          }
 
-        // Clear up invalid answers and flag it as invisible when element is not hidden
-        if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
+          // Clear up invalid answers and flag it as invisible when element is not hidden
+          if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
+            return responseElement
+              .set('visible', false)
+              .update('answers', responseElementAnswerIds =>
+                responseElementAnswerIds.clear()
+              );
+          }
+
           return responseElement
-            .set('visible', false)
-            .update('answers', responseElementAnswerIds =>
-              responseElementAnswerIds.clear()
-            );
-        }
-
-        return responseElement
-          .set('visible', true)
-          .update('answers', responseElementAnswerIds => {
-            return responseElementAnswerIds.map(responseElementAnswerId =>
-              getResponseElementAnswersById(state, responseElementAnswerId)
-            );
-          });
-      })
+            .set('visible', true)
+            .update('answers', responseElementAnswerIds => {
+              return responseElementAnswerIds.map(responseElementAnswerId =>
+                getResponseElementAnswersById(state, responseElementAnswerId)
+              );
+            });
+        })
   );
 };
 

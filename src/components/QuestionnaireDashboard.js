@@ -7,6 +7,7 @@ import Footer from './Footer';
 import Payment from './Payment';
 import Markdown from 'react-markdown';
 import { Dimmer, Loader } from 'semantic-ui-react';
+import { getCompletedQuestionnaires } from '../helpers/questionnaires';
 
 const DashboardIntro = styled.div`
   margin: 60px 0px 20px 0px;
@@ -37,14 +38,10 @@ function QuestionnaireDashboard(props) {
       </Grid>
     );
   }
-  const hasCompletedAllQuestionnaires = props.questionnaires.reduce(
-    (completed, version) => {
-      return (
-        completed && version && version.response && version.response.completed
-      );
-    },
-    true
+  const hasCompletedQuestionnaires = getCompletedQuestionnaires(
+    props.questionnaires
   );
+
   if (props.isLoadingReponses && !props.questionnaires) {
     return loading();
   }
@@ -78,7 +75,7 @@ function QuestionnaireDashboard(props) {
         )}
 
         {/* All questionnaires finished, but has price plans */}
-        {hasCompletedAllQuestionnaires &&
+        {hasCompletedQuestionnaires.beforePayment &&
           props.pricePlanId && (
             <Payment
               pricePlanId={props.pricePlanId}
@@ -109,7 +106,9 @@ function QuestionnaireDashboard(props) {
             return (
               <Col sm={4} style={{ marginBottom: 32 }} key={i}>
                 <Questionnaire
-                  completed={version.response && version.response.completed}
+                  completed={
+                    (version.response && version.response.completed) || false
+                  }
                   title={version.title}
                   timeInMinutes={version.time}
                   percentComplete={
@@ -142,7 +141,12 @@ function QuestionnaireDashboard(props) {
                       ? version.response.completed ? 'Completed' : 'In Progress'
                       : 'New'
                   }
-                  isDisabled={version.body.length > 0 ? false : true}
+                  isError={version.body.length > 0 ? false : true}
+                  requiresPayment={
+                    version.afterPayment && (props.pricePlanId && !props.isPaid)
+                      ? true
+                      : false
+                  }
                 />
               </Col>
             );
@@ -150,7 +154,7 @@ function QuestionnaireDashboard(props) {
         </Row>
 
         {/* All questionnaires finished, no price plans */}
-        {hasCompletedAllQuestionnaires &&
+        {hasCompletedQuestionnaires.all &&
           props.questionnaires.length > 0 &&
           !props.pricePlanId && (
             <h3 style={{ fontSize: 16, marginBottom: 32, color: '#666' }}>

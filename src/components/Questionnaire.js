@@ -30,15 +30,50 @@ const WhiteSection = styled.div`
   background-color: white;
 `;
 class Questionnaire extends Component {
-  static propTypes: {
+  static propTypes = {
     title: PropTypes.string.isRequired,
     buttonText: PropTypes.string.isRequired,
     link: PropTypes.string.isRequired,
-    percentComplete: PropTypes.number.isRequred,
-    timeInMinutes: PropTypes.number.isRequred,
+    percentComplete: PropTypes.number.isRequired,
+    timeInMinutes: PropTypes.number.isRequired,
     completed: PropTypes.bool.isRequired,
-    isDisabled: PropTypes.bool.isRequred
+    requiresPayment: PropTypes.bool.isRequired,
+    isError: PropTypes.bool.isRequired
   };
+  renderButton = () => {
+    if (this.props.isError) {
+      return (
+        <Message negative>
+          <Message.Header>Error</Message.Header>
+          <p>This questionnaire has no questions</p>
+        </Message>
+      );
+    }
+
+    if (this.props.requiresPayment && !this.props.completed) {
+      return (
+        <Message info>
+          <p>Enabled after payment</p>
+        </Message>
+      );
+    }
+
+    return (
+      <a
+        href={this.props.link}
+        className="btn btn-primary btn-block"
+        style={{
+          backgroundColor: this.props.completed ? 'rgb(82, 88, 93)' : '#192229',
+          border: 'none',
+          borderRadius: 3,
+          padding: '12px 16px'
+        }}
+      >
+        {this.props.buttonText}
+      </a>
+    );
+  };
+
   render() {
     return (
       <OuterBox>
@@ -69,29 +104,7 @@ class Questionnaire extends Component {
                   {Math.floor(this.props.timeInMinutes)} minutes
                 </div>
               )}
-              <div>
-                {!this.props.isDisabled ? (
-                  <a
-                    href={this.props.link}
-                    className="btn btn-primary btn-block"
-                    style={{
-                      backgroundColor: this.props.completed
-                        ? 'rgb(82, 88, 93)'
-                        : '#192229',
-                      border: 'none',
-                      borderRadius: 3,
-                      padding: '12px 16px'
-                    }}
-                  >
-                    {this.props.buttonText}
-                  </a>
-                ) : (
-                  <Message negative>
-                    <Message.Header>Error</Message.Header>
-                    <p>This questionnaire has no questions</p>
-                  </Message>
-                )}
-              </div>
+              <div>{this.renderButton()}</div>
             </div>
           )}
         </WhiteSection>
