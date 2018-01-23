@@ -17,9 +17,8 @@ class Payment extends Component {
 
   handlePayment = (consentTypeId, pricePlanId) => () => {
     window.location.assign(
-      `${
-        process.env.REACT_APP_PAYMENTS_URL
-      }/users/price-plans/${encodeURIComponent(
+      `${process.env
+        .REACT_APP_PAYMENTS_URL}/users/price-plans/${encodeURIComponent(
         pricePlanId
       )}?jwt=${getAccessToken()}&returnTo=${encodeURIComponent(
         window.location.href
@@ -58,9 +57,11 @@ class Payment extends Component {
             <li>Complete any other surveys you may have at this time.</li>
           </ul>
 
-          <p>
-            Thank-you for partnering with our team! You are a valued member of
-            our Sanford Health Family!
+          <p style={{ fontSize: 24, color: '#62A5DB' }}>
+            <strong>
+              Thank-you for partnering with our team! You are a valued member of
+              our Sanford Health Family!
+            </strong>
           </p>
         </div>
       </div>
@@ -77,22 +78,12 @@ class Payment extends Component {
           below.
         </p>
 
-        <Table striped bordered condensed hover>
-          <tbody>
-            <tr>
-              <td>Title</td>
-              <td>{get(pricePlan, 'title', '')}</td>
-            </tr>
-            <tr>
-              <td>Description</td>
-              <td>{get(pricePlan, 'description', '')}</td>
-            </tr>
-            <tr>
-              <td>Currency</td>
-              <td>{get(pricePlan, 'currency.currencyName', '')}</td>
-            </tr>
-          </tbody>
-        </Table>
+        <p>
+          <strong>
+            Amount Due ${get(pricePlan, 'amount', '')}{' '}
+            {get(pricePlan, 'currency.currencyName', '')}
+          </strong>
+        </p>
 
         <Button
           className="btn btn-primary btn-lg"
