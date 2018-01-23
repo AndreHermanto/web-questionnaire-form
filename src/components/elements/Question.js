@@ -90,8 +90,9 @@ class Question extends Component {
 
         <div style={{ whiteSpace: 'pre-wrap', marginBottom: 10 }}>
           <Markdown
-            source={`${this.props.questionNumber}\\. ${this.props.element
-              .question}`}
+            source={`${this.props.questionNumber}\\. ${
+              this.props.element.question
+            }`}
             escapeHtml={true}
             skipHtml={true}
           />

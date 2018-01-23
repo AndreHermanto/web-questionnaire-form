@@ -10,9 +10,9 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import App from './App';
 import reducer from './reducers';
-import './index.css';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import 'semantic-ui-css/semantic.min.css';
+import './index.css';
 // logger
 // extra stuff for logging immutanle
 
@@ -21,8 +21,8 @@ const middleware = [];
 middleware.push(thunk);
 
 // logging (only in development)
-if (process.env.NODE_ENV === `development`) {
-  const { createLogger } = require(`redux-logger`);
+if (process.env.NODE_ENV === 'development') {
+  const { createLogger } = require('redux-logger');
   const logger = createLogger();
   middleware.push(logger);
 }

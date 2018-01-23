@@ -73,7 +73,8 @@ class Form extends Component {
           onClick={() =>
             this.props.cycleFontSize(
               this.props.largeText < 2 ? this.props.largeText + 1 : 0
-            )}
+            )
+          }
         >
           <img alt="icon" src={fontSizeLogo} />
         </button>

@@ -2,8 +2,12 @@ html {
   height: 100%;
 }
 body {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   height: inherit;
+  font-family: "Helvetica Neue", Helvetica, Arial, Lato, sans-serif !important;
+}
+body p {
+  font-family: "Helvetica Neue", Helvetica, Arial, Lato, sans-serif !important;
 }
 
 div#root,

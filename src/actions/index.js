@@ -693,20 +693,20 @@ export const setupQuestionnaire = ({ questionnaireId, resume }) => (
       if (responses.length) {
         const response = responses[responses.length - 1];
         // there are responses
-        return dispatch(
-          fetchVersion(questionnaireId, response.versionId)
-        ).then(() => {
-          dispatch({
-            type: 'SET_CURRENT_QUESTIONNAIRE',
-            payload: {
-              responseId: response.id,
-              versionId: response.versionId,
-              userId: response.userId,
-              questionnaireId
-            }
-          });
-          return response;
-        });
+        return dispatch(fetchVersion(questionnaireId, response.versionId)).then(
+          () => {
+            dispatch({
+              type: 'SET_CURRENT_QUESTIONNAIRE',
+              payload: {
+                responseId: response.id,
+                versionId: response.versionId,
+                userId: response.userId,
+                questionnaireId
+              }
+            });
+            return response;
+          }
+        );
       }
 
       return new Promise((resolve, reject) => {
@@ -742,19 +742,19 @@ export const setupQuestionnaire = ({ questionnaireId, resume }) => (
           });
         }
       }).then(version => {
-        return dispatch(
-          createResponse(questionnaireId, userId, version)
-        ).then(response => {
-          dispatch({
-            type: 'SET_CURRENT_QUESTIONNAIRE',
-            payload: {
-              responseId: response.id,
-              versionId: response.versionId,
-              questionnaireId
-            }
-          });
-          return response;
-        });
+        return dispatch(createResponse(questionnaireId, userId, version)).then(
+          response => {
+            dispatch({
+              type: 'SET_CURRENT_QUESTIONNAIRE',
+              payload: {
+                responseId: response.id,
+                versionId: response.versionId,
+                questionnaireId
+              }
+            });
+            return response;
+          }
+        );
       });
     })
     .then(() => {
