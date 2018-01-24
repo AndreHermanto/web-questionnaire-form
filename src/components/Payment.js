@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Button, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { getAccessToken } from '../cookies';
 import get from 'lodash.get';
@@ -85,12 +84,17 @@ class Payment extends Component {
           </strong>
         </p>
 
-        <Button
+        <a
           className="btn btn-primary btn-lg"
-          onClick={this.handlePayment(consentTypeId, pricePlan.id)}
+          href={`${process.env
+            .REACT_APP_PAYMENTS_URL}/users/price-plans/${encodeURIComponent(
+            pricePlan.id
+          )}?jwt=${getAccessToken()}&returnTo=${encodeURIComponent(
+            window.location.href
+          )}`}
         >
           Go to Pay
-        </Button>
+        </a>
       </div>
     );
   };

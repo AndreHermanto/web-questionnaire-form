@@ -1,5 +1,6 @@
 html {
   height: 100%;
+  font-size: 14px !important;
 }
 body {
   background-color: #fafafa;
@@ -23,7 +24,8 @@ div#root > div > div {
   #submit-modal {
     visibility: hidden;
   }
-  #section-to-print, #section-to-print * {
+  #section-to-print,
+  #section-to-print * {
     visibility: visible;
   }
   .question-container {
@@ -33,6 +35,6 @@ div#root > div > div {
   }
 }
 
-.form-control{
+.form-control {
   font-size: inherit;
 }
