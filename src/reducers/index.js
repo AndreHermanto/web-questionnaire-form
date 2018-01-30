@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux-immutable';
 import { List } from 'immutable';
 import moment from 'moment';
+import jsonLogic from 'json-logic-js';
 import * as fromQuestionnaires from './questionnaires';
 import * as fromVersions from './versions';
 import * as fromResponses from './responses';
@@ -350,13 +351,15 @@ export const getProgress = state => {
   const responseElementsWithInvalidAnswers = getResponseElementsWithInvalidAnswers(
     state
   );
+  const numberOfQuestionsAnswered = questionResponseElements.filter(
+    responseElement =>
+      !!responseElement.get('answers').size ||
+      responseElement.get('preferNotToAnswer')
+  ).size;
+  const numberOfQuestionsWithInvalidAnswers =
+    responseElementsWithInvalidAnswers.size;
   return (
-    (questionResponseElements.filter(
-      responseElement =>
-        !!responseElement.get('answers').size ||
-        responseElement.get('preferNotToAnswer')
-    ).size -
-      responseElementsWithInvalidAnswers.size) /
+    (numberOfQuestionsAnswered - numberOfQuestionsWithInvalidAnswers) /
     questionResponseElements.size *
     100
   );
@@ -371,15 +374,57 @@ export const getResponseElementsWithInvalidAnswers = state => {
   return getResponseById(state, responseId)
     .get('answeredQuestions')
     .map(responseElementId => getResponseElementById(state, responseElementId))
-    .filter(
-      responseElement =>
-        getElementById(state, responseElement.get('elementId')).get('type') ===
-        'date'
-    )
     .filter(responseElement => {
       // keep invalid dates
       const answers = responseElement.get('answers');
-      if (!answers.size) {
+      if (!answers || !answers.size) {
+        return false;
+      }
+      const element = getElementById(state, responseElement.get('elementId'));
+      if (element.get('type') === 'number' || element.get('type') === 'text') {
+        // does it have validation logic?
+        const validationLogic = getAnswerById(
+          state,
+          element.getIn(['answers', '0'])
+        ).get('validationLogic');
+        console.log('validation logic', validationLogic);
+        if (!validationLogic) {
+          return false;
+        }
+        // get out the first answer
+        const responseElementAnswer = getResponseElementAnswersById(
+          state,
+          responseElement.get('answers').get(0)
+        );
+        if (element.get('type') === 'number') {
+          const number = responseElementAnswer.get('number');
+          const logic = validationLogic.get('number')
+            ? validationLogic.get('number').toJS()
+            : null;
+          if (!logic) {
+            return false;
+          }
+          const isValid = jsonLogic.apply(logic, {
+            number: parseInt(number, 10)
+          });
+          return !isValid;
+        }
+        if (element.get('type') === 'text') {
+          const text = responseElementAnswer.get('text');
+          const logic = validationLogic.get('text')
+            ? validationLogic.get('text').toJS()
+            : null;
+          if (!logic) {
+            return false;
+          }
+          const isValid = jsonLogic.apply(logic, {
+            text: text
+          });
+          return !isValid;
+        }
+        return false;
+      }
+      if (element.get('type') !== 'date') {
         return false;
       }
       const responseElementAnswer = getResponseElementAnswersById(
@@ -398,7 +443,9 @@ export const getResponseElementsWithInvalidAnswers = state => {
         responseElementAnswer.get('day') > 31 ||
         responseElementAnswer.get('day') <= 0 ||
         !moment(
-          `${responseElementAnswer.get('year')}-${responseElementAnswer.get('month')}-${responseElementAnswer.get('day')}`,
+          `${responseElementAnswer.get('year')}-${responseElementAnswer.get(
+            'month'
+          )}-${responseElementAnswer.get('day')}`,
           'YYYY-MM-DD'
         ).isValid()
       );
@@ -409,36 +456,35 @@ export const getFullResponse = state => {
   const responseId = getResponseId(state);
   const visibleResponseElementIds = getVisibleResponseElementIds(state);
 
-  return getResponseById(
-    state,
-    responseId
-  ).update('answeredQuestions', answeredQuestions =>
-    answeredQuestions
-      .map(responseElementId =>
-        getResponseElementById(state, responseElementId)
-      )
-      .map(responseElement => {
-        if (!responseElement.get('answers')) {
-          return responseElement;
-        }
+  return getResponseById(state, responseId).update(
+    'answeredQuestions',
+    answeredQuestions =>
+      answeredQuestions
+        .map(responseElementId =>
+          getResponseElementById(state, responseElementId)
+        )
+        .map(responseElement => {
+          if (!responseElement.get('answers')) {
+            return responseElement;
+          }
 
-        // Clear up invalid answers and flag it as invisible when element is not hidden
-        if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
+          // Clear up invalid answers and flag it as invisible when element is not hidden
+          if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
+            return responseElement
+              .set('visible', false)
+              .update('answers', responseElementAnswerIds =>
+                responseElementAnswerIds.clear()
+              );
+          }
+
           return responseElement
-            .set('visible', false)
-            .update('answers', responseElementAnswerIds =>
-              responseElementAnswerIds.clear()
-            );
-        }
-
-        return responseElement
-          .set('visible', true)
-          .update('answers', responseElementAnswerIds => {
-            return responseElementAnswerIds.map(responseElementAnswerId =>
-              getResponseElementAnswersById(state, responseElementAnswerId)
-            );
-          });
-      })
+            .set('visible', true)
+            .update('answers', responseElementAnswerIds => {
+              return responseElementAnswerIds.map(responseElementAnswerId =>
+                getResponseElementAnswersById(state, responseElementAnswerId)
+              );
+            });
+        })
   );
 };
 
