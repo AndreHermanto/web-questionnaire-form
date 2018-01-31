@@ -83,7 +83,7 @@ class Question extends Component {
         }}
       >
         {isAnswered && (
-          <div style={{ float: 'right' }}>
+          <div style={{ float: 'right', marginTop: '-10px' }}>
             <Checkmark />
           </div>
         )}
