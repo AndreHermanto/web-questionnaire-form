@@ -33,7 +33,7 @@ repo_name="$app_name.wiki"
 repo_url="https://2fa70040e61b6d5faaf08f9c382587b707711051@github.com/GenomeOne/$app_name.wiki.git"
 
 # Output Test results
-CI=true npm test -- --coverage --collectCoverageFrom="src/{actions,reducers,selectors}/**/*" > $output_file_name 2>&1
+CI=true npm test -- --coverage --collectCoverageFrom="src/{actions,reducers,selectors,helpers}/**/*" > $output_file_name 2>&1
 # grab the new coverage result
 testsValue=`cat $output_file_name`
 coverageFloat=`echo $testsValue | cut -d"|" -f23`
