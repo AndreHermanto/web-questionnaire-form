@@ -387,13 +387,18 @@ export const getResponseElementsWithInvalidAnswers = state => {
         return false;
       }
       const element = getElementById(state, responseElement.get('elementId'));
-      if (element.get('type') === 'number' || element.get('type') === 'text') {
+      if (
+        element.get('type') === 'number' ||
+        element.get('type') === 'text' ||
+        element.get('type') === 'uom' ||
+        element.get('type') === 'uoms'
+      ) {
         // does it have validation logic?
         const validationLogic = getAnswerById(
           state,
           element.getIn(['answers', '0'])
         ).get('validationLogic');
-        console.log('validation logic', validationLogic);
+
         if (!validationLogic) {
           return false;
         }
@@ -402,6 +407,47 @@ export const getResponseElementsWithInvalidAnswers = state => {
           state,
           responseElement.get('answers').get(0)
         );
+        if (element.get('type') === 'uoms') {
+          const uom1 = responseElementAnswer.get('uom1');
+          const uom2 = responseElementAnswer.get('uom2');
+          const logic1 = validationLogic.get('uom1')
+            ? validationLogic.get('uom1').toJS()
+            : null;
+          const logic2 = validationLogic.get('uom2')
+            ? validationLogic.get('uom2').toJS()
+            : null;
+
+          if (!logic1 && !logic2) {
+            // no logic at all
+            return false;
+          }
+          let isValid1 = true,
+            isValid2 = true;
+          if (logic1) {
+            isValid1 = jsonLogic.apply(logic1, {
+              uom1: parseInt(uom1, 10)
+            });
+          }
+          if (logic2) {
+            isValid2 = jsonLogic.apply(logic2, {
+              uom2: parseInt(uom2, 10)
+            });
+          }
+          return !isValid1 || !isValid2;
+        }
+        if (element.get('type') === 'uom') {
+          const uom1 = responseElementAnswer.get('uom1');
+          const logic = validationLogic.get('uom1')
+            ? validationLogic.get('uom1').toJS()
+            : null;
+          if (!logic) {
+            return false;
+          }
+          const isValid = jsonLogic.apply(logic, {
+            uom1: parseInt(uom1, 10)
+          });
+          return !isValid;
+        }
         if (element.get('type') === 'number') {
           const number = responseElementAnswer.get('number');
           const logic = validationLogic.get('number')

@@ -11,15 +11,13 @@ describe('convertJsonLogicToText', () => {
   it('handles vars', () => {
     const logic = { '>': [{ var: 'number' }, '1'] };
     const results = convertJsonLogicToText(logic);
-    expect(results).toEqual('a number value greater than 1');
+    expect(results).toEqual('greater than 1');
   });
   it('handles vars and ands', () => {
     const logic = {
       and: [{ '>': [{ var: 'feet' }, '0'] }, { '<': [{ var: 'feet' }, '13'] }]
     };
     const results = convertJsonLogicToText(logic);
-    expect(results).toEqual(
-      'a feet value greater than 0 and, a feet value less than 13'
-    );
+    expect(results).toEqual('greater than 0 and, less than 13');
   });
 });

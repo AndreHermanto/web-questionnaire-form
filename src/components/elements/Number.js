@@ -19,7 +19,7 @@ class Number extends Component {
     }
     return (
       <div className="text-danger">
-        Please make sure your answer has:{' '}
+        Please make sure your answer is:{' '}
         {convertJsonLogicToText(validationLogic)}
       </div>
     );
@@ -32,7 +32,6 @@ class Number extends Component {
       responseElement
     } = this.props;
     const number = get(responseElementAnswers, `${answers[0].id}.number`, '');
-    console.log('element', responseElement);
     return (
       <div>
         <input

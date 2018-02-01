@@ -5,7 +5,7 @@ export const convertJsonLogicToText = value => {
   if (typeof value === 'object') {
     const key = Object.keys(value)[0];
     if (key === 'var') {
-      return `a ${value[key]} value`;
+      return '';
     }
     const label = {
       '>': 'greater than',
@@ -15,7 +15,11 @@ export const convertJsonLogicToText = value => {
       and: 'and,',
       or: 'or'
     };
-    return value[key].map(convertJsonLogicToText).join(` ${label[key]} `);
+    return value[key]
+      .map(convertJsonLogicToText)
+      .join(` ${label[key]} `)
+      .replace('  ', ' ')
+      .trim();
   }
   return value;
 };

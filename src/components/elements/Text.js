@@ -34,7 +34,6 @@ class Text extends Component {
       responseElementAnswers
     } = this.props;
     const text = get(responseElementAnswers, `${answers[0].id}.text`, '');
-    console.log('element', responseElement);
     return (
       <div>
         <Textarea
