@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import get from 'lodash.get';
 import Textarea from 'react-textarea-autosize';
+import { Input } from 'semantic-ui-react';
 import jsonLogic from 'json-logic-js';
 
 class Text extends Component {
@@ -31,23 +32,30 @@ class Text extends Component {
       responseElement,
       answers,
       setAnswerValue,
-      responseElementAnswers
+      responseElementAnswers,
+      element
     } = this.props;
     const text = get(responseElementAnswers, `${answers[0].id}.text`, '');
+
+    const inputProps = {
+      type: 'text',
+      className: 'form-control',
+      value: text,
+      onChange: e => setAnswerValue(answers[0].id, 'text', e.target.value),
+      style: {
+        resize: 'vertical',
+        boxShadow: 'none',
+        padding: 15,
+        minHeight: 100
+      }
+    };
+    if (element.singleLine) {
+      return <Input {...inputProps} />;
+    }
+    //
     return (
       <div>
-        <Textarea
-          type="text"
-          className="form-control"
-          value={text}
-          onChange={e => setAnswerValue(answers[0].id, 'text', e.target.value)}
-          style={{
-            resize: 'vertical',
-            boxShadow: 'none',
-            padding: 15,
-            minHeight: 100
-          }}
-        />
+        <Textarea {...inputProps} />
         {!responseElement.preferNotToAnswer &&
           this.renderValidation(answers, text)}
       </div>
