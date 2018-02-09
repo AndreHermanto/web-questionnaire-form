@@ -19,7 +19,7 @@ describe('fetching the consent type mapping', () => {
 
     process.env.REACT_APP_BASE_URL = 'http://localhost:5000';
     fetchMock
-      .get(`http://localhost:5000/releases?consentTypeId=1`, {
+      .get('http://localhost:5000/releases?consentTypeId=1', {
         body: {
           status: 200,
           data: [

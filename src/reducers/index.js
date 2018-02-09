@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux-immutable';
 import { List } from 'immutable';
 import moment from 'moment';
+import jsonLogic from 'json-logic-js';
 import * as fromQuestionnaires from './questionnaires';
 import * as fromVersions from './versions';
 import * as fromResponses from './responses';
@@ -99,7 +100,8 @@ export const getHomepageQuestionnaires = state => {
   }
 
   return release.get('questionnaires').map(mappedQuestionnaire => {
-    // get the version for that questionnaire
+    // get the version for that questionnaire along with afterPayment flag
+    const afterPayment = mappedQuestionnaire.get('afterPayment') || false;
     const responses = fromResponses
       .getAllResponse(state.get('entities').get('responses'))
       .filter(
@@ -116,14 +118,19 @@ export const getHomepageQuestionnaires = state => {
       if (!version) {
         return undefined;
       }
-      return version.set('response', firstResponse);
+      return version
+        .set('response', firstResponse)
+        .set('afterPayment', afterPayment);
     } else {
       // there are no responses, use the version id from the mapping
       const version = getVersionById(
         state,
         mappedQuestionnaire.get('versionPublished')
       );
-      return version;
+      if (!version) {
+        return undefined;
+      }
+      return version.set('afterPayment', afterPayment);
     }
   });
 };
@@ -350,13 +357,15 @@ export const getProgress = state => {
   const responseElementsWithInvalidAnswers = getResponseElementsWithInvalidAnswers(
     state
   );
+  const numberOfQuestionsAnswered = questionResponseElements.filter(
+    responseElement =>
+      !!responseElement.get('answers').size ||
+      responseElement.get('preferNotToAnswer')
+  ).size;
+  const numberOfQuestionsWithInvalidAnswers =
+    responseElementsWithInvalidAnswers.size;
   return (
-    (questionResponseElements.filter(
-      responseElement =>
-        !!responseElement.get('answers').size ||
-        responseElement.get('preferNotToAnswer')
-    ).size -
-      responseElementsWithInvalidAnswers.size) /
+    (numberOfQuestionsAnswered - numberOfQuestionsWithInvalidAnswers) /
     questionResponseElements.size *
     100
   );
@@ -371,15 +380,103 @@ export const getResponseElementsWithInvalidAnswers = state => {
   return getResponseById(state, responseId)
     .get('answeredQuestions')
     .map(responseElementId => getResponseElementById(state, responseElementId))
-    .filter(
-      responseElement =>
-        getElementById(state, responseElement.get('elementId')).get('type') ===
-        'date'
-    )
     .filter(responseElement => {
       // keep invalid dates
       const answers = responseElement.get('answers');
-      if (!answers.size) {
+      if (!answers || !answers.size) {
+        return false;
+      }
+      const element = getElementById(state, responseElement.get('elementId'));
+      if (
+        element.get('type') === 'number' ||
+        element.get('type') === 'text' ||
+        element.get('type') === 'uom' ||
+        element.get('type') === 'uoms'
+      ) {
+        // does it have validation logic?
+        const validationLogic = getAnswerById(
+          state,
+          element.getIn(['answers', '0'])
+        ).get('validationLogic');
+
+        if (!validationLogic) {
+          return false;
+        }
+        // get out the first answer
+        const responseElementAnswer = getResponseElementAnswersById(
+          state,
+          responseElement.get('answers').get(0)
+        );
+        if (element.get('type') === 'uoms') {
+          const uom1 = responseElementAnswer.get('uom1');
+          const uom2 = responseElementAnswer.get('uom2');
+          const logic1 = validationLogic.get('uom1')
+            ? validationLogic.get('uom1').toJS()
+            : null;
+          const logic2 = validationLogic.get('uom2')
+            ? validationLogic.get('uom2').toJS()
+            : null;
+
+          if (!logic1 && !logic2) {
+            // no logic at all
+            return false;
+          }
+          let isValid1 = true,
+            isValid2 = true;
+          if (logic1) {
+            isValid1 = jsonLogic.apply(logic1, {
+              uom1: parseInt(uom1, 10)
+            });
+          }
+          if (logic2) {
+            isValid2 = jsonLogic.apply(logic2, {
+              uom2: parseInt(uom2, 10)
+            });
+          }
+          return !isValid1 || !isValid2;
+        }
+        if (element.get('type') === 'uom') {
+          const uom1 = responseElementAnswer.get('uom1');
+          const logic = validationLogic.get('uom1')
+            ? validationLogic.get('uom1').toJS()
+            : null;
+          if (!logic) {
+            return false;
+          }
+          const isValid = jsonLogic.apply(logic, {
+            uom1: parseInt(uom1, 10)
+          });
+          return !isValid;
+        }
+        if (element.get('type') === 'number') {
+          const number = responseElementAnswer.get('number');
+          const logic = validationLogic.get('number')
+            ? validationLogic.get('number').toJS()
+            : null;
+          if (!logic) {
+            return false;
+          }
+          const isValid = jsonLogic.apply(logic, {
+            number: parseInt(number, 10)
+          });
+          return !isValid;
+        }
+        if (element.get('type') === 'text') {
+          const text = responseElementAnswer.get('text');
+          const logic = validationLogic.get('text')
+            ? validationLogic.get('text').toJS()
+            : null;
+          if (!logic) {
+            return false;
+          }
+          const isValid = jsonLogic.apply(logic, {
+            text: text
+          });
+          return !isValid;
+        }
+        return false;
+      }
+      if (element.get('type') !== 'date') {
         return false;
       }
       const responseElementAnswer = getResponseElementAnswersById(
@@ -398,7 +495,9 @@ export const getResponseElementsWithInvalidAnswers = state => {
         responseElementAnswer.get('day') > 31 ||
         responseElementAnswer.get('day') <= 0 ||
         !moment(
-          `${responseElementAnswer.get('year')}-${responseElementAnswer.get('month')}-${responseElementAnswer.get('day')}`,
+          `${responseElementAnswer.get('year')}-${responseElementAnswer.get(
+            'month'
+          )}-${responseElementAnswer.get('day')}`,
           'YYYY-MM-DD'
         ).isValid()
       );
@@ -409,36 +508,35 @@ export const getFullResponse = state => {
   const responseId = getResponseId(state);
   const visibleResponseElementIds = getVisibleResponseElementIds(state);
 
-  return getResponseById(
-    state,
-    responseId
-  ).update('answeredQuestions', answeredQuestions =>
-    answeredQuestions
-      .map(responseElementId =>
-        getResponseElementById(state, responseElementId)
-      )
-      .map(responseElement => {
-        if (!responseElement.get('answers')) {
-          return responseElement;
-        }
+  return getResponseById(state, responseId).update(
+    'answeredQuestions',
+    answeredQuestions =>
+      answeredQuestions
+        .map(responseElementId =>
+          getResponseElementById(state, responseElementId)
+        )
+        .map(responseElement => {
+          if (!responseElement.get('answers')) {
+            return responseElement;
+          }
 
-        // Clear up invalid answers and flag it as invisible when element is not hidden
-        if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
+          // Clear up invalid answers and flag it as invisible when element is not hidden
+          if (!visibleResponseElementIds.includes(responseElement.get('id'))) {
+            return responseElement
+              .set('visible', false)
+              .update('answers', responseElementAnswerIds =>
+                responseElementAnswerIds.clear()
+              );
+          }
+
           return responseElement
-            .set('visible', false)
-            .update('answers', responseElementAnswerIds =>
-              responseElementAnswerIds.clear()
-            );
-        }
-
-        return responseElement
-          .set('visible', true)
-          .update('answers', responseElementAnswerIds => {
-            return responseElementAnswerIds.map(responseElementAnswerId =>
-              getResponseElementAnswersById(state, responseElementAnswerId)
-            );
-          });
-      })
+            .set('visible', true)
+            .update('answers', responseElementAnswerIds => {
+              return responseElementAnswerIds.map(responseElementAnswerId =>
+                getResponseElementAnswersById(state, responseElementAnswerId)
+              );
+            });
+        })
   );
 };
 
