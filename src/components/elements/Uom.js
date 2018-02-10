@@ -43,7 +43,7 @@ class Uom extends Component {
               setAnswerValue(answers[0].id, 'uom1', e.target.value)}
           />
           <span className="input-group-addon" id="basic-addon2">
-            {answers[0].value1.uom.label}
+            {answers[0].uom1.label}
           </span>
         </div>
         {!responseElement.preferNotToAnswer &&
