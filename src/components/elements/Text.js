@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import get from 'lodash.get';
 import Textarea from 'react-textarea-autosize';
-import { Input } from 'semantic-ui-react';
 import jsonLogic from 'json-logic-js';
 
 class Text extends Component {
@@ -21,9 +20,9 @@ class Text extends Component {
       return null;
     }
     return (
-      <div className="text-danger">
-        Please make sure your answer conforms to the following:{' '}
-        {JSON.stringify(validationLogic)}
+      <div className="text-danger" style={{ marginTop: 8 }}>
+        Please make sure your answer is valid.
+        <p className="text-muted">{JSON.stringify(validationLogic.regex[1])}</p>
       </div>
     );
   };
@@ -41,21 +40,29 @@ class Text extends Component {
       type: 'text',
       className: 'form-control',
       value: text,
-      onChange: e => setAnswerValue(answers[0].id, 'text', e.target.value),
-      style: {
-        resize: 'vertical',
-        boxShadow: 'none',
-        padding: 15,
-        minHeight: 100
-      }
+      onChange: e => setAnswerValue(answers[0].id, 'text', e.target.value)
     };
     if (element.singleLine) {
-      return <Input {...inputProps} />;
+      return (
+        <div>
+          <input {...inputProps} />
+          {!responseElement.preferNotToAnswer &&
+            this.renderValidation(answers, text)}
+        </div>
+      );
     }
     //
     return (
       <div>
-        <Textarea {...inputProps} />
+        <Textarea
+          {...inputProps}
+          style={{
+            resize: 'vertical',
+            boxShadow: 'none',
+            padding: 15,
+            minHeight: 100
+          }}
+        />
         {!responseElement.preferNotToAnswer &&
           this.renderValidation(answers, text)}
       </div>
