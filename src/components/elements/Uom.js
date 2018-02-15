@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import get from 'lodash.get';
 import jsonLogic from 'json-logic-js';
-import { convertJsonLogicToText } from '../../helpers/questions';
 class Uom extends Component {
   renderValidation = (answers, uom) => {
     const validationLogic = get(answers, '0.validationLogic.uom1', false);
@@ -18,10 +17,7 @@ class Uom extends Component {
       return null;
     }
     return (
-      <div className="text-danger">
-        Please make sure your answer is:{' '}
-        {convertJsonLogicToText(validationLogic)}
-      </div>
+      <div className="text-danger">Please make sure your answer is valid.</div>
     );
   };
   render() {

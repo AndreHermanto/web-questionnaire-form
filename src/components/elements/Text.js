@@ -22,7 +22,6 @@ class Text extends Component {
     return (
       <div className="text-danger" style={{ marginTop: 8 }}>
         Please make sure your answer is valid.
-        <p className="text-muted">{JSON.stringify(validationLogic.regex[1])}</p>
       </div>
     );
   };
