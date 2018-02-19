@@ -41,8 +41,13 @@ class Number extends Component {
           onChange={e =>
             setAnswerValue(answers[0].id, 'number', e.target.value)}
           onKeyDown={e => {
-            //don't let user enter -,+,.
-            if (e.keyCode === 189 || e.keyCode === 187 || e.keyCode === 190) {
+            //don't let user enter -,+,., e
+            if (
+              e.keyCode === 189 ||
+              e.keyCode === 187 ||
+              e.keyCode === 190 ||
+              e.keyCode === 69
+            ) {
               e.preventDefault();
             }
           }}

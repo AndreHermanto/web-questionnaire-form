@@ -37,11 +37,22 @@ class Uoms extends Component {
       <div>
         <div className="input-group" style={{ marginBottom: 10 }}>
           <input
-            type="text"
+            type="number"
             className="form-control"
             value={get(responseElementAnswers, `${answers[0].id}.uom1`, '')}
             onChange={e =>
               setAnswerValue(answers[0].id, 'uom1', e.target.value)}
+            onKeyDown={e => {
+              //don't let user enter -,+,., e
+              if (
+                e.keyCode === 189 ||
+                e.keyCode === 187 ||
+                e.keyCode === 190 ||
+                e.keyCode === 69
+              ) {
+                e.preventDefault();
+              }
+            }}
           />
           <span className="input-group-addon" id="basic-addon2">
             {answers[0].uom1.label}
@@ -52,11 +63,22 @@ class Uoms extends Component {
 
         <div className="input-group" style={{ marginBottom: 10 }}>
           <input
-            type="text"
+            type="number"
             className="form-control"
             value={get(responseElementAnswers, `${answers[0].id}.uom2`, '')}
             onChange={e =>
               setAnswerValue(answers[0].id, 'uom2', e.target.value)}
+            onKeyDown={e => {
+              //don't let user enter -,+,., e
+              if (
+                e.keyCode === 189 ||
+                e.keyCode === 187 ||
+                e.keyCode === 190 ||
+                e.keyCode === 69
+              ) {
+                e.preventDefault();
+              }
+            }}
           />
           <span className="input-group-addon" id="basic-addon2">
             {answers[0].uom2.label}
