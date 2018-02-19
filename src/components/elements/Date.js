@@ -6,7 +6,12 @@ class Date extends Component {
   render() {
     const { answers, setAnswerValue, responseElementAnswers } = this.props;
     const preventTypingMinus = e => {
-      if (e.keyCode === 189) {
+      if (
+        e.keyCode === 189 ||
+        e.keyCode === 187 ||
+        e.keyCode === 190 ||
+        e.keyCode === 69
+      ) {
         e.preventDefault();
       }
     };
@@ -117,19 +122,18 @@ class Date extends Component {
           </div>
         </div>
         {!!dayValue.length &&
-          invalidDay &&
-          <div className="text-danger">
-            Invalid Day: Day must be between 1 and
-            {' '}
-            {maxDayValue}
-            {' '}
-            for that month
-          </div>}
+          invalidDay && (
+            <div className="text-danger">
+              Invalid Day: Day must be between 1 and {maxDayValue} for that
+              month
+            </div>
+          )}
         {!!yearValue.length &&
-          (yearValue < 1900 || yearValue > moment().year()) &&
-          <div className="text-danger">
-            Invalid Year: Year must be between 1900 and {moment().year()}
-          </div>}
+          (yearValue < 1900 || yearValue > moment().year()) && (
+            <div className="text-danger">
+              Invalid Year: Year must be between 1900 and {moment().year()}
+            </div>
+          )}
       </div>
     );
   }
