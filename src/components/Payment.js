@@ -25,48 +25,6 @@ class Payment extends Component {
     );
   };
 
-  paid = () => {
-    return (
-      <div>
-        <div>
-          <p>
-            You are now enrolled in the Sanford Chip. A message will be sent to
-            your doctor letting them know that you have completed the enrollment
-            process.
-          </p>
-          <h3>Genetic Testing Process</h3>
-          <ul>
-            <li>
-              Please wait 2 business days before going to any Sanford Lab to
-              have your blood drawn.
-            </li>
-            <li>
-              After your blood sample is drawn, it will be sent to a Sanford lab
-              for genetic testing.
-            </li>
-            <li>
-              When the genetic testing is done, the results will be sent to your
-              doctor.
-            </li>
-          </ul>
-
-          <h3>From this page you may either:</h3>
-          <ul>
-            <li> Close the browser</li>
-            <li>Complete any other surveys you may have at this time.</li>
-          </ul>
-
-          <p style={{ fontSize: 24, color: '#62A5DB' }}>
-            <strong>
-              Thank-you for partnering with our team! You are a valued member of
-              our Sanford Health Family!
-            </strong>
-          </p>
-        </div>
-      </div>
-    );
-  };
-
   unPaid = (consentTypeId, pricePlan) => {
     return (
       <div>
@@ -110,9 +68,13 @@ class Payment extends Component {
     }
 
     return (
-      <Segment padded style={{ marginBottom: 24 }}>
-        {isPaid ? this.paid() : this.unPaid(consentTypeId, pricePlans[0])}
-      </Segment>
+      <div>
+        {!isPaid && (
+          <Segment padded style={{ marginBottom: 24 }}>
+            {this.unPaid(consentTypeId, pricePlans[0])}
+          </Segment>
+        )}
+      </div>
     );
   }
 }

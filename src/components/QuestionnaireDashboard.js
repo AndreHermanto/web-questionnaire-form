@@ -8,6 +8,7 @@ import Payment from './Payment';
 import Markdown from 'react-markdown';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { getCompletedQuestionnaires } from '../helpers/questionnaires';
+import { Segment } from 'semantic-ui-react';
 
 const DashboardIntro = styled.div`
   margin: 60px 0px 20px 0px;
@@ -48,6 +49,48 @@ function QuestionnaireDashboard(props) {
   return (
     <div style={{ position: 'relative', minHeight: '100%' }}>
       <div className="container" style={{ paddingBottom: 120 }}>
+        {/* All questionnaires finished, but has price plans */}
+        {props.isPaid && (
+          <Segment padded style={{ marginBottom: 24 }}>
+            <div>
+              <div>
+                <p style={{ fontSize: 24, color: '#62A5DB' }}>
+                  <strong>
+                    Thank-you for partnering with our team! You are a valued
+                    member of our Sanford Health Family!
+                  </strong>
+                </p>
+                <p>
+                  You are now enrolled in the Sanford Chip. A message will be
+                  sent to your doctor letting them know that you have completed
+                  the enrollment process.
+                </p>
+                <h3>Genetic Testing Process</h3>
+                <ul>
+                  <li>
+                    Please wait 2 business days before going to any Sanford Lab
+                    to have your blood drawn.
+                  </li>
+                  <li>
+                    After your blood sample is drawn, it will be sent to a
+                    Sanford lab for genetic testing.
+                  </li>
+                  <li>
+                    When the genetic testing is done, the results will be sent
+                    to your doctor.
+                  </li>
+                </ul>
+
+                <h3>From this page you may either:</h3>
+                <ul>
+                  <li> Close the browser</li>
+                  <li>Complete any other surveys you may have at this time.</li>
+                </ul>
+              </div>
+            </div>
+          </Segment>
+        )}
+
         {props.landingPage.title && (
           <DashboardIntro>
             <Header color="#00437E">
