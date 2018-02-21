@@ -50,8 +50,11 @@
     "styled-components": "^2.1.1"
   },
   "scripts": {
-    "start": "REACT_APP_BASE_URL= PORT=3001 REACT_APP_PAYMENTS_URL=http://localhost:3010/# react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts start",
+    "build": "sh -ac '. ./.env.${REACT_APP_ENV}; react-scripts build'",
+    "build:demo": "REACT_APP_ENV=demo npm run build",
+    "build:demo_uat": "REACT_APP_ENV=demo_uat npm run build",
+    "build:uat": "REACT_APP_ENV=uat npm run build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
@@ -62,10 +65,7 @@
     "extends": "react-app"
   },
   "lint-staged": {
-    "src/**/*.js": [
-      "prettier --single-quote --write",
-      "git add"
-    ]
+    "src/**/*.js": ["prettier --single-quote --write", "git add"]
   },
   "homepage": ".",
   "proxy": "http://localhost:4000"
