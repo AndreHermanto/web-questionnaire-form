@@ -65,7 +65,10 @@
     "extends": "react-app"
   },
   "lint-staged": {
-    "src/**/*.js": ["prettier --single-quote --write", "git add"]
+    "src/**/*.js": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   },
   "homepage": ".",
   "proxy": "http://localhost:4000"

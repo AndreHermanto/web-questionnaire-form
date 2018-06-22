@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Radio as RadioBootstrap } from 'react-bootstrap';
 import styled from 'styled-components';
 import get from 'lodash.get';
-import Markdown from 'react-markdown';
+import GlossaryAnnotator from './GlossaryAnnotator';
 
 const RadioContainer = styled.div`
-  input[type="radio"] {
+  input[type='radio'] {
     margin-top: ${props =>
       props.largeText === 0 ? '' : props.largeText > 1 ? '20px' : '10px'};
   }
@@ -22,7 +22,7 @@ class Radio extends Component {
     return (
       <RadioContainer largeText={largeText}>
         <ul className="list-unstyled">
-          {answers.map(answer =>
+          {answers.map(answer => (
             <li key={answer.id}>
               <RadioBootstrap
                 checked={get(responseElementAnswers, answer.id, false)}
@@ -30,29 +30,30 @@ class Radio extends Component {
                 style={{ whiteSpace: 'pre-wrap' }}
               >
                 {
-                  <Markdown
-                    source={answer.text}
-                    escapeHtml={true}
-                    skipHtml={true}
+                  <GlossaryAnnotator
+                    text={answer.text}
+                    glossaryTermAnnotations={answer.glossaryTermAnnotations}
                   />
                 }
               </RadioBootstrap>
               {get(responseElementAnswers, answer.id, false) &&
-                answer.followUp &&
-                <div>
-                  {answer.followUp.question}
-                  <textarea
-                    onChange={e => onFollowUpChanged(answer.id, e.target.value)}
-                    className="form-control"
-                    value={get(
-                      responseElementAnswers,
-                      `${answer.id}.followUp.text`,
-                      ''
-                    )}
-                  />
-                </div>}
+                answer.followUp && (
+                  <div>
+                    {answer.followUp.question}
+                    <textarea
+                      onChange={e =>
+                        onFollowUpChanged(answer.id, e.target.value)}
+                      className="form-control"
+                      value={get(
+                        responseElementAnswers,
+                        `${answer.id}.followUp.text`,
+                        ''
+                      )}
+                    />
+                  </div>
+                )}
             </li>
-          )}
+          ))}
         </ul>
       </RadioContainer>
     );
