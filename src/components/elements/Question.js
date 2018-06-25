@@ -10,10 +10,9 @@ import Number from './Number';
 import Uom from './Uom';
 import Uoms from './Uoms';
 import Checkmark from '../Checkmark';
-import Markdown from 'react-markdown';
 import Matrix from './Matrix';
 import { Modal, Button } from 'react-bootstrap';
-import { Accordion, Icon, List } from 'semantic-ui-react';
+import GlossaryAnnotator from './GlossaryAnnotator';
 
 class Question extends Component {
   static propTypes: {
@@ -72,11 +71,6 @@ class Question extends Component {
       (this.props.responseElement.answers.length ||
         this.props.responseElement.preferNotToAnswer) &&
       !this.props.isInvalid;
-    const { onGlossary } = this.state;
-    const { glossaryTermAnnotations } = this.props.element;
-    const isGlossary =
-      Array.isArray(glossaryTermAnnotations) &&
-      glossaryTermAnnotations.length > 0;
     return (
       <div
         className="question-container"
@@ -96,12 +90,10 @@ class Question extends Component {
         )}
 
         <div style={{ whiteSpace: 'pre-wrap', marginBottom: 10 }}>
-          <Markdown
-            source={`${this.props.questionNumber}\\. ${
-              this.props.element.question
-            }`}
-            escapeHtml={true}
-            skipHtml={true}
+          <GlossaryAnnotator
+            text={`${this.props.questionNumber}\\. ${this.props.element
+              .question}`}
+            glossaryTermAnnotations={this.props.element.glossaryTermAnnotations}
           />
         </div>
         {this.renderElement()}
@@ -168,30 +160,6 @@ class Question extends Component {
           <div className="text-muted text-uppercase" style={{ fontSize: 10 }}>
             This question is required.
           </div>
-        )}
-
-        {isGlossary && (
-          <Accordion>
-            <Accordion.Title
-              active={onGlossary}
-              onClick={() => this.setState({ onGlossary: !onGlossary })}
-            >
-              Glossary Terms Annotation
-              <Icon name="dropdown" />
-            </Accordion.Title>
-            <Accordion.Content active={onGlossary}>
-              {glossaryTermAnnotations.map((glossaryTermAnnotation, index) => (
-                <List as="ul" key={index}>
-                  <List.Item as="li">
-                    Name: {glossaryTermAnnotation.text}
-                  </List.Item>
-                  <List.Item as="li">
-                    Definition: {glossaryTermAnnotation.glossaryTerm.definition}
-                  </List.Item>
-                </List>
-              ))}
-            </Accordion.Content>
-          </Accordion>
         )}
       </div>
     );
