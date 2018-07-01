@@ -1,7 +1,59 @@
 import React, { Component } from 'react';
 import Markdown from 'react-markdown';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Image } from 'semantic-ui-react';
 import { Modal, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import cuid from 'cuid';
+
+const covertVideoToEmbededUrl = url => {
+  /* eslint-disable no-useless-escape */
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+
+  if (match && match[2].length === 11) {
+    return `//www.youtube.com/embed/${match[2]}`;
+  }
+
+  return undefined;
+};
+
+const YouTube = ({
+  src,
+  title,
+  width,
+  height,
+  frameborder,
+  allowfullscreen
+}) => {
+  const embededSrc = covertVideoToEmbededUrl(src);
+  if (!embededSrc) return <div>No Video Found</div>;
+
+  return (
+    <iframe
+      title={title}
+      src={embededSrc}
+      width={width}
+      height={height}
+      frameBorder={frameborder}
+      allowFullScreen={allowfullscreen}
+    />
+  );
+};
+YouTube.propTypes = {
+  src: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  width: PropTypes.string,
+  height: PropTypes.string,
+  frameborder: PropTypes.string,
+  allowfullscreen: PropTypes.bool
+};
+YouTube.defaultProps = {
+  title: cuid(),
+  width: '560',
+  height: '315',
+  frameborder: '0',
+  allowfullscreen: true
+};
 
 export default class GlossaryAnnotator extends Component {
   state = {};
@@ -122,7 +174,9 @@ export default class GlossaryAnnotator extends Component {
                           </dd>
                           <dt>Synonyms</dt>
                           <dd>
-                            {glossaryTermAnnotation.glossaryTerm.synonyms}
+                            {glossaryTermAnnotation.glossaryTerm.synonyms.join(
+                              ', '
+                            )}
                           </dd>
                           <dt>Definition</dt>
                           <dd>
@@ -140,10 +194,22 @@ export default class GlossaryAnnotator extends Component {
                             }
                           </dd>
                           <dt>Image</dt>
-                          <dd>{glossaryTermAnnotation.glossaryTerm.image}</dd>
+                          <dd>
+                            {glossaryTermAnnotation.glossaryTerm.image && (
+                              <Image
+                                src={glossaryTermAnnotation.glossaryTerm.image}
+                              />
+                            )}
+                          </dd>
                           <dt>Video Link</dt>
                           <dd>
-                            {glossaryTermAnnotation.glossaryTerm.videoLink}
+                            {glossaryTermAnnotation.glossaryTerm.videoLink && (
+                              <YouTube
+                                src={
+                                  glossaryTermAnnotation.glossaryTerm.videoLink
+                                }
+                              />
+                            )}
                           </dd>
                           <dt>External Resource Link</dt>
                           <dd>
