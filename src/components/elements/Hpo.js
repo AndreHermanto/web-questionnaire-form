@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Label,
-  FormGroup,
-  ControlLabel,
-  FormControl,
-  Glyphicon
-} from 'react-bootstrap';
+import { Label, FormGroup, FormControl, Glyphicon } from 'react-bootstrap';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import toJS from '../toJS';
@@ -73,7 +67,6 @@ class Hpo extends Component {
       <div>
         <form>
           <FormGroup>
-            <ControlLabel>Concept ID (e.g. HPO ID)</ControlLabel>
             <FormControl
               componentClass="input"
               name="concepts"
@@ -169,7 +162,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(toJS(Hpo));
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(Hpo));
