@@ -48,8 +48,7 @@ class Matrix extends Component {
                           {answer.followUp.question}
                           <textarea
                             onChange={e =>
-                              onFollowUpChanged(answer.id, e.target.value)
-                            }
+                              onFollowUpChanged(answer.id, e.target.value)}
                             className="form-control"
                             value={get(
                               responseElementAnswers,

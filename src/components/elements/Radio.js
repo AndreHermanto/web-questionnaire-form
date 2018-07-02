@@ -35,6 +35,13 @@ class Radio extends Component {
                     glossaryTermAnnotations={answer.glossaryTermAnnotations}
                   />
                 }
+                {answer.image && (
+                  <img
+                    src={answer.image}
+                    alt="question"
+                    className="img-responsive"
+                  />
+                )}
               </RadioBootstrap>
               {get(responseElementAnswers, answer.id, false) &&
                 answer.followUp && (
