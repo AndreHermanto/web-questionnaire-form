@@ -365,8 +365,8 @@ export const getProgress = state => {
   const numberOfQuestionsWithInvalidAnswers =
     responseElementsWithInvalidAnswers.size;
   return (
-    (numberOfQuestionsAnswered - numberOfQuestionsWithInvalidAnswers) /
-    questionResponseElements.size *
+    ((numberOfQuestionsAnswered - numberOfQuestionsWithInvalidAnswers) /
+      questionResponseElements.size) *
     100
   );
 };
@@ -387,6 +387,16 @@ export const getResponseElementsWithInvalidAnswers = state => {
         return false;
       }
       const element = getElementById(state, responseElement.get('elementId'));
+      if (element.get('type') === 'ontologyBased') {
+        const responseElementAnswer = getResponseElementAnswersById(
+          state,
+          responseElement.get('answers').get(0)
+        );
+        return !(
+          List.isList(responseElementAnswer.get('concepts')) &&
+          responseElementAnswer.get('concepts').size > 0
+        );
+      }
       if (
         element.get('type') === 'number' ||
         element.get('type') === 'text' ||

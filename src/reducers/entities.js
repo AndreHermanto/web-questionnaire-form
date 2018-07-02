@@ -11,6 +11,7 @@ import releases from './releases';
 import payments from './payments';
 import pricePlans from './pricePlans';
 import pricePlansMapping from './pricePlansMapping';
+import concepts from './concepts';
 
 const entities = combineReducers({
   releases,
@@ -23,7 +24,8 @@ const entities = combineReducers({
   responses, // responses to whole version,
   payments,
   pricePlans,
-  pricePlansMapping
+  pricePlansMapping,
+  concepts
 });
 
 export default entities;

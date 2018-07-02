@@ -55,3 +55,11 @@ export const arrayOfPricePlans = new schema.Array(pricePlans);
 // price Plans Mapping
 export const pricePlansMapping = new schema.Entity('pricePlansMapping');
 export const arrayOfPricePlansMapping = new schema.Array(pricePlansMapping);
+
+// concepts
+export const concepts = new schema.Entity(
+  'concepts',
+  {},
+  { idAttribute: 'uri' }
+);
+export const arrayOfConcepts = new schema.Array(concepts);

@@ -41,6 +41,7 @@ class NewElement extends Component {
       case 'matrix':
       case 'uom':
       case 'uoms':
+      case 'ontologyBased':
         return <Question {...this.props} />;
       default:
         return (
