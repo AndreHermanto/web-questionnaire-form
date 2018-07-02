@@ -96,6 +96,14 @@ class Question extends Component {
             glossaryTermAnnotations={this.props.element.glossaryTermAnnotations}
           />
         </div>
+        {this.props.element.image && (
+          <img
+            src={this.props.element.image}
+            alt="question"
+            className="img-responsive"
+          />
+        )}
+
         {this.renderElement()}
 
         {!this.props.element.required && (

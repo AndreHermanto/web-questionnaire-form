@@ -38,6 +38,13 @@ class Checkbox extends Component {
                     glossaryTermAnnotations={answer.glossaryTermAnnotations}
                   />
                 }
+                {answer.image && (
+                  <img
+                    src={answer.image}
+                    alt="question"
+                    className="img-responsive"
+                  />
+                )}
               </CheckboxBootstrap>
               {get(responseElementAnswers, answer.id, false) &&
                 answer.followUp && (
