@@ -8,6 +8,7 @@ export const NUMBER = 'number';
 export const MATRIX = 'matrix';
 export const UOM = 'uom';
 export const UOMS = 'uoms';
+export const ONTOLOGYBASED = 'ontologyBased';
 
 const questionTypes = [
   RADIO,
@@ -19,6 +20,7 @@ const questionTypes = [
   NUMBER,
   MATRIX,
   UOM,
-  UOMS
+  UOMS,
+  ONTOLOGYBASED
 ];
 export default questionTypes;

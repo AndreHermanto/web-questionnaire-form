@@ -11,6 +11,7 @@ import Uom from './Uom';
 import Uoms from './Uoms';
 import Checkmark from '../Checkmark';
 import Matrix from './Matrix';
+import Hpo from './Hpo';
 import { Modal, Button } from 'react-bootstrap';
 import GlossaryAnnotator from './GlossaryAnnotator';
 
@@ -57,6 +58,8 @@ class Question extends Component {
         return <Uom {...this.props} />;
       case 'uoms':
         return <Uoms {...this.props} />;
+      case 'ontologyBased':
+        return <Hpo {...this.props} />;
       default:
         return (
           <div>
@@ -91,8 +94,9 @@ class Question extends Component {
 
         <div style={{ whiteSpace: 'pre-wrap', marginBottom: 10 }}>
           <GlossaryAnnotator
-            text={`${this.props.questionNumber}\\. ${this.props.element
-              .question}`}
+            text={`${this.props.questionNumber}\\. ${
+              this.props.element.question
+            }`}
             glossaryTermAnnotations={this.props.element.glossaryTermAnnotations}
           />
         </div>
