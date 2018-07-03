@@ -97,7 +97,7 @@ export default class GlossaryAnnotator extends Component {
     const blah = text.split(re);
     return (
       <span>
-        {blah.map(textParts => {
+        {blah.map((textParts, index) => {
           // find the matching annotation
           const glossaryTermAnnotation = glossaryTermAnnotations.find(
             gta => gta.text === textParts
@@ -108,6 +108,7 @@ export default class GlossaryAnnotator extends Component {
                 style={{
                   borderBottom: '1px dashed blue'
                 }}
+                key={index}
               >
                 <span>{textParts}</span>
                 {!this.state[glossaryTermAnnotation.text] && (
@@ -174,9 +175,10 @@ export default class GlossaryAnnotator extends Component {
                           </dd>
                           <dt>Synonyms</dt>
                           <dd>
-                            {glossaryTermAnnotation.glossaryTerm.synonyms.join(
-                              ', '
-                            )}
+                            {glossaryTermAnnotation.glossaryTerm.synonyms &&
+                              glossaryTermAnnotation.glossaryTerm.synonyms.join(
+                                ', '
+                              )}
                           </dd>
                           <dt>Definition</dt>
                           <dd>
@@ -237,7 +239,7 @@ export default class GlossaryAnnotator extends Component {
               </span>
             );
           } else {
-            return <span>{textParts}</span>;
+            return <span key={index}>{textParts}</span>;
           }
         })}
       </span>
