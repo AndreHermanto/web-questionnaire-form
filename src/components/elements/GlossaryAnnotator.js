@@ -137,8 +137,18 @@ export default class GlossaryAnnotator extends Component {
                       borderRadius: '3px'
                     }}
                   >
+                    <Icon
+                      style={{ float: 'none' }}
+                      name="close"
+                      onClick={e => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        this.setState({
+                          [glossaryTermAnnotation.text]: false
+                        });
+                      }}
+                    />
                     {glossaryTermAnnotation.glossaryTerm.displayText}
-
                     <button
                       style={{
                         color: 'blue',
